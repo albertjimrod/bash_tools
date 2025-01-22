@@ -48,39 +48,11 @@ Verificando en el entorno: bigquery
 ✅ jupyterlab está instalado en el entorno bigquery
 Verificando en el entorno: blablacar
 ❌ jupyterlab no está instalado en el entorno blablacar
-Verificando en el entorno: crewai
-❌ jupyterlab no está instalado en el entorno crewai
-Verificando en el entorno: django
-❌ jupyterlab no está instalado en el entorno django
-Verificando en el entorno: docker_jupyterlab
-✅ jupyterlab está instalado en el entorno docker_jupyterlab
-Verificando en el entorno: eda
-✅ jupyterlab está instalado en el entorno eda
-Verificando en el entorno: eda_dataprep
-✅ jupyterlab está instalado en el entorno eda_dataprep
-Verificando en el entorno: hispasonic
-✅ jupyterlab está instalado en el entorno hispasonic
-Verificando en el entorno: jupyterbook
-❌ jupyterlab no está instalado en el entorno jupyterbook
-Verificando en el entorno: jupyterlab
-✅ jupyterlab está instalado en el entorno jupyterlab
-Verificando en el entorno: kaggle
-✅ jupyterlab está instalado en el entorno kaggle
-Verificando en el entorno: praisonai
-❌ jupyterlab no está instalado en el entorno praisonai
-Verificando en el entorno: rstudio
-✅ jupyterlab está instalado en el entorno rstudio
-Verificando en el entorno: sonus
-✅ jupyterlab está instalado en el entorno sonus
-Verificando en el entorno: sqlite
-❌ jupyterlab no está instalado en el entorno sqlite
-Verificando en el entorno: synth_data
-❌ jupyterlab no está instalado en el entorno synth_data
-Verificando en el entorno: tf_env
-✅ jupyterlab está instalado en el entorno tf_env
 Verificando en el entorno: time_series
 ❌ jupyterlab no está instalado en el entorno time_series
-
+.
+.
+.
 ```
 
 <br>
