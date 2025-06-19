@@ -82,6 +82,6 @@ This script solves that:
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your_user/article-generator-ollama.git
+git clone git@github.com:albertjimrod/bash_tools.git
 cd article-generator-ollama
 
