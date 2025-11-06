@@ -1,4 +1,5 @@
 # Patrones que no quiero que git siga
+# Folders
 .ipynb_checkpoints
 Document_Tag_Extractor
 Extracting_knowledge
@@ -7,4 +8,26 @@ generar_articulos
 getting_yt_transcription
 input_docs
 obsidian_vault
+
+# files
+
+README.md
+Untitled.ipynb
+analizar_texto.py
+analogias entre el metodo LEAN startup y el método LEGO SERIOUS PLAY.xml
+bash-icon-20.png
+debug_fabric_output.txt
+eda
+export_conda_envs.sh
+fabob.py
+fabric
+fabric_obsidian_importer.py
+import_conda_envs.sh
+json
+markdown
+os
+paquetes.txt
+procesar_odt.py
+pytesseract
+tarfile
 
