@@ -1,2 +1,0 @@
-yt-dlp --flat-playlist -I : --print "%(webpage_url)s" \
-  "https://www.youtube.com/@tuHandle/videos"

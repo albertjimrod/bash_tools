@@ -1,0 +1,10 @@
+# Patrones que no quiero que git siga
+.ipynb_checkpoints
+Document_Tag_Extractor
+Extracting_knowledge
+auto_publish
+generar_articulos
+getting_yt_transcription
+input_docs
+obsidian_vault
+
