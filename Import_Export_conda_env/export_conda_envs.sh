@@ -2,7 +2,7 @@
 
 # Configuración
 USUARIO_DESTINO="ion"        # Cambia esto por el nombre de usuario de la máquina destino
-MAQUINA_DESTINO="192.168.98.102"        # Cambia esto por la IP o el hostname de la máquina destino
+MAQUINA_DESTINO="192.168.1.33"        # Cambia esto por la IP o el hostname de la máquina destino
 DIRECTORIO_DESTINO="~/"       # Cambia esto por el directorio en la máquina destino donde guardarás los archivos
 
 # Crear una carpeta temporal para almacenar los archivos YAML

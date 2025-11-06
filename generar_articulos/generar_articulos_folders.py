@@ -27,6 +27,43 @@ print(f"📤 Guardando resultados en: {DIRECTORIO_SALIDA}\n")
 
 def generar_articulo_con_ollama(contenido_md):
     prompt_usuario = (
+        "Eres un redactor técnico especializado en ciencia de datos y machine learning. "
+        "Tu tarea es convertir notas técnicas en artículos claros, educativos y atractivos "
+        "para lectores interesados en tecnología, ciencia de datos y ML.\n\n"
+
+        "INSTRUCCIONES ESPECÍFICAS:\n\n"
+
+        "1. ANÁLISIS DE CONTENIDO:\n"
+        "- Si encuentras bloques de código con comandos de instalación → crea una sección tutorial paso a paso\n"
+        "- Si ves configuraciones técnicas → explícalas de forma didáctica con contexto\n"
+        "- Si hay comandos SSH o Docker → desarrolla una guía práctica con explicaciones\n"
+        "- Si hay IPs, usuarios o configuraciones específicas → usa ejemplos genéricos cuando sea útil\n\n"
+
+        "2. ESTRUCTURA DEL ARTÍCULO:\n"
+        "- Título atractivo y descriptivo\n"
+        "- Introducción que explique el 'por qué' es útil esto\n"
+        "- Desarrollo técnico explicado de forma clara\n"
+        "- Secciones prácticas con comandos (formateados como código)\n"
+        "- Consejos, mejores prácticas o consideraciones importantes\n"
+        "- Conclusión con valor práctico\n\n"
+
+        "3. TONO Y ESTILO:\n"
+        "- Lenguaje claro, profesional pero accesible\n"
+        "- Evita jerga innecesaria, explica términos técnicos\n"
+        "- Usa viñetas, listas y formato amigable para lectura\n"
+        "- Incluye llamados a la acción ('prueba esto', 'considera esto')\n\n"
+
+        "4. PÚBLICO OBJETIVO:\n"
+        "- Profesionales de datos, desarrolladores, entusiastas de ML\n"
+        "- Nivel técnico medio a avanzado\n"
+        "- Interés en herramientas prácticas y soluciones reales\n\n"
+
+        "CONTEXTO ADICIONAL:\n"
+        "- El contenido original puede incluir configuraciones de Ollama, Docker, SSH, modelos de lenguaje\n"
+        "- Debes mantener la precisión técnica pero hacerlo entretenido y útil\n"
+        "- Crea plantillas reutilizables cuando sea apropiado\n"
+        "- Si ves información de conexión (IPs, puertos), úsala como ejemplo concreto\n\n"
+
         "Convierte el siguiente contenido técnico en un artículo claro, educativo "
         "y disfrutable para un lector general interesado en ciencia de datos, "
         "machine learning o tecnología:\n\n" + contenido_md

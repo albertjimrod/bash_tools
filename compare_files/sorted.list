@@ -1,0 +1,791 @@
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/00_Caso_practico/book_188006.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/00_Caso_practico/Caso Práctico.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/00_Caso_practico/caso_practico_BI.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/00_Caso_practico/CP-9-4 Xavier Torres -Business Intelligence.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/00_Caso_practico/Respuestas caso práctico-20191115T074539Z-001.zip
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI .aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/00_Intro_BI.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/01_Piramide_conocimiento.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/01_Que_es_BI.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/02_Piramide.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/03_toma_de_decisiones.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/04_funciones_de_BI.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/05_ejemplos_de_aplicacion.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/06_ejemplos_de_aplicacion.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/07_caracteristicas_BigData.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/08_ejemplos_aplicaciones_BigData.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/10_BI_vs_BG.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/Pista de etiqueta.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/Pregunta_semana_Modelado de datos y Data Warehouse.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/01_Que_es_BI _data/Sumario.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/00_diagrama_de_capas.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/02_componentes_BI.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/comparativa_OLTP_DSS.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/componentes_ETL.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/componentes_OLAP.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/diagrama_datos_2.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/diferencias_DWH_Data_Mart.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/intro_components_BI.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/02_componentes_BI_data/visualizacion de  datos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/03_tema2_Intro_DDBB.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/Cardinalidad_de_relaciones.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/conceptos_basicos_tablas.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/diagrama_E-R.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/ejemplo_diagrama_BBDD.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/Pista de etiqueta.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/sistema_de_gestion_BBDD.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/Tipos_de_BBDD.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Intro_DDBB_relaciones_data/tipos_de_claves.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/03_tema2_Modelado_datos.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/button-up.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/conclusiones.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/ejemplo_modelo_estrella.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/ejemplo_modelos_copodenieve.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/modelo_de_datos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/paso_definir_tabla_de_hechos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/tipos_modelos_estrella_snow.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Modelado_datos_data/Top-down.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/03_tema2_Normalizacion_de_datos.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/claves_ex.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/claves.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/conceptos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/dependencias_funcionales.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/desnormalizacion.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/dimensiones.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/ejemplo_tabla_primera_forma_normal.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/enfoque_Botton_up.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/enfoque_DWH_Top_down.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/formas_normales.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/modelo_copo_de_nieve.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/modelo_desnormalizado_ejemplo.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/otras_formas_normales.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/Pista de etiqueta.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/primera_forma_normal.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/relacion_tabla.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/segunda_forma_normal.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/tabla_conceptos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/tercera_forma_normal.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/03_tema2_Normalizacion_de_datos_data/tipo_de_modelo_estrella.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI_data/04_tema3_Gestion_proyectos_BI.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI_data/ciclo_vida_BI_2.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI_data/ciclo_vide_BI.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI_data/fasees_BI.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI_data/objetivos_erroneos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/04_tema3_Gestion_proyectos_BI_data/Pista de etiqueta.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/05_gestion_de_proyectos_BI_2.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/agile_2.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/agile.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/BI_tradicional.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/Captura de pantalla de 2020-04-06 17-44-56.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/comparativa_tradicional_modern.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/conceptos_SCRUM.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/equipo_data_driven.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/equipos_tradicionales.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/factores de exito.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/mani_agil_1.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/mani_agil_2.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/modern_BI.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/SCRUM.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/05_gestion_de_proyectos_BI_2_data/SCRUM_princiaples_conceptos.png
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Componentes del Bussiness Intelligence.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Introducción al Business Intelligence.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/respuesta_clase1_BI.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Tema2_modelado de datos/Introducción a las Bases de Datos Relacionales.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Tema2_modelado de datos/La necesidad de conocer el lenguaje SQL en un proyecto de Business Intelligence
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Tema2_modelado de datos/Modelado de datos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Tema3_gestion de proyectos BI/Clase 1 - Tema 3 - Video 2.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Tema3_gestion de proyectos BI/Gestión.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Tema3_gestion de proyectos BI/La importancia de los tipos de visualizaciones para transmitir el mensaje correcto
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/01_Clase_1_Introduccion al BI/Toda_la_Clase_1.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/indice_de_los_pdf.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Pista de etiquetas_30_minutos.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/00_tema1_Introducción a SQL y Componentes del lenguaje.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/00_tema1_Introducción a SQL y Componentes del lenguaje_data/00_tema1_Introducción a SQL y Componentes del lenguaje.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/01_tema1_ Lenguaje de Definición de Datos (DDL).aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/01_tema1_ Lenguaje de Definición de Datos (DDL)_data/01_tema1_ Lenguaje de Definición de Datos (DDL).odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/02_tema1_ Lenguaje de Definición de Datos (DDL).aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/02_tema1_ Lenguaje de Definición de Datos (DDL)_data/02_tema1_ Lenguaje de Definición de Datos (DDL).odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/03_Consultas agregadas.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/03_Consultas agregadas_data/03_Consultas agregadas.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/04_ Ejercicios SQL.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/Consultas combinadas (JOINS) y agregadas.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/Lenguaje de definición de datos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/Lenguaje de manipulación de datos (DML) I y II.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/Lenguaje de manipulación de datos I y II.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 1 Programación SQL/Programación SQL.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/05Tema2_Herramientas de BI.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/05Tema2_Herramientas de BI_data/05Tema2_Herramientas de BI.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/06_Integración de datos.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/06_Integración de datos_data/06_Integración de datos.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/07_ Visualización de datos.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/07_ Visualización de datos_data/07_ Visualización de datos.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/Herramientas BI.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/Integración de datos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/02_Implementación de proyectos BI/Tema 2 Implementación de proyectos BI/Visualización de datos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_ Cálculos y dimensión tiempo.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_ Gráficos_Mapas.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_ Modelado de datos.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_ Visualizaciones_data.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_Calculos_dimension_tiempo.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_Intro.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_Primeros pasos.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_Qué es Power BI.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/00_Query Editor.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/CA Sales.csv
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Cálculos y dimensión tiempo.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/DE Sales.csv
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Financial Sample.xlsx
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/FR Sales (1).csv
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/FR Sales.csv
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Gráficos y Mapas.aup
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Gráficos y Mapas_data/Gráficos_y_Mapas.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Gráficos y Mapas_data/Pista de etiqueta.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Gráficos y Mapas.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Introducción al Power BI.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Lab 2 - Starting.pbix
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Lab 3 - Starting.pbix
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Modelado de datos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/MX Sales.csv
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Power BI Desktop - Primeros pasos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/Query Editor.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/repuesta_semana_3.odt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/03_Power BI/tema11.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/BI_vs_Big-Data.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Dialnet-TecnicasDeModeladoDeProcesosDeETLUnaRevisionDeAlte-4271531.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Ebook Procesos ETL La Base de la Inteligencia de Negocio.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Ebook Procesos ETL La Base de la Inteligencia de Negocio.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Ebook_gratuito_kyocera_estrategia_de_datos.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Ebook_gratuito_kyocera_estrategia_de_datos.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Instrucciones-Caso Práctico.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Modelos_de_Vigilancia_INFOCENTER.pdf
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/Modelos_de_Vigilancia_INFOCENTER.txt
+/home/ion/Documentos/albertjimrod/ordenar/08_Business_Intelligence(alberto morales tostonazo)/s-patil2.pdf
+/home/ion/Documentos/albertjimrod/ordenar/22_Alberto Caycho/Documento sin título
+/home/ion/Documentos/albertjimrod/ordenar/22_Alberto Caycho/MKT plan - 24ENT.pptx
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Caycho - BDEN caso practico.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Caycho - BDML.docx
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Credits.JPG
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez - Dataquest Learning Assistant.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jiménez – Facilitador de talleres LEGO®SERIOUS PLAY® – Facilitador certificado en LEGO® Serious Play®, especializado en talleres que impulsan la creatividad, la resolución de problemas y la cohesión de equipos. Servicios adaptados .html
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Factura 1-003064-1.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Tarjeta sin texto baner_33.png
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Tarjeta sin texto baner.png
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Tarjeta sin texto ni firma baner.png
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Tarjetas baner.png
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Tarjetas.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Técnico electronico
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez Técnico electronico.doc
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_14-10-19- CV que envie
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_14-10-19.doc
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_14-10-19.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_14-10-19.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Artística.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_A (copia).odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_A (copia).pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_A.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_A.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_B (copia).odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_B (copia).pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material_B.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina_Material.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Bobina.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_CV_MIELE.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_CV.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_CV.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_CV_TMB.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Electronico.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Industrial.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Material_Industrial_B.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Material_Industrial.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez's Learning Profile _ Dataquest.html
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_2024.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_aristocrat.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_Carandini.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_casino.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_casino.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_Linea_metro.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_Linea_metro.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_original_cardini.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_original.odt
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico_original.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto Jimenez_Tecnico.pdf
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/BD Boing.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/BD Boom.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/BD Smack.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Arcade.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Dial-up.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Engine Start.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Flutter.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Fold 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Fold.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX LFO.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Lo-flutter.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Low Battery 1.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Low Battery 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Slomo Laser 1.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Slomo Laser 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Slomo Laser 3.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Sonar.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Spring-like.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Square Sweep.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Square.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Stutter Square.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Sweep 01.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Sweep 02.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/FX Tuning in.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Digital Bird 1.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Digital Bird 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Frogger.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Lasers.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Random Congas.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Sample & Hold.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Scanning.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/AlbertO-Coast/LP Toms.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/BD Boing.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/BD Boom.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/BD Smack.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Arcade.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Dial-up.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Engine Start.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Flutter.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Fold 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Fold.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX LFO.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Lo-flutter.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Low Battery 1.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Low Battery 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Slomo Laser 1.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Slomo Laser 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Slomo Laser 3.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Sonar.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Spring-like.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Square Sweep.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Square.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Stutter Square.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Sweep 01.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Sweep 02.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/FX Tuning in.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Digital Bird 1.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Digital Bird 2.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Frogger.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Lasers.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Random Congas.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Sample & Hold.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Scanning.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast/LP Toms.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertO-Coast.zip
+/home/ion/Documentos/albertjimrod/ordenar/alberto/Cultural Thule (191)/cover.jpg
+/home/ion/Documentos/albertjimrod/ordenar/alberto/Cultural Thule (191)/Cultural Thule - alberto.pdf
+/home/ion/Documentos/albertjimrod/ordenar/alberto/Cultural Thule (191)/metadata.opf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_diploma.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez (2).qvf
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_ari_eng.odt
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_ari_eng.pdf
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_ari.pdf
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_big.png
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez_Brazilian E-Commerce Public Dataset by Olist.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez_Data_Analyst-1.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez_Data_Analyst-2.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez_Data_Analyst-3.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez_Data_Analyst.pdf
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_foto_estudio.jpg
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez.jpg
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez.jpg_original
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/albertojimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Jimenez.qvf
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_JImenez_Rodriguez_06_10_20.pdf
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_scale.png
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_telefonica_ari.odt
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_telefonica_imp.odt
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_telefonica_imp.pdf
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez_telefonica.odt
+/home/ion/Documentos/albertjimrod/ordenar/alberto_jimenez.xcf
+/home/ion/Documentos/albertjimrod/ordenar/albertojimnez.WordPress.2025-08-11.xml
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/._Documentacion_Mechanics.pdf
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/Documentacion_Mechanics.pdf
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/Foley_mechanics.wav
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/._mechanics_foley2.mp4
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/mechanics_foley2.mp4
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/._Mechanics.mp4
+/home/ion/Documentos/albertjimrod/ordenar/AlbertoJr/Mechanics.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2(1).jpg
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2(2).jpg
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2-ha editado(1).jpg
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2-ha editado(2).jpg
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2-ha editado.jpg
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2.jpg
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2.jpg(1).json
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2.jpg(2).json
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor_2.jpg.json
+/home/ion/Documentos/albertjimrod/ordenar/Alberto_Productor.jpg
+/home/ion/Documentos/albertjimrod/ordenar/Armomicos Alberto Jimenez Rodriguez.png
+/home/ion/Documentos/albertjimrod/ordenar/Arreglo finiquito Alberto.pdf
+/home/ion/Documentos/albertjimrod/ordenar/burofax alberto jimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Assistencia Alberto Jimenez.odt
+/home/ion/Documentos/albertjimrod/ordenar/Carta Assistencia Alberto Jimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/carta astral-Alberto.aup
+/home/ion/Documentos/albertjimrod/ordenar/carta astral-Alberto_edit.wav
+/home/ion/Documentos/albertjimrod/ordenar/carta astral-Alberto.WMA
+/home/ion/Documentos/albertjimrod/ordenar/Carta Bonarea AlbertoJimenez.odt
+/home/ion/Documentos/albertjimrod/ordenar/Carta Bonarea AlbertoJimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Hays Alberto Jimenez.odt
+/home/ion/Documentos/albertjimrod/ordenar/Carta Hays Alberto Jimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Natal Completa  Alberto Jimenez Rodriguez.png
+/home/ion/Documentos/albertjimrod/ordenar/Carta Natal completa Alberto Jimenez Rodriguez .pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr/Carta Vincle Albertojr.odt
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr/Carta Vincle Albertojr.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr/Cv Vincle Albertojr.odt
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr/Cv Vincle Albertojr.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr/.~lock.Carta Vincle Albertojr.odt#
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr.odt
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Carta Vincle Albertojr/Vincle es una empresa.txt
+/home/ion/Documentos/albertjimrod/ordenar/Certificado de Notas - Alberto Jiménez Rodríguez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/configuracion_basedatos_albertojimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/contact@albertojimenez.net
+/home/ion/Documentos/albertjimrod/ordenar/contact_albertojimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/01_DATA Storming.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/02_Presentación de Insights complejos a equipos no técnicos.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/03_Planificación Estratégica Basada en Datos.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/04_Fundamentos de la Lógica de Programación.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/05_Introducción a Estructuras y Funciones.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/06_Descomposición de Problemas y Pensamiento Algorítmico.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/07_Depuración y Manejo de Errores.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/08_Transformación y Toma de Decisiones con Datos utilizando LEGO® SERIOUS PLAY®.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/2928-lego-serious-play-aprender-a-brincar-1528367464-home.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/acceder a la pagina mientras la cosa no va bien
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/certificado.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/configuracion_basedatos_albertojimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/configurando_wordpress.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/contornodelego.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/coursera_logoc.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/DALL·E 2024-10-30 19.42.44 - A simple, open handprint with a continuous, minimalist outline, similar to traditional Australian Aboriginal art. The handprint should be earthy and o.webp
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/DALL·E 2024-10-30 19.43.01 - A simple, open handprint with a continuous, minimalist outline, similar to traditional Australian Aboriginal art. The handprint should be earthy and o.webp
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/dataquest (1).png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/dataquest.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/dns_administration.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/fichero_de_encriptacion_de_hetzner_para_albertojimenez.net
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/Google-Logo-PNG-Picture.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/historial_30_10_2024.txt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img10.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img11.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img12.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img13.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img14.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img15.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img__1.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img1.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img__2.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img2.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img3.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img4.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img5.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img6.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img7.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img8.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/img9.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/LEGO preguntas criticas y creativas.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/lego_img1.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/lego_img2.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/lego-serious-play.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/legoseriousplay_logo.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/logo-IEBS-Digital-School.webp
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/LSP open source.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/LSP_table.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/mano_LEGO.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/mano.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/manowebp
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/nombres de dominio_ideas de logos.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/pagina_actual.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/pantallazo_fotos_mobile.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/perfiles que pueda interesar LEGO.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/sobre mi.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/SSL_datablog.png
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/talleres y su funcionamiento.odt
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/url_albertojimenez
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/yo_escalado.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido primera version de albertojimenez net/yo.jpg
+/home/ion/Documentos/albertjimrod/ordenar/contenido_albertojimenez_net/albertojimnez.WordPress.2025-08-11.xml
+/home/ion/Documentos/albertjimrod/ordenar/Creditos_Alberto_JR.ras
+/home/ion/Documentos/albertjimrod/ordenar/Cultural Thule - alberto.pdf
+/home/ion/Documentos/albertjimrod/ordenar/CV Alberto JR – Innova-TSN.odt
+/home/ion/Documentos/albertjimrod/ordenar/CV Alberto JR – Innova-TSN.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Cv Assistencia Alberto Jimenez.odt
+/home/ion/Documentos/albertjimrod/ordenar/Cv Assistencia Alberto Jimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Cv Bonarea Albertojimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Cv Bonarea Albertojr.odt
+/home/ion/Documentos/albertjimrod/ordenar/Cv Hays Alberto Jimenez.odt
+/home/ion/Documentos/albertjimrod/ordenar/Cv Hays Alberto Jimenez.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Cv Vincle Albertojr.odt
+/home/ion/Documentos/albertjimrod/ordenar/Cv Vincle Albertojr.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Descripción de albertojimenez segun chatgpt.odt
+/home/ion/Documentos/albertjimrod/ordenar/Dvd Alberto.m4v
+/home/ion/Documentos/albertjimrod/ordenar/fichero_de_encriptacion_de_hetzner_para_albertojimenez.net
+/home/ion/Documentos/albertjimrod/ordenar/firma_alberto_jimenez_negra_ok.png
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_1925.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2397.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2413.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2462.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2463.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2485.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2617.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2618.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2619.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/fotos para alberto/SAM_2620.cp2013.JPG
+/home/ion/Documentos/albertjimrod/ordenar/Inarmomicos Alberto Jimenez Rodriguez.png
+/home/ion/Documentos/albertjimrod/ordenar/mediciones en albertojimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/mod_alberto_jimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/mod_alberto_jimenez.xcf
+/home/ion/Documentos/albertjimrod/ordenar/Orientacion Laboral Alberto Jimenez Rodriguez .pdf
+/home/ion/Documentos/albertjimrod/ordenar/passw @albertojimemez
+/home/ion/Documentos/albertjimrod/ordenar/passw info@albertojimemez
+/home/ion/Documentos/albertjimrod/ordenar/Proyecto Final Grupo 9 y Proyecto Final Alberto Jimenez/Clasificación_frecuencial.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Proyecto Final Grupo 9 y Proyecto Final Alberto Jimenez/Proyecto Final Master_Grupo 9.pdf
+/home/ion/Documentos/albertjimrod/ordenar/Proyecto Final Grupo 9 y Proyecto Final Alberto Jimenez.rar
+/home/ion/Documentos/albertjimrod/ordenar/Proyecto Final Grupo 9 y Proyecto Final Alberto Jimenez/xcor.png
+/home/ion/Documentos/albertjimrod/ordenar/psw alberto mvp2025 gmail.txt
+/home/ion/Documentos/albertjimrod/ordenar/tipos_Alberto Jimenez.png
+/home/ion/Documentos/albertjimrod/ordenar/Transitos  15 años del 03 Octubre 2022 al 03 Octubre 2037 1º orbre Alberto Jimenez Rodriguez .pdf
+/home/ion/Documentos/albertjimrod/ordenar/Tránsitos del 2 Octubre 2021 al 2 Octubre 2022 1º Orb Alberto Jimenez Rodriguez .pdf
+/home/ion/Documentos/albertjimrod/ordenar/url_albertojimenez
+/home/ion/Documentos/albertjimrod/ordenar/Video 1 Alberto Jimenez Rodriguez 2021-10-02 07-59-27.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 10 Conocer mejor y mas profundamnete tu carta aspectos Varios   Cartas muestra Gauquelin y ptors Alberto Jimenez Rodriguez 2021-10-03 11-45-29.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 11 Procesos  desde primeroscon enamoramientos 2022 y 2023 y mas adelante hasta  años hasta el 2032  muy buenos procesos  Alberto Jimenez Rodriguez  2021-10-03 12-21-17.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 12 Procesos delos 58 -60 años grandes momentos que continuan con una  Mente Muy despierta en los procesos  hasta los 72-74 Años  Alberto jimenez Rodriguez 2021-10-03 15-17-29.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 13 y fin Proceso de los 74 años hasta los 86 Años -repaso final Explicacion textos Libros y como utilizarlos en la Mundial Alberto Jimenez Rodriguez 2021-10-03 15-57-03.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 2 Alberto Jimenez Rodriguez 2021-10-02 08-32-26.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 3 Alberto Jimenez Rodriguez 2021-10-02 09-19-11.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 4 Alberto imenez  Rodriguez 2021-10-02 10-11-04.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 5 AlbertoJimenez  Rodriguez 2021-10-02 10-45-48.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 6 Alberto Jimenez  Rodriguez 2021-10-02 11-24-01.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 7   Epecial economias Alberto Jimenez Rodriguez  Para Javier Reinoso y Javier Sada 2000 años de Historia- Francisco Lojo Mestre -Sobre Economias Mundiales no compartir con nadie Gracias.wmv
+/home/ion/Documentos/albertjimrod/ordenar/Video 8 importante  conocer y comprender  como es la mentepor medio de Mercurio  Judit Polgart y Edgar Cayce  y su funcionamemiento por astrlogia Alberto Jimenez Rodriguez 2021-10-03 10-21-36.mp4
+/home/ion/Documentos/albertjimrod/ordenar/Video 9 Como poder utilizara a tu Mente  Mercurio en Tu Carta y otros procesos La IGLESIA YSU PODER  Alberto Jimenez Rodriguez  2021-10-03 10-54-24.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-6-alberto-jimenez-rodriguez-2021-10-02-11-24-01-mp4_2021-10-02_1015/Video 6 Alberto Jimenez  Rodriguez 2021-10-02 11-24-01.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-6-alberto-jimenez-rodriguez-2021-10-02-11-24-01-mp4_2021-10-02_1015/Video 7   Epecial economias Alberto Jimenez Rodriguez  Para Javier Reinoso y Javier Sada 2000 años de Historia- Francisco Lojo Mestre -Sobre Economias Mundiales no compartir con nadie Gracias.wmv
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-6-alberto-jimenez-rodriguez-2021-10-02-11-24-01-mp4_2021-10-02_1015.zip
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8.aup
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000007.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000000f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000030.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000055.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000056.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000007e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000099.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000a8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000cb.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000cc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000d0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000db.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000e0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00000f0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000108.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000010a.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000123.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000128.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000013f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000017a.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000017f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000019f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00001a6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00001be.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000209.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000020e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000212.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000213.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000229.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000237.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000025c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000026e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000278.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000280.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000282.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00002ac.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00002db.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00002ed.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00002f6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00002fb.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00002ff.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000030b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000315.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000324.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000335.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000363.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000036c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000388.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000389.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00003c3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00003d7.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00003dd.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00003e8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000404.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000041d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000041f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000443.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000452.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000456.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000461.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000046b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000487.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00004aa.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00004ad.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00004ba.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00004bf.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00004f3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00004f9.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000503.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000507.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000509.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000512.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000527.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000537.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000053b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000543.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000054b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000559.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000056f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000575.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000057c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000057f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000588.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000058d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005a3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005b5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005c6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005cc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005cd.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005d3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00005fd.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000623.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000063b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000645.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000064f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000658.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000066b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000693.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00006a2.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00006c7.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00006e4.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00006ff.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000708.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000712.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000740.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000743.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000074f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000765.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000076c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000771.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000077f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000079b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00007a3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00007aa.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00007b2.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00007d5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00007e3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00007ec.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000805.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000807.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000080f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000814.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000817.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000081e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000823.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000082c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000830.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000843.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000846.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000086b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000088c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000893.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000894.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000089b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00008a2.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00008a5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00008b0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00008b5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00008d1.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000906.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000090e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000912.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000958.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e000097f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000985.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000990.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009a0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009a6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009af.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009b5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009bf.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009c1.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009d3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009e1.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009e4.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009e8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e00009fa.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000a0a.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000a28.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000a54.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000a6e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ab2.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ab7.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000abe.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ac6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ad6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ad8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ad9.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b0e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b1d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b23.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b26.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b3f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b41.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b63.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b68.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b7a.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b8a.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b8b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b8f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b93.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000b95.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ba0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000bac.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000bad.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000bda.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000bef.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000bfc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c08.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c0e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c14.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c23.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c2b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c2c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c2f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c39.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c7c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c7d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c8c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c99.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000c9b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ccb.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000cdc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d02.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d1f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d2f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d31.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d34.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d53.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d54.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d5f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d60.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d73.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d83.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000d93.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000da8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000db8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000dbb.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000dc7.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000dd0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000dd3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ddc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000de4.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000df3.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e03.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e11.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e1c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e1f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e24.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e41.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e4c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e59.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e5b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e70.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e88.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000e98.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ea4.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000eaa.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000eb9.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000eea.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ef8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000efc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f1e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f3f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f4d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f71.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f73.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f86.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000f97.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000fbc.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000fc0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000fc1.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000fd8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000fdb.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000fef.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d00/e0000ff1.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000103b.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000106e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000107f.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000109e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00010c5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001149.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001194.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000122d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001289.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001367.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00013dd.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001446.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001489.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00014a8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000159c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00015b8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00016a8.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00016a9.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00016c5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00016eb.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000175c.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001769.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001789.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00017ad.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00017f0.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001809.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e000182e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00018ea.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e00019d6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001a26.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001a7e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001af2.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001b02.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001b45.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001b8e.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001b91.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001c51.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001c6d.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001caf.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001cb7.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001cd5.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001e91.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001eab.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001ec1.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001ed6.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001edd.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001faf.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001fba.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/audio_video_8_data/e00/d01/e0001fd9.au
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/notas_del_video8
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 10 Conocer mejor y mas profundamnete tu carta aspectos Varios   Cartas muestra Gauquelin y ptors Alberto Jimenez Rodriguez 2021-10-03 11-45-29.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 11 Procesos  desde primeroscon enamoramientos 2022 y 2023 y mas adelante hasta  años hasta el 2032  muy buenos procesos  Alberto Jimenez Rodriguez  2021-10-03 12-21-17.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 12 Procesos delos 58 -60 años grandes momentos que continuan con una  Mente Muy despierta en los procesos  hasta los 72-74 Años  Alberto jimenez Rodriguez 2021-10-03 15-17-29.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 13 y fin Proceso de los 74 años hasta los 86 Años -repaso final Explicacion textos Libros y como utilizarlos en la Mundial Alberto Jimenez Rodriguez 2021-10-03 15-57-03.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 7   Epecial economias Alberto Jimenez Rodriguez  Para Javier Reinoso y Javier Sada 2000 años de Historia- Francisco Lojo Mestre -Sobre Economias Mundiales no compartir con nadie Gracias.wmv
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 8 importante  conocer y comprender  como es la mentepor medio de Mercurio  Judit Polgart y Edgar Cayce  y su funcionamemiento por astrlogia Alberto Jimenez Rodriguez 2021-10-03 10-21-36.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825/Video 9 Como poder utilizara a tu Mente  Mercurio en Tu Carta y otros procesos La IGLESIA YSU PODER  Alberto Jimenez Rodriguez  2021-10-03 10-54-24.mp4
+/home/ion/Documentos/albertjimrod/ordenar/wetransfer_video-7-epecial-economias-alberto-jimenez-rodriguez-para-javier-reinoso-y-javier-sada-2000-anos-de-historia-francisco-lojo-mestre-sobre-economias-mundiales-no-compartir-con-nadie-gracias-wmv_2021-10-03_1825.zip
+.txt
+.txt
