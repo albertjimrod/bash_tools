@@ -1,0 +1,9 @@
+from langchain.vectorstores import FAISS
+
+vector_store = FAISS.from_texts(chunks, embeddings)
+
+def extract_tags(text):
+    prompt = f"Extrae etiquetas relevantes del siguiente texto:\n\n{text}"
+    response = ollama.chat(model="phi3", messages=[{'role': 'user', 'content': prompt}])
+    return response['message']['content']
+
