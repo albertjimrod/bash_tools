@@ -1,33 +1,45 @@
-# Bash Tools
+# Scripts
 
-![Bash](https://img.shields.io/badge/Bash-4EAA25?style=flat&logo=gnu-bash&logoColor=white)
-![Conda](https://img.shields.io/badge/Conda-44A833?style=flat&logo=anaconda&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
+Colección de scripts de automatización organizados por categoría.
 
-Collection of CLI utilities for development workflow automation.
+## Estructura
 
-## Tools
-
-| Tool | Description |
-|------|-------------|
-| `comparador_entornos` | Compare packages across Conda environments |
-| `enviroment_comparator` | Advanced comparison with descriptions |
-| `conda_modulos_peso` | Analyze Conda package sizes |
-| `check_conda_packages` | Verify package installations |
-| `Import_Export_conda_env` | Backup and restore Conda environments |
-| `search_git_folders` | Find Git repositories in directory tree |
-| `compare_files` | File comparison utility |
-| `duplicados_multi` | Find duplicate files |
-
-## Usage
-
-Each tool has its own directory. Most are executable bash scripts:
-
-```bash
-chmod +x tool_name.sh
-./tool_name.sh
+```
+scripts/
+├── conda_tools/        # Gestión de entornos Conda
+├── youtube_tools/      # Descarga de transcripciones YouTube
+├── git_tools/          # Búsqueda y gestión de repos Git
+├── utils/              # Utilidades varias
+└── organize_with_ai/   # Organizador de archivos con IA (Ollama)
 ```
 
-## Author
+## Categorías
+
+| Carpeta | Descripción | Scripts |
+|---------|-------------|---------|
+| [conda_tools](./conda_tools/) | Exportar, importar, comparar entornos Conda | 10 |
+| [youtube_tools](./youtube_tools/) | Descargar subtítulos, crear corpus | 6 |
+| [git_tools](./git_tools/) | Buscar repos, encontrar commits | 2 |
+| [utils](./utils/) | Análisis texto, backups, duplicados | 6 |
+| [organize_with_ai](./organize_with_ai/) | Organizar archivos con Ollama | 1 |
+
+## Uso rápido
+
+```bash
+# Hacer ejecutable
+chmod +x categoria/script.sh
+
+# Ejecutar
+./categoria/script.sh [argumentos]
+```
+
+## Requisitos generales
+
+- Bash 4.0+
+- Conda/Miniconda (para conda_tools)
+- yt-dlp (para youtube_tools)
+- Ollama (para organize_with_ai)
+
+## Autor
 
 **Alberto Jiménez** - [GitHub](https://github.com/albertjimrod)

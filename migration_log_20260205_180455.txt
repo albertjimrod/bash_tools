@@ -1,0 +1,51 @@
+=== Log de migración de scripts .sh ===
+Fecha: jue 05 feb 2026 18:04:55 CET
+Destino: /home/ion/dev/scripts
+
+=== ARCHIVOS COPIADOS ===
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/input_docs/analize_text.sh -> /home/ion/dev/scripts/analize_text.sh
+[SKIP-DUP] /home/ion/Documentos/bash_tools/input_docs/analize_text.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/input_docs/analize_text.sh)
+[COPIADO] /home/ion/Documentos/bash_tools/CONDA-ENVIRONMENT-MANAGER/demo.sh -> /home/ion/dev/scripts/demo.sh
+[COPIADO] /home/ion/Documentos/bash_tools/youtube_transcription/full_pipeline.sh -> /home/ion/dev/scripts/full_pipeline.sh
+[COPIADO] /home/ion/Documentos/bash_tools/getting_yt_transcription/make_corpus.sh -> /home/ion/dev/scripts/make_corpus.sh
+[COPIADO] /home/ion/Documentos/bash_tools/CONDA-ENVIRONMENT-MANAGER/install_manager.sh -> /home/ion/dev/scripts/install_manager.sh
+[COPIADO] /home/ion/Documentos/bash_tools/CONDA-ENVIRONMENT-MANAGER/conda_env_manager.sh -> /home/ion/dev/scripts/conda_env_manager.sh
+[COPIADO] /home/ion/Documentos/bash_tools/yt_transcribe_v2/youtube_pipeline.sh -> /home/ion/dev/scripts/youtube_pipeline.sh
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/import_conda_env/import_conda_envs.sh -> /home/ion/dev/scripts/import_conda_envs.sh
+[SKIP-DUP] /home/ion/Documentos/albertjimrod/bash_tools/import_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/import_conda_env/import_conda_envs.sh)
+[SKIP-DUP] /home/ion/Documentos/albertjimrod/bash_tools/Import_Export_conda_env/import_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/import_conda_env/import_conda_envs.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/import_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/import_conda_env/import_conda_envs.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/Import_Export_conda_env/import_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/import_conda_env/import_conda_envs.sh)
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/search_git_folders/buscar_git.sh -> /home/ion/dev/scripts/buscar_git.sh
+[SKIP-DUP] /home/ion/Documentos/bash_tools/search_git_folders/buscar_git.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/search_git_folders/buscar_git.sh)
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/Import_Export_conda_env/export_conda_envs.sh -> /home/ion/dev/scripts/export_conda_envs.sh
+[SKIP-DUP] /home/ion/Documentos/bash_tools/Import_Export_conda_env/export_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/Import_Export_conda_env/export_conda_envs.sh)
+[COPIADO] /home/ion/Documentos/bash_tools/compare_files/compare_files.sh -> /home/ion/dev/scripts/compare_files.sh
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos_new.sh -> /home/ion/dev/scripts/comparador_entornos_new.sh
+[SKIP-DUP] /home/ion/Documentos/albertjimrod/bash_tools/enviroment_comparator/comparador_entornos_new.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos_new.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/comparador_entornos/comparador_entornos_new.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos_new.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/comparador_entornos/enviroment_comparator/comparador_entornos_new.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos_new.sh)
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/conda_modulos_peso/conda_modulos_peso.sh -> /home/ion/dev/scripts/conda_modulos_peso.sh
+[SKIP-DUP] /home/ion/Documentos/bash_tools/conda_modulos_peso/conda_modulos_peso.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/conda_modulos_peso/conda_modulos_peso.sh)
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/program_user/user_packages.sh -> /home/ion/dev/scripts/user_packages.sh
+[COPIADO] /home/ion/Documentos/bash_tools/conda_modulos_peso/detect_openwebui.sh -> /home/ion/dev/scripts/detect_openwebui.sh
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/check_conda_package.sh -> /home/ion/dev/scripts/check_conda_package.sh
+[SKIP-DUP] /home/ion/Documentos/bash_tools/check_conda_packages/check_conda_package.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/check_conda_package.sh)
+[COPIADO] /home/ion/Documentos/bash_tools/direcciones_relacionadas_cuenta/direcciones_unicas.sh -> /home/ion/dev/scripts/direcciones_unicas.sh
+[COPIADO] /home/ion/Documentos/bash_tools/youtubes/debug_video.sh -> /home/ion/dev/scripts/debug_video.sh
+[COPIADO] /home/ion/Documentos/bash_tools/getting_yt_transcription/yt_simple_v2.sh -> /home/ion/dev/scripts/yt_simple_v2.sh
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/backup_inventario/backup_inventario.sh -> /home/ion/dev/scripts/backup_inventario.sh
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/export_conda_env/export_conda_envs.sh -> /home/ion/dev/scripts/export_conda_envs_de2c8d.sh
+[SKIP-DUP] /home/ion/Documentos/albertjimrod/bash_tools/export_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/export_conda_env/export_conda_envs.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/export_conda_envs.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/export_conda_env/export_conda_envs.sh)
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos.sh -> /home/ion/dev/scripts/comparador_entornos.sh
+[SKIP-DUP] /home/ion/Documentos/albertjimrod/bash_tools/enviroment_comparator/comparador_entornos.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/comparador_entornos/comparador_entornos.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/comparador_entornos/comparador_entornos.sh)
+[COPIADO] /home/ion/Documentos/albertjimrod/bash_tools/Buscar la ruta de un commit específico en múltiples repositorios Git/git-find-commit.sh -> /home/ion/dev/scripts/git-find-commit.sh
+[SKIP-DUP] /home/ion/Documentos/albertjimrod/bash_tools/git_find_commit/git-find-commit.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/Buscar la ruta de un commit específico en múltiples repositorios Git/git-find-commit.sh)
+[SKIP-DUP] /home/ion/Documentos/bash_tools/Buscar la ruta de un commit específico en múltiples repositorios Git/git-find-commit.sh (duplicado de /home/ion/Documentos/albertjimrod/bash_tools/Buscar la ruta de un commit específico en múltiples repositorios Git/git-find-commit.sh)
+[COPIADO] /home/ion/Documentos/bash_tools/youtubes/yt_channel_to_corpus.sh -> /home/ion/dev/scripts/yt_channel_to_corpus.sh
+
+=== RESUMEN ===
+Copiados: 24
+Omitidos (duplicados): 18
