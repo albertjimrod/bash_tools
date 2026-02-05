@@ -1,30 +1,20 @@
 # YouTube Tools
 
-Herramientas para descargar transcripciones de YouTube y crear corpus de texto.
+Herramientas para descargar transcripciones de YouTube y crear corpus.
 
-## Scripts
+## Scripts disponibles
 
-| Script | Descripción | Uso |
-|--------|-------------|-----|
-| `youtube_pipeline.sh` | Pipeline completo: canal → transcripciones → corpus | `./youtube_pipeline.sh <URL_CANAL> [LANG] [PART_SIZE]` |
-| `full_pipeline.sh` | Pipeline alternativo con más opciones | `./full_pipeline.sh <URL_CANAL> [LANG] [PART_SIZE]` |
-| `yt_channel_to_corpus.sh` | Extrae subtítulos de canal y genera corpus MD | `./yt_channel_to_corpus.sh <URL>` |
-| `yt_simple_v2.sh` | Descarga subtítulos desde lista de URLs | `./yt_simple_v2.sh <urls.txt> <dir_salida>` |
-| `make_corpus.sh` | Crea corpus Markdown desde archivos de texto | `./make_corpus.sh` |
-| `debug_video.sh` | Prueba descarga de subtítulos para un vídeo | `./debug_video.sh <URL> [LANG]` |
+| Directorio | Descripción |
+|------------|-------------|
+| [debug_video](./debug_video/) | Prueba descarga de subtítulos |
+| [full_pipeline](./full_pipeline/) | Pipeline completo: canal → corpus |
+| [make_corpus](./make_corpus/) | Crea corpus desde archivos de texto |
+| [youtube_pipeline](./youtube_pipeline/) | Pipeline unificado de transcripciones |
+| [yt_channel_to_corpus](./yt_channel_to_corpus/) | Extrae subtítulos de canal |
+| [yt_simple_v2](./yt_simple_v2/) | Descarga desde lista de URLs |
 
 ## Requisitos
 
 ```bash
 pip install -U yt-dlp
-```
-
-## Ejemplo
-
-```bash
-# Descargar transcripciones de un canal
-./youtube_pipeline.sh "https://www.youtube.com/@canal/videos" es
-
-# Crear corpus desde archivos descargados
-./make_corpus.sh
 ```

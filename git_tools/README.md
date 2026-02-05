@@ -2,19 +2,14 @@
 
 Herramientas para búsqueda y gestión de repositorios Git.
 
-## Scripts
+## Scripts disponibles
 
-| Script | Descripción | Uso |
-|--------|-------------|-----|
-| `buscar_git.sh` | Busca directorios que contengan repos Git | `./buscar_git.sh [directorio_base]` |
-| `git-find-commit.sh` | Busca un commit específico en múltiples repos | `./git-find-commit.sh` |
+| Directorio | Descripción |
+|------------|-------------|
+| [buscar_git](./buscar_git/) | Busca repos Git en un directorio |
+| [git-find-commit](./git-find-commit/) | Busca commit en múltiples repos |
 
-## Ejemplo
+## Requisitos
 
-```bash
-# Buscar todos los repos Git en home
-./buscar_git.sh ~
-
-# Buscar repos en directorio actual
-./buscar_git.sh .
-```
+- Git instalado
+- Bash 4.0+

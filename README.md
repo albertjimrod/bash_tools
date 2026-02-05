@@ -1,16 +1,26 @@
-# Scripts
+# Bash Tools
 
-Colección de scripts de automatización organizados por categoría.
+Colección de scripts de automatización organizados por categoría. Cada script tiene su propio directorio con README detallado.
 
 ## Estructura
 
 ```
-scripts/
-├── conda_tools/        # Gestión de entornos Conda
-├── youtube_tools/      # Descarga de transcripciones YouTube
-├── git_tools/          # Búsqueda y gestión de repos Git
-├── utils/              # Utilidades varias
-└── organize_with_ai/   # Organizador de archivos con IA (Ollama)
+bash_tools/
+├── conda_tools/           # Gestión de entornos Conda (10 scripts)
+│   ├── check_conda_package/
+│   ├── conda_env_manager/
+│   └── ...
+├── youtube_tools/         # Transcripciones YouTube (6 scripts)
+│   ├── youtube_pipeline/
+│   ├── yt_channel_to_corpus/
+│   └── ...
+├── git_tools/             # Búsqueda repos Git (2 scripts)
+│   ├── buscar_git/
+│   └── git-find-commit/
+├── utils/                 # Utilidades varias (6 scripts)
+│   ├── compare_files/
+│   └── ...
+└── organize_with_ai/      # Organizador con IA (1 script)
 ```
 
 ## Categorías
@@ -23,14 +33,18 @@ scripts/
 | [utils](./utils/) | Análisis texto, backups, duplicados | 6 |
 | [organize_with_ai](./organize_with_ai/) | Organizar archivos con Ollama | 1 |
 
-## Uso rápido
+## Uso
 
 ```bash
-# Hacer ejecutable
-chmod +x categoria/script.sh
+# Navegar al script deseado
+cd conda_tools/conda_env_manager/
+
+# Ver documentación
+cat README.md
 
 # Ejecutar
-./categoria/script.sh [argumentos]
+chmod +x conda_env_manager.sh
+./conda_env_manager.sh
 ```
 
 ## Requisitos generales
