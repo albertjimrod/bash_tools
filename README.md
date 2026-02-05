@@ -20,6 +20,9 @@ bash_tools/
 ├── utils/                 # Utilidades varias (6 scripts)
 │   ├── compare_files/
 │   └── ...
+├── wordpress_tools/       # Publicación WordPress (2 scripts)
+│   ├── wordpress_publisher/
+│   └── generar_articulos/
 └── organize_with_ai/      # Organizador con IA (1 script)
 ```
 
@@ -31,6 +34,7 @@ bash_tools/
 | [youtube_tools](./youtube_tools/) | Descargar subtítulos, crear corpus | 6 |
 | [git_tools](./git_tools/) | Buscar repos, encontrar commits | 2 |
 | [utils](./utils/) | Análisis texto, backups, duplicados | 6 |
+| [wordpress_tools](./wordpress_tools/) | Publicar artículos en WordPress con IA | 2 |
 | [organize_with_ai](./organize_with_ai/) | Organizar archivos con Ollama | 1 |
 
 ## Uso
@@ -52,7 +56,8 @@ chmod +x conda_env_manager.sh
 - Bash 4.0+
 - Conda/Miniconda (para conda_tools)
 - yt-dlp (para youtube_tools)
-- Ollama (para organize_with_ai)
+- Ollama (para organize_with_ai, wordpress_tools)
+- python-dotenv, requests (para wordpress_tools)
 
 ## Autor
 
