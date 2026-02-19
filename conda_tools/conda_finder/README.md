@@ -86,54 +86,17 @@ bash conda_finder.sh ~/projects/nlp_app/ --top 5 --detail
 
 ### Sample output
 
-```
-══════════════════════════════════════════════════
-   CONDA FINDER — Dependency Analysis
-══════════════════════════════════════════════════
+**Step 1 — Import analysis and environment scan:**
 
-Analyzing: model_training.py
+![Import analysis and environment scan](screen_1.png)
 
-Imports detected:
-  Stdlib (discarded):  8
-  Third-party to check: 5
+**Step 2 — Results ranked by compatibility:**
 
-  Packages to search:
-    sklearn  → scikit-learn
-    pandas
-    numpy
-    matplotlib
-    dotenv  → python-dotenv
+![Results with progress bars](screen_2.png)
 
-Analyzing conda environments...
+**Step 3 — Full ranking and final recommendation:**
 
-  Environments found: 35
-
-  [ 1/35] base                     3/5 packages (60%)
-  [ 2/35] kaggle                   5/5 packages (100%)
-  ...
-
-══════════════════════════════════════════════════
-   RESULTS — Environments ranked by compatibility
-══════════════════════════════════════════════════
-
-#1  kaggle
-    [█████████████████████████] 100%  (5/5)  PERFECT ✓
-    Found:   sklearn, pandas, numpy, matplotlib, dotenv
-
-#2  eda_dataprep
-    [████████████████████░░░░░] 80%   (4/5)  VERY GOOD
-    Found:   sklearn, pandas, numpy, matplotlib
-    Missing: dotenv
-
-#3  base
-    [███████████████░░░░░░░░░░] 60%   (3/5)  PARTIAL
-    Found:   pandas, numpy, matplotlib
-    Missing: sklearn, dotenv
-
-==================================================
-RECOMMENDATION:  conda activate kaggle  (100% compatible)
-==================================================
-```
+![Full ranking and recommendation](screen_3.png)
 
 ---
 
@@ -263,54 +226,17 @@ bash conda_finder.sh ~/proyectos/app_nlp/ --top 5 --detail
 
 ### Ejemplo de salida
 
-```
-══════════════════════════════════════════════════
-   CONDA FINDER — Análisis de dependencias
-══════════════════════════════════════════════════
+**Paso 1 — Análisis de imports y escaneo de entornos:**
 
-Analizando: entrenamiento_modelo.py
+![Análisis de imports y escaneo de entornos](screen_1.png)
 
-Imports detectados:
-  Stdlib (descartados):  8
-  Terceros a analizar:   5
+**Paso 2 — Resultados ordenados por compatibilidad:**
 
-  Paquetes a buscar:
-    sklearn  → scikit-learn
-    pandas
-    numpy
-    matplotlib
-    dotenv  → python-dotenv
+![Resultados con barras de progreso](screen_2.png)
 
-Analizando entornos conda...
+**Paso 3 — Ranking completo y recomendación final:**
 
-  Entornos encontrados: 35
-
-  [ 1/35] base                     3/5 paquetes (60%)
-  [ 2/35] kaggle                   5/5 paquetes (100%)
-  ...
-
-══════════════════════════════════════════════════
-   RESULTADOS — Entornos por compatibilidad
-══════════════════════════════════════════════════
-
-#1  kaggle
-    [█████████████████████████] 100%  (5/5)  PERFECTO ✓
-    Encontrados: sklearn, pandas, numpy, matplotlib, dotenv
-
-#2  eda_dataprep
-    [████████████████████░░░░░] 80%   (4/5)  MUY BUENO
-    Encontrados: sklearn, pandas, numpy, matplotlib
-    Faltan:      dotenv
-
-#3  base
-    [███████████████░░░░░░░░░░] 60%   (3/5)  PARCIAL
-    Encontrados: pandas, numpy, matplotlib
-    Faltan:      sklearn, dotenv
-
-==================================================
-RECOMENDACIÓN:  conda activate kaggle  (100% compatible)
-==================================================
-```
+![Ranking completo y recomendación](screen_3.png)
 
 ---
 
