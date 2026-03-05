@@ -9,6 +9,7 @@ Uso:
 Comandos:
   publish       Publicar artículos nuevos (por defecto)
   draft         Publicar artículos como borradores
+  wait          Esperar en bucle a que aparezcan archivos (GPU generando)
   update-dates  Solo actualizar fechas de posts existentes
   diagnose      Diagnóstico completo de conexión y servidor
   verify        Verificar estado y límites del servidor
@@ -486,6 +487,35 @@ def cmd_update_dates(articulos_dir: str, limit: Optional[int], delay: int):
     logger.info(f"Errores:             {errores}")
     logger.info("=" * 70)
 
+# ==================== MODO ESPERA ====================
+
+def cmd_wait(articulos_dir: str, limit: Optional[int], delay: int):
+    """Espera en bucle a que aparezcan archivos nuevos y los publica (útil cuando GPU genera artículos)."""
+    logger.info("=" * 70)
+    logger.info("MODO: WAIT (esperando archivos generados por GPU)")
+    logger.info(f"Directorio: {articulos_dir}")
+    logger.info("Revisa cada 10 segundos. Presiona Ctrl+C para detener.")
+    logger.info("=" * 70)
+
+    try:
+        while True:
+            checkpoint = cargar_checkpoint()
+            procesados_previos = set(checkpoint.get("procesados", []))
+            archivos = obtener_archivos(articulos_dir)
+            pendientes = [f for f in archivos if f not in procesados_previos]
+
+            if pendientes:
+                logger.info(f"\n{len(pendientes)} archivos nuevos encontrados. Procesando...")
+                procesar_articulos("publish", articulos_dir, limit, delay)
+            else:
+                logger.info("Sin archivos pendientes. Esperando 10s... (Ctrl+C para salir)")
+                time.sleep(10)
+
+    except KeyboardInterrupt:
+        logger.info("\n\nModo espera detenido.")
+        sys.exit(0)
+
+
 # ==================== DIAGNÓSTICO ====================
 
 def cmd_diagnose():
@@ -694,6 +724,7 @@ USO:
 COMANDOS:
   publish       Publicar artículos nuevos (por defecto)
   draft         Publicar artículos como borradores
+  wait          Esperar en bucle a que aparezcan archivos (GPU generando)
   update-dates  Solo actualizar fechas de posts existentes
   diagnose      Diagnóstico completo: .env, conexión, autenticación
   verify        Verificar estado y capacidad del servidor
@@ -708,6 +739,9 @@ OPCIONES:
 EJEMPLOS:
   # Publicar todos los artículos pendientes
   python3 wp_publisher.py publish
+
+  # Esperar a que la GPU genere archivos y publicarlos automáticamente
+  python3 wp_publisher.py wait
 
   # Publicar solo los primeros 50 como borradores
   python3 wp_publisher.py draft --limit 50
@@ -775,7 +809,9 @@ if __name__ == "__main__":
         logger.error(f"Directorio no existe: {articulos_dir}")
         sys.exit(1)
 
-    if cmd == "update-dates":
+    if cmd == "wait":
+        cmd_wait(articulos_dir, limit, delay)
+    elif cmd == "update-dates":
         cmd_update_dates(articulos_dir, limit, delay)
     elif cmd in ("publish", "draft"):
         procesar_articulos(cmd, articulos_dir, limit, delay)
