@@ -2,6 +2,35 @@
 
 Colección de scripts de automatización organizados por categoría. Cada script tiene su propio directorio con README detallado.
 
+## Categorías
+
+```mermaid
+mindmap
+  root((bash_tools))
+    conda_tools
+      export / import envs
+      comparador_entornos
+      conda_env_manager
+      check_conda_package
+      conda_ai_analyzer
+    youtube_tools
+      youtube_pipeline
+      yt_channel_to_corpus
+      make_corpus
+      yt_simple_v2
+    git_tools
+      buscar_git
+      git-find-commit
+    utils
+      compare_files
+      Document_Tag_Extractor
+    wordpress_tools
+      generar_articulos
+      wordpress_publisher
+    organize_with_ai
+      Ollama-based organizer
+```
+
 ## Estructura
 
 ```
