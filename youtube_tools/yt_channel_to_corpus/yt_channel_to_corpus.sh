@@ -122,18 +122,21 @@ echo "📥 PASO 2: Descargando transcripciones (idioma preferido: $LANG)"
 echo "   Usando: youtube-transcript-api (sin n-challenge)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Exportar cookies del navegador a fichero temporal para pasarlas a youtube-transcript-api
-COOKIES_FILE=$(mktemp /tmp/yt_cookies_XXXXXX.txt)
-trap 'rm -f "$COOKIES_FILE"' EXIT INT TERM
-echo "🍪 Exportando cookies de $BROWSER..."
-if yt-dlp --cookies-from-browser "$BROWSER" --cookies "$COOKIES_FILE" \
-    --skip-download "https://www.youtube.com" >/dev/null 2>&1 && [[ -s "$COOKIES_FILE" ]]; then
-  echo "   ✅ Cookies exportadas"
-  export YT_COOKIES_FILE="$COOKIES_FILE"
-else
-  echo "   ⚠️  No se pudieron exportar cookies — continuando sin autenticación"
-  export YT_COOKIES_FILE=""
-fi
+echo "🍪 Cargando cookies de $BROWSER con rookiepy..."
+export YT_BROWSER="$BROWSER"
+python3 -c "
+import sys
+try:
+    import rookiepy
+    fn = getattr(rookiepy, '$BROWSER', None)
+    if fn is None:
+        print('   ⚠️  Navegador no soportado por rookiepy')
+        sys.exit(0)
+    cookies = fn(['.youtube.com'])
+    print(f'   ✅ {len(cookies)} cookies de YouTube cargadas')
+except Exception as e:
+    print(f'   ⚠️  rookiepy no disponible: {e}')
+" 2>&1
 echo ""
 
 sanitize() {
@@ -157,26 +160,27 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
   echo "▶ $VID_ID"
 
   # Obtener transcripción con youtube-transcript-api
-  RESULT=$(python3 - "$VID_ID" "$LANG" "$YT_COOKIES_FILE" <<'PYEOF'
+  RESULT=$(python3 - "$VID_ID" "$LANG" "$YT_BROWSER" <<'PYEOF'
 import sys, json, os
 import requests
-from http.cookiejar import MozillaCookieJar
 from youtube_transcript_api import YouTubeTranscriptApi
 
-vid_id      = sys.argv[1]
-lang        = sys.argv[2]
-cookies_file = sys.argv[3] if len(sys.argv) > 3 else ""
+vid_id  = sys.argv[1]
+lang    = sys.argv[2]
+browser = sys.argv[3] if len(sys.argv) > 3 else ""
 
 session = requests.Session()
 session.headers.update({
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
 })
-if cookies_file and os.path.exists(cookies_file):
-    cj = MozillaCookieJar(cookies_file)
+if browser:
     try:
-        cj.load(ignore_discard=True, ignore_expires=True)
-        session.cookies = cj
+        import rookiepy
+        fn = getattr(rookiepy, browser, None)
+        if fn:
+            for c in fn(['.youtube.com']):
+                session.cookies.set(c['name'], c['value'], domain=c['domain'])
     except Exception:
         pass
 
