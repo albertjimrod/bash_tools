@@ -66,13 +66,19 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 INSTALLED=$(yt-dlp --version 2>/dev/null || echo "desconocida")
 echo "   Versión instalada: $INSTALLED"
 
+# Normalizar versión: quitar ceros de relleno en cada segmento (2026.03.17 → 2026.3.17)
+normalize_ver() { echo "$1" | awk -F. '{printf "%d.%d.%d\n", $1, $2, $3}'; }
+
 # Comparar contra la última versión disponible en PyPI
 LATEST=$(pip index versions yt-dlp 2>/dev/null \
   | head -1 | grep -oP '[\d]+\.[\d]+\.[\d]+' | head -1 || echo "")
 
+INSTALLED_NORM=$(normalize_ver "$INSTALLED")
+LATEST_NORM=$(normalize_ver "$LATEST")
+
 if [[ -z "$LATEST" ]]; then
   echo "   ⚠️  No se pudo consultar PyPI (sin conexión?). Continúa con precaución."
-elif [[ "$INSTALLED" == "$LATEST" ]]; then
+elif [[ "$INSTALLED_NORM" == "$LATEST_NORM" ]]; then
   echo "   ✅ Versión al día ($INSTALLED). OK."
 else
   echo ""
