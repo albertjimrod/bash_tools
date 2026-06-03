@@ -66,33 +66,32 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 INSTALLED=$(yt-dlp --version 2>/dev/null || echo "desconocida")
 echo "   Versión instalada: $INSTALLED"
 
-# Las versiones de yt-dlp son de formato YYYY.MM.DD — comparamos por fecha
-INSTALLED_DATE=$(echo "$INSTALLED" | grep -oP '^\d{4}\.\d{2}\.\d{2}' || true)
-if [[ -n "$INSTALLED_DATE" ]]; then
-  INSTALLED_EPOCH=$(date -d "${INSTALLED_DATE//./-}" +%s 2>/dev/null || echo 0)
-  TODAY_EPOCH=$(date +%s)
-  DAYS_OLD=$(( (TODAY_EPOCH - INSTALLED_EPOCH) / 86400 ))
+# Comparar contra la última versión disponible en PyPI
+LATEST=$(pip index versions yt-dlp 2>/dev/null \
+  | head -1 | grep -oP '[\d]+\.[\d]+\.[\d]+' | head -1 || echo "")
 
-  if [[ $DAYS_OLD -gt 30 ]]; then
-    echo ""
-    echo "   ┌─────────────────────────────────────────────────────┐"
-    echo "   │  ⚠️  AVISO: yt-dlp tiene ${DAYS_OLD} días sin actualizar      │"
-    echo "   │                                                     │"
-    echo "   │  YouTube cambia su API con frecuencia. Sin         │"
-    echo "   │  actualizar, el script puede fallar silenciosamente │"
-    echo "   │  (subtítulos vacíos, errores de descarga, etc.)    │"
-    echo "   │                                                     │"
-    echo "   │  Actualiza con:                                     │"
-    echo "   │    pip install -U yt-dlp                            │"
-    echo "   └─────────────────────────────────────────────────────┘"
-    echo ""
-    read -rp "   ¿Continuar de todas formas? [s/N]: " CONT
-    [[ "$CONT" =~ ^[sS]$ ]] || { echo "   Cancelado. Actualiza yt-dlp y vuelve a ejecutar."; exit 0; }
-  else
-    echo "   ✅ Versión reciente (${DAYS_OLD} días). OK."
-  fi
+if [[ -z "$LATEST" ]]; then
+  echo "   ⚠️  No se pudo consultar PyPI (sin conexión?). Continúa con precaución."
+elif [[ "$INSTALLED" == "$LATEST" ]]; then
+  echo "   ✅ Versión al día ($INSTALLED). OK."
 else
-  echo "   ⚠️  No se pudo comprobar la fecha de versión. Continúa con precaución."
+  echo ""
+  echo "   ┌─────────────────────────────────────────────────────┐"
+  echo "   │  ⚠️  AVISO: hay una versión más nueva en PyPI        │"
+  echo "   │                                                     │"
+  echo "   │  Instalada: $INSTALLED"
+  echo "   │  Disponible: $LATEST"
+  echo "   │                                                     │"
+  echo "   │  YouTube cambia su API con frecuencia. Sin         │"
+  echo "   │  actualizar, el script puede fallar silenciosamente │"
+  echo "   │  (subtítulos vacíos, errores de descarga, etc.)    │"
+  echo "   │                                                     │"
+  echo "   │  Actualiza con:                                     │"
+  echo "   │    pip install -U yt-dlp                            │"
+  echo "   └─────────────────────────────────────────────────────┘"
+  echo ""
+  read -rp "   ¿Continuar de todas formas? [s/N]: " CONT
+  [[ "$CONT" =~ ^[sS]$ ]] || { echo "   Cancelado. Actualiza yt-dlp y vuelve a ejecutar."; exit 0; }
 fi
 echo ""
 
