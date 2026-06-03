@@ -122,6 +122,20 @@ echo "📥 PASO 2: Descargando transcripciones (idioma preferido: $LANG)"
 echo "   Usando: youtube-transcript-api (sin n-challenge)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
+# Exportar cookies del navegador a fichero temporal para pasarlas a youtube-transcript-api
+COOKIES_FILE=$(mktemp /tmp/yt_cookies_XXXXXX.txt)
+trap 'rm -f "$COOKIES_FILE"' EXIT INT TERM
+echo "🍪 Exportando cookies de $BROWSER..."
+if yt-dlp --cookies-from-browser "$BROWSER" --cookies "$COOKIES_FILE" \
+    --skip-download "https://www.youtube.com" >/dev/null 2>&1 && [[ -s "$COOKIES_FILE" ]]; then
+  echo "   ✅ Cookies exportadas"
+  export YT_COOKIES_FILE="$COOKIES_FILE"
+else
+  echo "   ⚠️  No se pudieron exportar cookies — continuando sin autenticación"
+  export YT_COOKIES_FILE=""
+fi
+echo ""
+
 sanitize() {
   printf "%s" "$1" | tr -d '\r' | \
     sed 's/[\/\\]/-/g; s/:/ - /g; s/"/'\''/g; s/[?*<>|]//g' | \
@@ -143,28 +157,60 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
   echo "▶ $VID_ID"
 
   # Obtener transcripción con youtube-transcript-api
-  RESULT=$(python3 - "$VID_ID" "$LANG" <<'PYEOF'
-import sys, json
+  RESULT=$(python3 - "$VID_ID" "$LANG" "$YT_COOKIES_FILE" <<'PYEOF'
+import sys, json, os
+import requests
+from http.cookiejar import MozillaCookieJar
 from youtube_transcript_api import YouTubeTranscriptApi
 
-vid_id = sys.argv[1]
-lang   = sys.argv[2]
-api    = YouTubeTranscriptApi()
+vid_id      = sys.argv[1]
+lang        = sys.argv[2]
+cookies_file = sys.argv[3] if len(sys.argv) > 3 else ""
 
-# Intentar idioma preferido, luego cualquiera disponible
-for langs in ([lang], None):
+session = requests.Session()
+session.headers.update({
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
+})
+if cookies_file and os.path.exists(cookies_file):
+    cj = MozillaCookieJar(cookies_file)
     try:
-        kwargs = {"languages": langs} if langs else {}
-        t = api.fetch(vid_id, **kwargs)
-        snippets = list(t)
-        title = ""
-        print(json.dumps({"ok": True, "lang": lang if langs else "auto",
-                          "text": " ".join(s.text for s in snippets)}))
-        sys.exit(0)
+        cj.load(ignore_discard=True, ignore_expires=True)
+        session.cookies = cj
     except Exception:
-        continue
+        pass
 
-print(json.dumps({"ok": False}))
+api = YouTubeTranscriptApi(http_client=session)
+
+try:
+    # Listar todas las transcripciones disponibles
+    tl = api.list(vid_id)
+    available = list(tl)
+
+    # 1. Buscar idioma preferido (manual o auto)
+    chosen = None
+    found_lang = None
+    for t in available:
+        if t.language_code == lang or t.language_code.startswith(lang + "-"):
+            chosen = t
+            found_lang = t.language_code
+            break
+
+    # 2. Si no hay en el idioma preferido, coger la primera disponible
+    if chosen is None and available:
+        chosen = available[0]
+        found_lang = chosen.language_code
+
+    if chosen is None:
+        print(json.dumps({"ok": False, "reason": "no transcripts"}))
+        sys.exit(0)
+
+    snippets = list(chosen.fetch())
+    text = " ".join(s.text for s in snippets)
+    print(json.dumps({"ok": True, "lang": found_lang, "text": text}))
+
+except Exception as e:
+    print(json.dumps({"ok": False, "reason": str(e)}))
 PYEOF
   )
 
