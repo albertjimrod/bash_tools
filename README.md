@@ -4,6 +4,12 @@
 
 ---
 
+<div align="center">
+  <img src=".github/assets/portfolio.png" width="100%"/>
+</div>
+
+---
+
 # Bash Tools
 
 Colección de scripts de automatización organizados por categoría. Cada script tiene su propio directorio con README detallado.
