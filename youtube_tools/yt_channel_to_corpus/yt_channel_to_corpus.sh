@@ -6,48 +6,39 @@ set -euo pipefail
 #
 # Uso:
 #   ./yt_channel_to_corpus.sh @NombreCanal
-#   ./yt_channel_to_corpus.sh @NombreCanal -l es -n 50
+#   ./yt_channel_to_corpus.sh @NombreCanal -l es -n 50 -b firefox
 #
 # Opciones:
-#   -l, --lang LANG     Idioma de subtítulos (en|es, por defecto: en)
-#   -n, --limit NUM     Limitar número de vídeos (por defecto: todos)
-#   -o, --output DIR    Directorio de salida (por defecto: channel_corpus)
-#   -h, --help          Mostrar ayuda
+#   -l, --lang LANG       Idioma de subtítulos (en|es, por defecto: en)
+#   -n, --limit NUM       Limitar número de vídeos (por defecto: todos)
+#   -o, --output DIR      Directorio de salida (por defecto: channel_corpus)
+#   -b, --browser NAME    Navegador para cookies (firefox|chrome|chromium|brave|edge)
+#                         Por defecto: firefox
+#   -h, --help            Mostrar ayuda
 
 # Variables por defecto
 CHANNEL=""
 LANG="en"
 LIMIT=""
 OUTDIR="channel_corpus"
+BROWSER="firefox"
 
-# Parseo de argumentos
+# ─── PARSEO DE ARGUMENTOS ────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -l|--lang)
-      LANG="$2"
-      shift 2
-      ;;
-    -n|--limit)
-      LIMIT="$2"
-      shift 2
-      ;;
-    -o|--output)
-      OUTDIR="$2"
-      shift 2
-      ;;
+    -l|--lang)    LANG="$2";    shift 2 ;;
+    -n|--limit)   LIMIT="$2";   shift 2 ;;
+    -o|--output)  OUTDIR="$2";  shift 2 ;;
+    -b|--browser) BROWSER="$2"; shift 2 ;;
     -h|--help)
       grep '^#' "$0" | sed -E 's/^# ?//'
       exit 0
       ;;
     @*|http*://*)
-      CHANNEL="$1"
-      shift
-      ;;
+      CHANNEL="$1"; shift ;;
     *)
-      # Asumir que es el canal si no se ha especificado aún
       if [[ -z "$CHANNEL" ]]; then
-        CHANNEL="$1"
-        shift
+        CHANNEL="$1"; shift
       else
         echo "❌ Error: Parámetro desconocido: $1" >&2
         exit 1
@@ -56,7 +47,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Validación
+# ─── VALIDACIONES ────────────────────────────────────────────────────────────
 if [[ -z "$CHANNEL" ]]; then
   echo "❌ Error: Debes especificar un canal (ej: @NombreCanal)" >&2
   exit 1
@@ -67,13 +58,62 @@ command -v yt-dlp >/dev/null 2>&1 || {
   exit 1
 }
 
-# Crear estructura de directorios
+# ─── COMPROBACIÓN DE VERSIÓN ─────────────────────────────────────────────────
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🔍 COMPROBANDO VERSIÓN DE yt-dlp"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+INSTALLED=$(yt-dlp --version 2>/dev/null || echo "desconocida")
+echo "   Versión instalada: $INSTALLED"
+
+# Las versiones de yt-dlp son de formato YYYY.MM.DD — comparamos por fecha
+INSTALLED_DATE=$(echo "$INSTALLED" | grep -oP '^\d{4}\.\d{2}\.\d{2}' || true)
+if [[ -n "$INSTALLED_DATE" ]]; then
+  INSTALLED_EPOCH=$(date -d "${INSTALLED_DATE//./-}" +%s 2>/dev/null || echo 0)
+  TODAY_EPOCH=$(date +%s)
+  DAYS_OLD=$(( (TODAY_EPOCH - INSTALLED_EPOCH) / 86400 ))
+
+  if [[ $DAYS_OLD -gt 30 ]]; then
+    echo ""
+    echo "   ┌─────────────────────────────────────────────────────┐"
+    echo "   │  ⚠️  AVISO: yt-dlp tiene ${DAYS_OLD} días sin actualizar      │"
+    echo "   │                                                     │"
+    echo "   │  YouTube cambia su API con frecuencia. Sin         │"
+    echo "   │  actualizar, el script puede fallar silenciosamente │"
+    echo "   │  (subtítulos vacíos, errores de descarga, etc.)    │"
+    echo "   │                                                     │"
+    echo "   │  Actualiza con:                                     │"
+    echo "   │    pip install -U yt-dlp                            │"
+    echo "   └─────────────────────────────────────────────────────┘"
+    echo ""
+    read -rp "   ¿Continuar de todas formas? [s/N]: " CONT
+    [[ "$CONT" =~ ^[sS]$ ]] || { echo "   Cancelado. Actualiza yt-dlp y vuelve a ejecutar."; exit 0; }
+  else
+    echo "   ✅ Versión reciente (${DAYS_OLD} días). OK."
+  fi
+else
+  echo "   ⚠️  No se pudo comprobar la fecha de versión. Continúa con precaución."
+fi
+echo ""
+
+# ─── COMPROBACIÓN DE COOKIES ─────────────────────────────────────────────────
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🍪 COOKIES: navegador → $BROWSER"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "   YouTube requiere autenticación para evitar bloqueos."
+echo "   Se usarán las cookies de sesión de '$BROWSER'."
+echo "   Asegúrate de tener el navegador cerrado o con sesión abierta en YouTube."
+echo ""
+
+COOKIE_FLAG="--cookies-from-browser $BROWSER"
+
+# ─── ESTRUCTURA DE DIRECTORIOS ───────────────────────────────────────────────
 mkdir -p "$OUTDIR"/{urls,subs}
 URLS_FILE="$OUTDIR/urls/channel_urls.txt"
 SUBS_DIR="$OUTDIR/subs"
 CORPUS_FILE="$OUTDIR/knowledge_corpus.md"
 
-# Paso 1: Extraer URLs del canal
+# ─── PASO 1: EXTRAER URLs DEL CANAL ─────────────────────────────────────────
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📡 PASO 1: Extrayendo URLs del canal $CHANNEL"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -81,31 +121,29 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 PLAYLIST_ARGS="--flat-playlist -I :"
 [[ -n "$LIMIT" ]] && PLAYLIST_ARGS="--flat-playlist -I 1:$LIMIT"
 
-if ! yt-dlp $PLAYLIST_ARGS \
+if ! yt-dlp $PLAYLIST_ARGS $COOKIE_FLAG \
     --print "%(webpage_url)s" \
     "https://www.youtube.com/${CHANNEL}/videos" \
     > "$URLS_FILE" 2>/dev/null; then
-  echo "❌ Error al extraer URLs. Verifica que el canal existe." >&2
+  echo "❌ Error al extraer URLs. Verifica que el canal existe y que el navegador tiene sesión en YouTube." >&2
   exit 1
 fi
 
 TOTAL_URLS=$(wc -l < "$URLS_FILE")
 echo "✅ Extraídas $TOTAL_URLS URLs"
 echo "📄 Guardadas en: $URLS_FILE"
-echo
+echo ""
 
-# Paso 2: Descargar subtítulos
+# ─── PASO 2: DESCARGAR SUBTÍTULOS ────────────────────────────────────────────
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📥 PASO 2: Descargando subtítulos (idioma: $LANG)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Función: sanitizar nombres
 sanitize() {
   printf "%s" "$1" | tr -d '\r' | sed 's/[\/\\]/-/g; s/:/ - /g; s/"/'\''/g; s/[?*<>|]//g' \
     | tr -d '\000-\037' | tr -s ' ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | cut -c1-180
 }
 
-# Función: limpiar subtítulos
 subs_to_text() {
   awk '
     /^(Kind:|WEBVTT|^[0-9]{2}:[0-9]{2}:|align:|position:)/ { next }
@@ -119,48 +157,51 @@ subs_to_text() {
   ' | sed '/^$/d; s/^[[:space:]]*//; s/[[:space:]]*$//'
 }
 
-TMPDIR="$(mktemp -d)"
-trap 'rm -rf "$TMPDIR"' EXIT INT TERM
+TMPDIR_SUBS="$(mktemp -d)"
+trap 'rm -rf "$TMPDIR_SUBS"' EXIT INT TERM
 
-OK=0 NO_SUB=0 ERR=0
+OK=0; NO_SUB=0; ERR=0
 
 while IFS= read -r URL || [[ -n "$URL" ]]; do
   URL=$(printf "%s" "$URL" | tr -d '\r')
   [[ -z "$URL" || "$URL" == \#* ]] && continue
-  
+
   echo "▶ $URL"
-  
-  VID_ID=$(yt-dlp --skip-download --get-id "$URL" 2>/dev/null) || { echo "  ✖ Error ID"; ((ERR++)); continue; }
-  TITLE_RAW=$(yt-dlp --skip-download -e "$URL" 2>/dev/null) || { echo "  ✖ Error título"; ((ERR++)); continue; }
+
+  VID_ID=$(yt-dlp --skip-download --get-id $COOKIE_FLAG "$URL" 2>/dev/null) \
+    || { echo "  ✖ Error ID"; ((ERR++)); continue; }
+  TITLE_RAW=$(yt-dlp --skip-download -e $COOKIE_FLAG "$URL" 2>/dev/null) \
+    || { echo "  ✖ Error título"; ((ERR++)); continue; }
   TITLE=$(sanitize "$TITLE_RAW")
   [[ -z "$TITLE" ]] && TITLE="video_${VID_ID}"
-  
+
   OUT_TXT="$SUBS_DIR/${TITLE}.txt"
-  FOUND=""
-  FOUND_LANG=""
-  
-  # Intento 1: idioma específico solicitado
-  echo "  • Buscando subtítulos en $LANG (manual y automático)…"
+  FOUND=""; FOUND_LANG=""
+
+  # Intento 1: idioma solicitado
+  echo "  • Buscando subtítulos en $LANG…"
   if yt-dlp --skip-download --write-sub --write-auto-sub \
       --sub-langs "$LANG" --sub-format vtt \
-      -o "$TMPDIR/%(id)s.%(sub_format)s.%(ext)s" \
+      $COOKIE_FLAG \
+      -o "$TMPDIR_SUBS/%(id)s.%(sub_format)s.%(ext)s" \
       "$URL" >/dev/null 2>&1; then
-    FOUND=$(find "$TMPDIR" -name "${VID_ID}.*.vtt" -o -name "${VID_ID}.*.srt" 2>/dev/null | head -n1)
+    FOUND=$(find "$TMPDIR_SUBS" -name "${VID_ID}.*.vtt" -o -name "${VID_ID}.*.srt" 2>/dev/null | head -n1)
     if [[ -n "$FOUND" ]]; then
       base=$(basename "$FOUND")
       FOUND_LANG=$(echo "$base" | sed -E 's/^[^.]+\.(.+)\.(vtt|srt)$/\1/')
       [[ -z "$FOUND_LANG" ]] && FOUND_LANG="desconocido"
     fi
   fi
-  
+
   # Intento 2: español si no se pidió español
   if [[ -z "$FOUND" && "$LANG" != "es" ]]; then
     echo "  • No encontrado en $LANG. Probando en español…"
     if yt-dlp --skip-download --write-sub --write-auto-sub \
         --sub-langs "es" --sub-format vtt \
-        -o "$TMPDIR/%(id)s.%(sub_format)s.%(ext)s" \
+        $COOKIE_FLAG \
+        -o "$TMPDIR_SUBS/%(id)s.%(sub_format)s.%(ext)s" \
         "$URL" >/dev/null 2>&1; then
-      FOUND=$(find "$TMPDIR" -name "${VID_ID}.*.vtt" -o -name "${VID_ID}.*.srt" 2>/dev/null | head -n1)
+      FOUND=$(find "$TMPDIR_SUBS" -name "${VID_ID}.*.vtt" -o -name "${VID_ID}.*.srt" 2>/dev/null | head -n1)
       if [[ -n "$FOUND" ]]; then
         base=$(basename "$FOUND")
         FOUND_LANG=$(echo "$base" | sed -E 's/^[^.]+\.(.+)\.(vtt|srt)$/\1/')
@@ -168,15 +209,16 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
       fi
     fi
   fi
-  
-  # Intento 3: cualquier idioma disponible
+
+  # Intento 3: cualquier idioma
   if [[ -z "$FOUND" ]]; then
-    echo "  • No encontrado. Buscando cualquier subtítulo disponible…"
+    echo "  • Probando cualquier idioma disponible…"
     if yt-dlp --skip-download --write-sub --write-auto-sub \
         --sub-langs "all" --sub-format vtt \
-        -o "$TMPDIR/%(id)s.%(sub_format)s.%(ext)s" \
+        $COOKIE_FLAG \
+        -o "$TMPDIR_SUBS/%(id)s.%(sub_format)s.%(ext)s" \
         "$URL" >/dev/null 2>&1; then
-      FOUND=$(find "$TMPDIR" -name "${VID_ID}.*.vtt" -o -name "${VID_ID}.*.srt" 2>/dev/null | head -n1)
+      FOUND=$(find "$TMPDIR_SUBS" -name "${VID_ID}.*.vtt" -o -name "${VID_ID}.*.srt" 2>/dev/null | head -n1)
       if [[ -n "$FOUND" ]]; then
         base=$(basename "$FOUND")
         FOUND_LANG=$(echo "$base" | sed -E 's/^[^.]+\.(.+)\.(vtt|srt)$/\1/')
@@ -184,7 +226,7 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
       fi
     fi
   fi
-  
+
   if [[ -n "$FOUND" ]]; then
     {
       echo "# Título: $TITLE_RAW"
@@ -199,16 +241,16 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
     echo "  ⚠ Sin subtítulos"
     ((NO_SUB++))
   fi
-  
-  # Limpiar archivos temporales de este vídeo
-  rm -f "$TMPDIR/${VID_ID}"*.vtt "$TMPDIR/${VID_ID}"*.srt 2>/dev/null || true
+
+  rm -f "$TMPDIR_SUBS/${VID_ID}"*.vtt "$TMPDIR_SUBS/${VID_ID}"*.srt 2>/dev/null || true
+
 done < "$URLS_FILE"
 
-echo
+echo ""
 echo "📊 Total: $TOTAL_URLS | Éxito: $OK | Sin subs: $NO_SUB | Errores: $ERR"
-echo
+echo ""
 
-# Paso 3: Crear corpus
+# ─── PASO 3: GENERAR CORPUS ──────────────────────────────────────────────────
 if [[ $OK -eq 0 ]]; then
   echo "⚠️  No se descargó ningún subtítulo. No hay corpus que generar."
   exit 0
@@ -219,7 +261,8 @@ echo "📚 PASO 3: Generando corpus Markdown"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 slugify() {
-  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g; s/-+/-/g' || echo 'unknown'
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | \
+    sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g; s/-+/-/g' || echo 'unknown'
 }
 
 extract_meta() {
@@ -230,16 +273,16 @@ extract_meta() {
 
 {
   echo "# Corpus de subtítulos: $CHANNEL"
-  echo
+  echo ""
   echo "- **Generado:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
   echo "- **Canal:** $CHANNEL"
   echo "- **Idioma:** $LANG"
   echo "- **Archivos:** $OK"
-  echo
+  echo ""
   echo "---"
-  echo
+  echo ""
   echo "## Tabla de contenidos"
-  echo
+  echo ""
 } > "$CORPUS_FILE"
 
 for f in "$SUBS_DIR"/*.txt; do
@@ -257,16 +300,16 @@ for f in "$SUBS_DIR"/*.txt; do
   anchor=$(slugify "$title")
   {
     echo "## $title"
-    echo
+    echo ""
     echo "**Archivo:** \`$(basename "$f")\`  "
     echo "**URL:** $url  "
     echo "**Anchor:** \`#${anchor}\`"
-    echo
+    echo ""
     echo "<!-- ---8<--- [BEGIN FILE: $(basename "$f")] ---8<--- -->"
-    echo
+    echo ""
     tr -d '\000' < "$f" | sed -E 's/\r$//' | sed 's/\t/    /g' | sed 's/[[:space:]]*$//' | \
-      awk 'BEGIN { p = 0 } { if (/^[[:space:]]*$/) { if (!p) print; p = 1 } else { print; p = 0 } }'
-    echo
+      awk 'BEGIN { p=0 } { if (/^[[:space:]]*$/) { if (!p) print; p=1 } else { print; p=0 } }'
+    echo ""
     echo "<!-- ---8<--- [END FILE: $(basename "$f")] ---8<--- -->"
     echo -e "\n---\n"
   } >> "$CORPUS_FILE"
@@ -274,7 +317,7 @@ done
 
 echo "✅ Corpus generado: $CORPUS_FILE"
 echo "📁 Directorio de salida: $OUTDIR"
-echo
+echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "✅ PROCESO COMPLETADO"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
