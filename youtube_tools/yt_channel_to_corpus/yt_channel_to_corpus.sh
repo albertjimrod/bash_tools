@@ -166,6 +166,8 @@ TMPDIR_SUBS="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR_SUBS"' EXIT INT TERM
 
 OK=0; NO_SUB=0; ERR=0
+# Nota: usar $(( var + 1 )) en lugar de ((var++)) para evitar
+# salida prematura con set -e cuando el valor es 0
 
 while IFS= read -r URL || [[ -n "$URL" ]]; do
   URL=$(printf "%s" "$URL" | tr -d '\r')
@@ -174,9 +176,9 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
   echo "▶ $URL"
 
   VID_ID=$(yt-dlp --skip-download --get-id $COOKIE_FLAG "$URL" 2>/dev/null) \
-    || { echo "  ✖ Error ID"; ((ERR++)); continue; }
+    || { echo "  ✖ Error ID"; ERR=$(( ERR + 1 )); continue; }
   TITLE_RAW=$(yt-dlp --skip-download -e $COOKIE_FLAG "$URL" 2>/dev/null) \
-    || { echo "  ✖ Error título"; ((ERR++)); continue; }
+    || { echo "  ✖ Error título"; ERR=$(( ERR + 1 )); continue; }
   TITLE=$(sanitize "$TITLE_RAW")
   [[ -z "$TITLE" ]] && TITLE="video_${VID_ID}"
 
@@ -241,10 +243,10 @@ while IFS= read -r URL || [[ -n "$URL" ]]; do
       subs_to_text "$FOUND"
     } > "$OUT_TXT"
     echo "  ✓ [$FOUND_LANG] $OUT_TXT"
-    ((OK++))
+    OK=$(( OK + 1 ))
   else
     echo "  ⚠ Sin subtítulos"
-    ((NO_SUB++))
+    NO_SUB=$(( NO_SUB + 1 ))
   fi
 
   rm -f "$TMPDIR_SUBS/${VID_ID}"*.vtt "$TMPDIR_SUBS/${VID_ID}"*.srt 2>/dev/null || true
