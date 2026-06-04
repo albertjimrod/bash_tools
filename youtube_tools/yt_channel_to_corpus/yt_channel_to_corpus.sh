@@ -12,7 +12,7 @@ set -euo pipefail
 #   -l, --lang LANG       Idioma preferido (en|es|..., por defecto: es)
 #   -n, --limit NUM       Limitar número de vídeos (por defecto: todos)
 #   -o, --output DIR      Directorio de salida (por defecto: channel_corpus)
-#   -b, --browser NAME    Navegador para cookies de yt-dlp (extracción de URLs)
+#   -b, --browser NAME    Navegador para cookies de python -m yt_dlp (extracción de URLs)
 #                         firefox|chrome|chromium|brave|edge (por defecto: brave)
 #   -h, --help            Mostrar ayuda
 
@@ -46,8 +46,8 @@ if [[ -z "$CHANNEL" ]]; then
   echo "❌ Error: Debes especificar un canal (ej: @NombreCanal)" >&2; exit 1
 fi
 
-command -v yt-dlp >/dev/null 2>&1 || {
-  echo "❌ yt-dlp no instalado. Instalar con: pip install -U yt-dlp" >&2; exit 1
+python -m yt_dlp --version >/dev/null 2>&1 || {
+  echo "❌ yt-dlp no instalado en este entorno. Instalar con: pip install -U yt-dlp" >&2; exit 1
 }
 
 python3 -c "from youtube_transcript_api import YouTubeTranscriptApi" 2>/dev/null || {
@@ -55,12 +55,12 @@ python3 -c "from youtube_transcript_api import YouTubeTranscriptApi" 2>/dev/null
   exit 1
 }
 
-# ─── COMPROBACIÓN DE VERSIÓN yt-dlp ─────────────────────────────────────────
+# ─── COMPROBACIÓN DE VERSIÓN yt-dlp ──────────────────────────────────────────
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🔍 COMPROBANDO VERSIÓN DE yt-dlp"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-INSTALLED=$(yt-dlp --version 2>/dev/null || echo "desconocida")
+INSTALLED=$(python -m yt_dlp --version 2>/dev/null || echo "desconocida")
 echo "   Versión instalada: $INSTALLED"
 
 normalize_ver() { echo "$1" | awk -F. '{printf "%d.%d.%d\n", $1, $2, $3}'; }
@@ -81,7 +81,7 @@ else
   echo "   │  ⚠️  AVISO: hay una versión más nueva en PyPI        │"
   echo "   │  Instalada:  $INSTALLED"
   echo "   │  Disponible: $LATEST"
-  echo "   │  Actualiza:  pip install -U yt-dlp                  │"
+  echo "   │  Actualiza:  pip install -U python -m yt_dlp                  │"
   echo "   └─────────────────────────────────────────────────────┘"
   echo ""
   read -rp "   ¿Continuar de todas formas? [s/N]: " CONT
@@ -103,15 +103,16 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 PLAYLIST_ARGS="--flat-playlist -I :"
 [[ -n "$LIMIT" ]] && PLAYLIST_ARGS="--flat-playlist -I 1:$LIMIT"
 
-if ! yt-dlp $PLAYLIST_ARGS --cookies-from-browser "$BROWSER" \
+python -m yt_dlp $PLAYLIST_ARGS --cookies-from-browser "$BROWSER" \
     --print "%(webpage_url)s" \
     "https://www.youtube.com/${CHANNEL}/videos" \
-    > "$URLS_FILE" 2>/dev/null; then
-  echo "❌ Error extrayendo URLs. Verifica el canal y que $BROWSER tenga sesión en YouTube." >&2
-  exit 1
-fi
+    > "$URLS_FILE" 2>/dev/null || true
 
 TOTAL_URLS=$(wc -l < "$URLS_FILE")
+if [[ $TOTAL_URLS -eq 0 ]]; then
+  echo "❌ No se extrajeron URLs. Verifica el canal y que $BROWSER tenga sesión en YouTube." >&2
+  exit 1
+fi
 echo "✅ Extraídas $TOTAL_URLS URLs"
 echo "📄 Guardadas en: $URLS_FILE"
 echo ""
