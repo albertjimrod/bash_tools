@@ -1,68 +1,19 @@
 # yt_channel_to_corpus
 
-Extrae subtítulos de todos los vídeos de un canal de YouTube y genera un único archivo Markdown (`knowledge_corpus.md`) listo para usar como base de un sistema RAG.
+Extrae transcripciones de todos los vídeos de un canal de YouTube y genera un único archivo Markdown (`knowledge_corpus.md`) listo para usar como base de un sistema RAG.
 
----
-
-## ⚠️ REQUISITOS CRÍTICOS — LEE ESTO ANTES DE EJECUTAR
-
-Hay dos condiciones sin las cuales el script falla silenciosamente (descarga 0 transcripciones sin dar error claro):
-
-### 1. yt-dlp debe estar actualizado
-
-YouTube cambia su API interna con mucha frecuencia. Una versión de yt-dlp con más de 30 días de antigüedad puede:
-- No poder descifrar las URLs de vídeo (`nsig extraction failed`)
-- Ser bloqueada como bot
-- Descargar archivos de subtítulos vacíos
-
-**El script comprueba la fecha de versión automáticamente** al arrancar y avisa si tiene más de 30 días:
-
-```
-┌─────────────────────────────────────────────────────┐
-│  ⚠️  AVISO: yt-dlp tiene 47 días sin actualizar     │
-│  Actualiza con:  pip install -U yt-dlp              │
-└─────────────────────────────────────────────────────┘
-¿Continuar de todas formas? [s/N]:
-```
-
-**Actualizar:**
-```bash
-pip install -U yt-dlp
-```
-
-**Regla práctica:** actualiza yt-dlp antes de cada uso o al menos una vez al mes.
-
----
-
-### 2. Las cookies del navegador son obligatorias
-
-YouTube exige autenticación para confirmar que no eres un bot. Sin cookies, el script obtiene el error:
-
-```
-Sign in to confirm you're not a bot.
-```
-
-El script pasa automáticamente las cookies del navegador que le indiques (por defecto: Firefox). **El navegador debe tener una sesión activa en YouTube** (no hace falta estar logado, pero sí haber visitado YouTube).
-
-**Navegadores soportados:** `firefox`, `chrome`, `chromium`, `brave`, `edge`
-
-Para usar un navegador distinto a Firefox:
-```bash
-./yt_channel_to_corpus.sh @NombreCanal -b chrome
-```
-
-> **Nota:** Cierra el navegador o al menos la pestaña activa de YouTube si el script da error de acceso a cookies. Algunos navegadores bloquean el acceso mientras están abiertos.
+Resultado real: **152/154 vídeos** con transcripción en una sola ejecución.
 
 ---
 
 ## Uso
 
 ```bash
-# Básico (Firefox, inglés, todos los vídeos)
+# Básico (Brave, español, todos los vídeos)
 ./yt_channel_to_corpus.sh @NombreCanal
 
-# Canal en español con Chrome, limitado a 50 vídeos
-./yt_channel_to_corpus.sh @NombreCanal -l es -n 50 -b chrome
+# Con opciones
+./yt_channel_to_corpus.sh @NombreCanal -l es -n 50 -b firefox
 
 # Directorio de salida personalizado
 ./yt_channel_to_corpus.sh @NombreCanal -l es -o mi_corpus
@@ -72,40 +23,105 @@ Para usar un navegador distinto a Firefox:
 
 | Opción | Descripción | Por defecto |
 |--------|-------------|-------------|
-| `-l, --lang` | Idioma de subtítulos (`en`, `es`, …) | `en` |
+| `-l, --lang` | Idioma preferido (`es`, `en`, …) | `es` |
 | `-n, --limit` | Limitar número de vídeos | todos |
 | `-o, --output` | Directorio de salida | `channel_corpus` |
-| `-b, --browser` | Navegador para cookies | `firefox` |
+| `-b, --browser` | Navegador para cookies (`brave`, `firefox`, `chrome`, `chromium`, `edge`) | `brave` |
 | `-h, --help` | Mostrar ayuda | — |
 
 ---
 
-## Flujo completo
+## Arquitectura
+
+El script combina dos herramientas con responsabilidades distintas:
+
+| Herramienta | Función |
+|-------------|---------|
+| `yt-dlp` | Extrae la lista de URLs del canal (paso 1) |
+| `youtube-transcript-api` | Descarga las transcripciones (paso 2) |
+| `rookiepy` | Lee las cookies del navegador y las pasa a las peticiones |
+
+Esta separación es clave: `youtube-transcript-api` accede directamente a la API de transcripciones de YouTube **sin necesitar resolver formatos de vídeo**, lo que evita el n-challenge de YouTube que bloquea a yt-dlp.
+
+---
+
+## Flujo de ejecución
 
 ```
-PASO 1 — Extrae URLs de todos los vídeos del canal
-PASO 2 — Por cada vídeo, intenta descargar subtítulos:
-          1º idioma solicitado → 2º español → 3º cualquier idioma
-PASO 3 — Une todos los .txt en knowledge_corpus.md con tabla de contenidos
+PASO 1 — yt-dlp extrae URLs de todos los vídeos del canal
+PASO 2 — Por cada vídeo:
+          1. Intentar transcripción en idioma preferido
+          2. Si no existe, coger cualquier idioma disponible
+          (via youtube-transcript-api + cookies de Brave/Firefox)
+PASO 3 — Unir todos los .txt en knowledge_corpus.md con tabla de contenidos
 ```
 
-La salida queda así:
+Salida:
 ```
-channel_corpus/
+channel_corpus/           ← ignorado por git (datos regenerables)
 ├── urls/
-│   └── channel_urls.txt      # lista de URLs del canal
+│   └── channel_urls.txt
 ├── subs/
-│   └── Título del vídeo.txt  # transcripción limpia por vídeo
-└── knowledge_corpus.md       # corpus final para el RAG
+│   └── VIDEO_ID.txt      ← una transcripción por vídeo
+└── knowledge_corpus.md   ← corpus final para el RAG
 ```
 
 ---
 
-## Requisitos técnicos
+## ⚠️ Requisitos críticos
 
-- Bash 4.0+
-- `yt-dlp` actualizado: `pip install -U yt-dlp`
-- Navegador con sesión en YouTube (Firefox por defecto)
+### 1. yt-dlp actualizado
+
+El script comprueba automáticamente si hay una versión más nueva en PyPI al arrancar:
+
+```
+✅ Versión al día (2026.03.17). OK.
+```
+
+Si hay versión más nueva:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  ⚠️  AVISO: hay una versión más nueva en PyPI        │
+│  Instalada:  2026.03.17                             │
+│  Disponible: 2026.06.01                             │
+│  Actualiza:  pip install -U yt-dlp                  │
+└─────────────────────────────────────────────────────┘
+¿Continuar de todas formas? [s/N]:
+```
+
+Actualizar antes de cada uso o al menos una vez al mes. YouTube cambia su API con frecuencia.
+
+### 2. Cookies del navegador (obligatorio)
+
+YouTube bloquea IPs con demasiadas peticiones anónimas. El script carga automáticamente las cookies de tu navegador mediante `rookiepy`, sin necesitar exportarlas manualmente.
+
+**El navegador debe tener una sesión activa en YouTube** (no hace falta estar logado).
+
+> Si el script dice `⚠️ rookiepy no disponible`, instala con `pip install rookiepy`.
+
+---
+
+## Dependencias
+
+```bash
+pip install -U yt-dlp
+pip install youtube-transcript-api
+pip install rookiepy
+```
+
+O dentro de tu entorno conda:
+
+```bash
+conda activate jupyterlab_new   # o prospector
+pip install -U yt-dlp youtube-transcript-api rookiepy
+```
+
+**Versiones probadas:**
+- `yt-dlp 2026.03.17`
+- `youtube-transcript-api` (última versión pip)
+- `rookiepy` (última versión pip)
+- Python 3.11
 
 ---
 
@@ -113,24 +129,34 @@ channel_corpus/
 
 | Síntoma | Causa probable | Solución |
 |---------|---------------|----------|
-| `Sign in to confirm you're not a bot` | Sin cookies | Añade `-b firefox` o `-b chrome` |
-| Error acceso a cookies | Navegador abierto | Cierra el navegador e intenta de nuevo |
-| `nsig extraction failed` | yt-dlp desactualizado | `pip install -U yt-dlp` |
-| Muchos "⚠ Sin subtítulos" | yt-dlp desactualizado o sin cookies | Actualiza y añade cookies |
-| 0 URLs extraídas | Canal mal escrito o privado | Verifica `@NombreCanal` en YouTube |
+| Muchos "Sin transcripción disponible" | IP bloqueada por YouTube | Esperar 1-2 h y reintentar con cookies cargadas |
+| `⚠️ rookiepy no disponible` | rookiepy no instalado | `pip install rookiepy` |
+| `❌ yt-dlp no instalado` | yt-dlp ausente del entorno | `pip install -U yt-dlp` |
+| `❌ youtube-transcript-api no instalado` | Librería ausente | `pip install youtube-transcript-api` |
+| 0 URLs extraídas | Canal mal escrito o privado | Verificar `@NombreCanal` en YouTube |
+| Cookies no cargan | Navegador incorrecto | Cambiar con `-b firefox` o `-b chrome` |
+
+### Bloqueo de IP
+
+YouTube bloquea temporalmente IPs que hacen demasiadas peticiones seguidas (habitual al hacer pruebas). Síntomas:
+
+- Todos los vídeos devuelven "Sin transcripción disponible"
+- El `list()` funciona pero el `fetch()` falla con `IpBlocked`
+
+Solución: esperar 1-2 horas y volver a ejecutar. Con cookies cargadas correctamente el bloqueo es mucho menos frecuente.
 
 ---
 
 ## Integración con RAG (Ollama)
 
-Una vez generado el corpus, úsalo con el sistema RAG:
-
 ```bash
 cd ~/projects/RAG_Agent/rag_corpus_procesador
 python rag_corpus_procesador.py
 # → selecciona channel_corpus/knowledge_corpus.md
-# → elige modelo (recomendado: qwen2.5:14b o mistral)
+# → elige modelo: qwen2.5:14b (calidad) o mistral (velocidad)
 ```
+
+Comandos disponibles dentro del RAG: `fechas`, `validacion`, `fuentes`, `debug`, `ayuda`, `salir`.
 
 ---
 
