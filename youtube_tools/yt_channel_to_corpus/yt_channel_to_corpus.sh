@@ -7,13 +7,14 @@ set -euo pipefail
 # Uso:
 #   ./yt_channel_to_corpus.sh @NombreCanal
 #   ./yt_channel_to_corpus.sh @NombreCanal -l es -n 50
+#   ./yt_channel_to_corpus.sh @NombreCanal -u          # usar corpus existente, saltar descarga
 #
 # Opciones:
 #   -l, --lang LANG       Idioma preferido (en|es|..., por defecto: es)
 #   -n, --limit NUM       Limitar número de vídeos (por defecto: todos)
 #   -o, --output DIR      Directorio de salida (por defecto: channel_corpus)
-#   -b, --browser NAME    Navegador para cookies de python -m yt_dlp (extracción de URLs)
-#                         firefox|chrome|chromium|brave|edge (por defecto: brave)
+#   -b, --browser NAME    Navegador para cookies (brave|firefox|chrome|chromium|edge)
+#   -u, --use-existing    Usar corpus ya generado y saltar la descarga
 #   -h, --help            Mostrar ayuda
 
 CHANNEL=""
@@ -21,14 +22,16 @@ LANG="es"
 LIMIT=""
 OUTDIR="channel_corpus"
 BROWSER="brave"
+USE_EXISTING=false
 
 # ─── PARSEO DE ARGUMENTOS ────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -l|--lang)    LANG="$2";    shift 2 ;;
-    -n|--limit)   LIMIT="$2";   shift 2 ;;
-    -o|--output)  OUTDIR="$2";  shift 2 ;;
-    -b|--browser) BROWSER="$2"; shift 2 ;;
+    -l|--lang)         LANG="$2";    shift 2 ;;
+    -n|--limit)        LIMIT="$2";   shift 2 ;;
+    -o|--output)       OUTDIR="$2";  shift 2 ;;
+    -b|--browser)      BROWSER="$2"; shift 2 ;;
+    -u|--use-existing) USE_EXISTING=true; shift ;;
     -h|--help)
       grep '^#' "$0" | sed -E 's/^# ?//'
       exit 0
@@ -94,6 +97,47 @@ mkdir -p "$OUTDIR"/{urls,subs}
 URLS_FILE="$OUTDIR/urls/channel_urls.txt"
 SUBS_DIR="$OUTDIR/subs"
 CORPUS_FILE="$OUTDIR/knowledge_corpus.md"
+
+# ─── DETECCIÓN DE CORPUS EXISTENTE ───────────────────────────────────────────
+if [[ "$USE_EXISTING" == false && -f "$CORPUS_FILE" ]]; then
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  CORPUS_SIZE=$(du -sh "$CORPUS_FILE" 2>/dev/null | cut -f1)
+  CORPUS_DATE=$(date -r "$CORPUS_FILE" "+%d/%m/%Y %H:%M" 2>/dev/null)
+  echo "📄 Corpus existente encontrado: $CORPUS_FILE"
+  echo "   Tamaño: $CORPUS_SIZE  |  Generado: $CORPUS_DATE"
+  echo ""
+  read -rp "   ¿Usar este corpus y saltar la descarga? [S/n]: " RESP
+  [[ "$RESP" =~ ^[nN]$ ]] || USE_EXISTING=true
+  echo ""
+fi
+
+if [[ "$USE_EXISTING" == true ]]; then
+  if [[ ! -f "$CORPUS_FILE" ]]; then
+    echo "❌ No existe corpus en $CORPUS_FILE. Ejecuta sin -u para generarlo." >&2
+    exit 1
+  fi
+  echo "⏭  Saltando descarga — usando corpus existente: $CORPUS_FILE"
+  echo ""
+  # Saltar directamente al arranque del RAG
+  RAG_SCRIPT="$HOME/projects/RAG_Agent/rag_corpus_procesador/rag_corpus_procesador.py"
+  if [[ -f "$RAG_SCRIPT" ]]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🤖 ARRANCAR RAG"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Modelos Ollama disponibles:"
+    ollama list 2>/dev/null | tail -n +2 | awk '{print "  •", $1}' || echo "  (no se pudo consultar ollama)"
+    echo ""
+    read -rp "Modelo a usar [qwen2.5:14b]: " MODELO
+    MODELO="${MODELO:-qwen2.5:14b}"
+    CORPUS_ABS=$(realpath "$CORPUS_FILE")
+    echo ""
+    python "$RAG_SCRIPT" "$MODELO" "$CORPUS_ABS"
+  else
+    echo "⚠️  Script RAG no encontrado en $RAG_SCRIPT"
+  fi
+  exit 0
+fi
 
 # ─── PASO 1: EXTRAER URLs DEL CANAL ─────────────────────────────────────────
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
