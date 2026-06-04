@@ -303,3 +303,32 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "✅ PROCESO COMPLETADO"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# ─── ARRANQUE AUTOMÁTICO DEL RAG ─────────────────────────────────────────────
+RAG_SCRIPT="$HOME/projects/RAG_Agent/rag_corpus_procesador/rag_corpus_procesador.py"
+
+if [[ ! -f "$RAG_SCRIPT" ]]; then
+  echo "⚠️  No se encontró el script RAG en: $RAG_SCRIPT"
+  echo "   Puedes arrancarlo manualmente con:"
+  echo "   python $RAG_SCRIPT"
+  exit 0
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🤖 ARRANCAR RAG"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "Modelos Ollama disponibles:"
+ollama list 2>/dev/null | tail -n +2 | awk '{print "  •", $1}' || echo "  (no se pudo consultar ollama)"
+echo ""
+read -rp "Modelo a usar [qwen2.5:14b]: " MODELO
+MODELO="${MODELO:-qwen2.5:14b}"
+
+CORPUS_ABS=$(realpath "$CORPUS_FILE")
+echo ""
+echo "Modelo:  $MODELO"
+echo "Corpus:  $CORPUS_ABS"
+echo ""
+
+python "$RAG_SCRIPT" "$MODELO" "$CORPUS_ABS"
