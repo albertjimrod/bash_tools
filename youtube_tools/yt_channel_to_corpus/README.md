@@ -12,30 +12,47 @@ Pipeline completo para extraer las transcripciones de un canal de YouTube y cons
 
 ---
 
-## Uso rápido
+## Comandos
 
 ```bash
-# Activar el entorno con las dependencias
-conda activate rag_gpu
+# ─── EXTRACCIÓN + RAG (primera vez) ──────────────────────────────────────────
 
-# Extraer transcripciones y arrancar el RAG
-./yt_channel_to_corpus.sh @NombreDelCanal -l es -b brave
+# Canal con handle
+./yt_channel_to_corpus.sh @NombreCanal -l es -b brave
+
+# Canal con URL completa
+./yt_channel_to_corpus.sh "https://www.youtube.com/@NombreCanal" -l es -b brave
+
+# Limitar a los últimos N vídeos
+./yt_channel_to_corpus.sh @NombreCanal -l es -n 50
+
+# Directorio de salida personalizado (para tener varios canales separados)
+./yt_channel_to_corpus.sh @NombreCanal -l es -o corpus_NombreCanal
+
+
+# ─── USAR CORPUS YA DESCARGADO ───────────────────────────────────────────────
+
+# Detecta automáticamente el corpus y pregunta si reutilizarlo
+./yt_channel_to_corpus.sh @NombreCanal
+
+# Forzar uso del corpus existente sin preguntar
+./yt_channel_to_corpus.sh @NombreCanal -u
+
+# Con directorio concreto
+./yt_channel_to_corpus.sh @NombreCanal -u -o corpus_NombreCanal
+
+
+# ─── SOLO RAG (sin pasar por el script de extracción) ────────────────────────
+
+python rag_youtube.py qwen2.5:14b-instruct-q5_K_M corpus_NombreCanal/knowledge_corpus.md
+
+
+# ─── DENTRO DEL RAG ──────────────────────────────────────────────────────────
+
+salir    # cerrar el RAG
 ```
 
-Al terminar la descarga, el script te pregunta qué modelo Ollama quieres usar y arranca el RAG directamente.
-
-**Si ya tienes el corpus descargado** (ejecuciones anteriores), el script lo detecta y pregunta si quieres saltarte la descarga:
-
-```bash
-./yt_channel_to_corpus.sh @NombreDelCanal
-# → "¿Usar corpus existente y saltar la descarga? [S/n]:"
-```
-
-O directamente con el flag `-u`:
-
-```bash
-./yt_channel_to_corpus.sh @NombreDelCanal -u
-```
+Al terminar la descarga, el script lista los modelos Ollama disponibles, pide que elijas uno y arranca el RAG directamente.
 
 ---
 
