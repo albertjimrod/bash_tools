@@ -110,10 +110,15 @@ else
   CHANNEL_URL="https://www.youtube.com/${CHANNEL}/videos"
 fi
 
+# Extraer URL y fecha de publicación (YYYYMMDD) separadas por tabulador
+URLS_WITH_DATES="$OUTDIR/urls/channel_urls_dates.txt"
 python -m yt_dlp $PLAYLIST_ARGS --cookies-from-browser "$BROWSER" \
-    --print "%(webpage_url)s" \
+    --print "%(webpage_url)s	%(upload_date)s" \
     "$CHANNEL_URL" \
-    > "$URLS_FILE" 2>/dev/null || true
+    > "$URLS_WITH_DATES" 2>/dev/null || true
+
+# Separar el fichero de URLs solo (para compatibilidad)
+cut -f1 "$URLS_WITH_DATES" > "$URLS_FILE"
 
 TOTAL_URLS=$(wc -l < "$URLS_FILE")
 if [[ $TOTAL_URLS -eq 0 ]]; then
@@ -156,7 +161,7 @@ sanitize() {
 
 OK=0; NO_SUB=0; ERR=0
 
-while IFS= read -r URL || [[ -n "$URL" ]]; do
+while IFS=$'\t' read -r URL UPLOAD_DATE || [[ -n "$URL" ]]; do
   URL=$(printf "%s" "$URL" | tr -d '\r')
   [[ -z "$URL" || "$URL" == \#* ]] && continue
 
@@ -232,8 +237,15 @@ PYEOF
     FOUND_LANG=$(echo "$RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('lang',''))" 2>/dev/null)
     TEXT=$(echo "$RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('text',''))" 2>/dev/null)
     OUT_TXT="$SUBS_DIR/${VID_ID}.txt"
+    # Convertir YYYYMMDD → DD/MM/YYYY para que el RAG detecte la fecha
+    if [[ "$UPLOAD_DATE" =~ ^[0-9]{8}$ ]]; then
+      DATE_FMT="${UPLOAD_DATE:6:2}/${UPLOAD_DATE:4:2}/${UPLOAD_DATE:0:4}"
+    else
+      DATE_FMT="$UPLOAD_DATE"
+    fi
     {
       echo "# URL: https://www.youtube.com/watch?v=${VID_ID}"
+      echo "# Fecha: $DATE_FMT"
       echo "# Idioma: $FOUND_LANG"
       echo "#"
       echo "$TEXT"
@@ -245,7 +257,7 @@ PYEOF
     NO_SUB=$(( NO_SUB + 1 ))
   fi
 
-done < "$URLS_FILE"
+done < "$URLS_WITH_DATES"
 
 echo ""
 echo "📊 Total: $TOTAL_URLS | Éxito: $OK | Sin transcripción: $NO_SUB | Errores: $ERR"
@@ -293,9 +305,11 @@ for f in "$SUBS_DIR"/*.txt; do
   [[ ! -f "$f" ]] && continue
   vid=$(basename "$f" .txt)
   url=$(grep -m1 '^# URL:' "$f" | sed 's/^# URL:[[:space:]]*//')
+  fecha=$(grep -m1 '^# Fecha:' "$f" | sed 's/^# Fecha:[[:space:]]*//')
   idioma=$(grep -m1 '^# Idioma:' "$f" | sed 's/^# Idioma:[[:space:]]*//')
+  # El encabezado incluye la fecha para que el RAG la detecte
   {
-    echo "## $vid"
+    echo "## $fecha - $vid"
     echo ""
     echo "**URL:** $url  "
     echo "**Idioma:** $idioma"
