@@ -103,9 +103,16 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 PLAYLIST_ARGS="--flat-playlist -I :"
 [[ -n "$LIMIT" ]] && PLAYLIST_ARGS="--flat-playlist -I 1:$LIMIT"
 
+# Si ya es URL completa la usamos tal cual, si es handle construimos la URL
+if [[ "$CHANNEL" == http* ]]; then
+  CHANNEL_URL="${CHANNEL%/videos}/videos"
+else
+  CHANNEL_URL="https://www.youtube.com/${CHANNEL}/videos"
+fi
+
 python -m yt_dlp $PLAYLIST_ARGS --cookies-from-browser "$BROWSER" \
     --print "%(webpage_url)s" \
-    "https://www.youtube.com/${CHANNEL}/videos" \
+    "$CHANNEL_URL" \
     > "$URLS_FILE" 2>/dev/null || true
 
 TOTAL_URLS=$(wc -l < "$URLS_FILE")
