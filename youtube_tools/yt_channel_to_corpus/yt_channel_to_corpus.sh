@@ -119,7 +119,7 @@ if [[ "$USE_EXISTING" == true ]]; then
   echo "⏭  Saltando descarga — usando corpus existente: $CORPUS_FILE"
   echo ""
   # Saltar directamente al arranque del RAG
-  RAG_SCRIPT="$HOME/projects/RAG_Agent/rag_corpus_procesador/rag_corpus_procesador.py"
+  RAG_SCRIPT="$(dirname "$0")/rag_youtube.py"
   if [[ -f "$RAG_SCRIPT" ]]; then
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "🤖 ARRANCAR RAG"
@@ -373,7 +373,7 @@ echo "✅ PROCESO COMPLETADO"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # ─── ARRANQUE AUTOMÁTICO DEL RAG ─────────────────────────────────────────────
-RAG_SCRIPT="$HOME/projects/RAG_Agent/rag_corpus_procesador/rag_corpus_procesador.py"
+RAG_SCRIPT="$(dirname "$0")/rag_youtube.py"
 
 if [[ ! -f "$RAG_SCRIPT" ]]; then
   echo "⚠️  No se encontró el script RAG en: $RAG_SCRIPT"
