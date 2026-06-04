@@ -62,6 +62,8 @@ def cargar_corpus(ruta: str) -> list[Document]:
 
 # ─── VECTOR STORE ─────────────────────────────────────────────────────────────
 
+BATCH_SIZE = 2000   # ChromaDB max ~5461; usamos 2000 por margen
+
 def construir_vectorstore(documentos: list[Document]) -> Chroma:
     if os.path.exists(DB_DIR):
         shutil.rmtree(DB_DIR)
@@ -70,14 +72,25 @@ def construir_vectorstore(documentos: list[Document]) -> Chroma:
         chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP
     )
     chunks = splitter.split_documents(documentos)
-    print(f"   {len(documentos)} transcripciones → {len(chunks)} fragmentos")
+    total  = len(chunks)
+    print(f"   {len(documentos)} transcripciones → {total} fragmentos")
 
-    print(f"   Generando embeddings con {EMBED_MODEL}...")
+    embedding = OllamaEmbeddings(model=EMBED_MODEL)
+    print(f"   Generando embeddings con {EMBED_MODEL} (lotes de {BATCH_SIZE})...")
+
+    # Primer lote — crea la colección
     vs = Chroma.from_documents(
-        chunks,
-        embedding=OllamaEmbeddings(model=EMBED_MODEL),
+        chunks[:BATCH_SIZE],
+        embedding=embedding,
         persist_directory=DB_DIR,
     )
+    print(f"   Lote 1/{-(-total // BATCH_SIZE)} indexado")
+
+    # Lotes siguientes
+    for i, inicio in enumerate(range(BATCH_SIZE, total, BATCH_SIZE), start=2):
+        vs.add_documents(chunks[inicio:inicio + BATCH_SIZE])
+        print(f"   Lote {i}/{-(-total // BATCH_SIZE)} indexado")
+
     return vs
 
 

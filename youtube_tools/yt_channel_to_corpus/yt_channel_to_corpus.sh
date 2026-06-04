@@ -128,10 +128,9 @@ if [[ "$USE_EXISTING" == true ]]; then
     echo "Modelos Ollama disponibles:"
     ollama list 2>/dev/null | tail -n +2 | awk '{print "  •", $1}' || echo "  (no se pudo consultar ollama)"
     echo ""
-    DEFAULT_MODELO=$(ollama list 2>/dev/null | tail -n +2 | awk 'NR==1{print $1}')
-    DEFAULT_MODELO="${DEFAULT_MODELO:-qwen2.5:14b-instruct-q5_K_M}"
-    read -rp "Modelo a usar [$DEFAULT_MODELO]: " MODELO
-    MODELO="${MODELO:-$DEFAULT_MODELO}"
+    while [[ -z "$MODELO" ]]; do
+      read -rp "Modelo a usar (copia uno de la lista): " MODELO
+    done
     CORPUS_ABS=$(realpath "$CORPUS_FILE")
     echo ""
     python "$RAG_SCRIPT" "$MODELO" "$CORPUS_ABS"
@@ -390,8 +389,9 @@ echo ""
 echo "Modelos Ollama disponibles:"
 ollama list 2>/dev/null | tail -n +2 | awk '{print "  •", $1}' || echo "  (no se pudo consultar ollama)"
 echo ""
-read -rp "Modelo a usar [qwen2.5:14b]: " MODELO
-MODELO="${MODELO:-qwen2.5:14b}"
+while [[ -z "$MODELO" ]]; do
+  read -rp "Modelo a usar (copia uno de la lista): " MODELO
+done
 
 CORPUS_ABS=$(realpath "$CORPUS_FILE")
 echo ""
