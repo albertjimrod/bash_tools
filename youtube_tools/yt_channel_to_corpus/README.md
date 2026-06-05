@@ -116,20 +116,73 @@ chroma_yt_db/                 ← base vectorial (se regenera en cada ejecución
 
 ---
 
-## Dependencias
+## Instalación
+
+### Entorno conda
+
+El entorno `rag_gpu` ya tiene todo instalado. Solo necesitas activarlo:
 
 ```bash
-pip install yt-dlp youtube-transcript-api rookiepy secretstorage
-pip install langchain langchain-community langchain-ollama langchain-core chromadb
+conda activate rag_gpu
 ```
 
-Modelos Ollama necesarios:
+Si necesitas crear el entorno desde cero (Python 3.11):
+
 ```bash
-ollama pull nomic-embed-text   # para embeddings (obligatorio)
-ollama pull qwen2.5:14b-instruct-q5_K_M  # o el LLM que prefieras
+conda create -n rag_gpu python=3.11 -y
+conda activate rag_gpu
 ```
 
-Entorno recomendado: `conda activate rag_gpu` (tiene todo instalado).
+### Dependencias Python
+
+```bash
+# Extracción de transcripciones
+pip install yt-dlp yt-dlp-ejs youtube-transcript-api rookiepy secretstorage
+
+# RAG
+pip install langchain==0.3.0 \
+            langchain-community==0.3.0 \
+            langchain-core==0.3.0 \
+            langchain-ollama==0.2.0 \
+            langchain-text-splitters==0.3.0 \
+            chromadb==1.4.0 \
+            ollama==0.6.1 \
+            sentence-transformers
+```
+
+### Ollama
+
+Instalar Ollama si no está disponible:
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Modelos necesarios:
+```bash
+# Embeddings — OBLIGATORIO para el RAG
+ollama pull nomic-embed-text
+
+# LLM — elige el que mejor se adapte a tu hardware
+ollama pull qwen2.5:14b-instruct-q5_K_M   # buena calidad, ~10 GB
+ollama pull mistral                         # más ligero, ~4 GB
+ollama pull gemma3:12b                      # alternativa, ~8 GB
+```
+
+Para ver qué modelos tienes disponibles:
+```bash
+ollama list
+```
+
+### Verificar instalación
+
+```bash
+conda activate rag_gpu
+python -c "from youtube_transcript_api import YouTubeTranscriptApi; print('✓ transcript api')"
+python -c "from langchain_community.vectorstores import Chroma; print('✓ langchain + chroma')"
+python -c "from langchain_ollama import OllamaEmbeddings; print('✓ ollama')"
+python -m yt_dlp --version
+ollama list
+```
 
 ---
 
