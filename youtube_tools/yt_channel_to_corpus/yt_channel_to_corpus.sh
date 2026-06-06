@@ -128,6 +128,7 @@ if [[ "$USE_EXISTING" == true ]]; then
     echo "Modelos Ollama disponibles:"
     ollama list 2>/dev/null | tail -n +2 | awk '{print "  •", $1}' || echo "  (no se pudo consultar ollama)"
     echo ""
+    MODELO=""
     while [[ -z "$MODELO" ]]; do
       read -rp "Modelo a usar (copia uno de la lista): " MODELO
     done
@@ -389,6 +390,7 @@ echo ""
 echo "Modelos Ollama disponibles:"
 ollama list 2>/dev/null | tail -n +2 | awk '{print "  •", $1}' || echo "  (no se pudo consultar ollama)"
 echo ""
+MODELO=""
 while [[ -z "$MODELO" ]]; do
   read -rp "Modelo a usar (copia uno de la lista): " MODELO
 done
