@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "classification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["es_metodo_negocio", "motivo"],
+  "properties": {
+    "es_metodo_negocio": {
+      "type": "boolean",
+      "description": "true si el vídeo explica/enseña un método concreto para generar ingresos que el espectador podría replicar. false si es una entrevista, una historia personal, una noticia, una opinión sobre otro tema, etc., aunque hable de dinero o de negocios de pasada."
+    },
+    "motivo": {
+      "type": "string",
+      "description": "Una frase justificando la clasificación."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "idea_recombination",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ideas"],
+  "properties": {
+    "ideas": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["mecanismo_valor", "canal_apalancamiento", "audiencia", "razon"],
+        "properties": {
+          "mecanismo_valor": { "type": "string" },
+          "canal_apalancamiento": { "type": "string" },
+          "audiencia": { "type": "string" },
+          "razon": {
+            "type": "string",
+            "description": "Frase concreta explicando por qué esta combinación podría funcionar."
+          }
+        }
+      }
+    }
+  }
+}

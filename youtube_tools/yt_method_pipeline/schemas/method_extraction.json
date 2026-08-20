@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "method_extraction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "resumen",
+    "resumen_frase",
+    "categoria",
+    "tipo_ingreso",
+    "evergreen",
+    "economia",
+    "requisitos",
+    "herramientas",
+    "pasos",
+    "tacticas",
+    "recursos_citados",
+    "riesgos_declarados",
+    "riesgos_omitidos",
+    "saturacion_competencia",
+    "red_flags",
+    "evidencia",
+    "vende_algo",
+    "sesgo_supervivencia",
+    "publico_objetivo",
+    "incentivo_creador",
+    "primitivos",
+    "assessment"
+  ],
+  "properties": {
+    "resumen": {
+      "type": "string",
+      "description": "Resumen objetivo del método explicado en el vídeo, en 2-4 frases."
+    },
+    "resumen_frase": {
+      "type": "string",
+      "description": "El método resumido en una sola frase."
+    },
+    "categoria": {
+      "type": "string",
+      "enum": [
+        "ecommerce_dropshipping",
+        "freelancing_servicios",
+        "contenido",
+        "afiliacion",
+        "arbitraje_reventa",
+        "inversion_trading",
+        "saas_producto_digital",
+        "infoproducto",
+        "automatizacion_ia",
+        "otros"
+      ]
+    },
+    "tipo_ingreso": {
+      "type": ["string", "null"],
+      "enum": ["activo", "semipasivo", "pasivo", null],
+      "description": "Si el ingreso requiere trabajo activo continuo, es semipasivo o pasivo."
+    },
+    "evergreen": {
+      "type": ["boolean", "null"],
+      "description": "Si el método sigue siendo viable en el tiempo (true) o depende de una ventana de oportunidad concreta (false)."
+    },
+    "economia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ingreso_declarado",
+        "inversion_inicial",
+        "costes_recurrentes",
+        "tiempo_primer_ingreso",
+        "mecanismo_monetizacion",
+        "escalabilidad"
+      ],
+      "properties": {
+        "ingreso_declarado": {
+          "type": ["string", "null"],
+          "description": "Cifra o rango de ingresos tal y como se menciona en el vídeo, literal, incluyendo el plazo (p.ej. '2000€/mes'). Null si no se menciona."
+        },
+        "inversion_inicial": {
+          "type": ["string", "null"],
+          "enum": ["0", "<100", "100-1000", "1000-10000", ">10000", null]
+        },
+        "costes_recurrentes": {
+          "type": ["string", "null"],
+          "description": "Costes recurrentes mencionados (suscripciones, herramientas de pago, etc.), literal. Null si no se menciona ninguno."
+        },
+        "tiempo_primer_ingreso": {
+          "type": ["string", "null"],
+          "enum": ["dias", "semanas", "1-3_meses", ">3_meses", null]
+        },
+        "mecanismo_monetizacion": {
+          "type": ["string", "null"],
+          "description": "Cómo se convierte la actividad en dinero (p.ej. 'comisión por venta', 'suscripción mensual')."
+        },
+        "escalabilidad": {
+          "type": ["string", "null"],
+          "enum": ["baja", "media", "alta", null]
+        }
+      }
+    },
+    "requisitos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["habilidades_necesarias", "conocimiento_previo", "dedicacion_horas_semana"],
+      "properties": {
+        "habilidades_necesarias": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Habilidades necesarias para ejecutar el método, normalizadas en minúsculas."
+        },
+        "conocimiento_previo": {
+          "type": ["string", "null"],
+          "description": "Conocimiento o experiencia previa que el vídeo da por necesaria o recomendable."
+        },
+        "dedicacion_horas_semana": {
+          "type": ["string", "null"],
+          "description": "Dedicación en horas/semana tal y como se menciona, literal (p.ej. '10-15h/semana')."
+        }
+      }
+    },
+    "herramientas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Herramientas, plataformas o software mencionados, normalizados en minúsculas."
+    },
+    "pasos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Pasos declarados en el vídeo para ejecutar el método, en orden."
+    },
+    "tacticas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tácticas o 'trucos' específicos mencionados, más allá de los pasos generales."
+    },
+    "recursos_citados": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Recursos citados explícitamente: webs, cuentas, comunidades, canales, etc."
+    },
+    "riesgos_declarados": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Riesgos que el propio vídeo menciona explícitamente."
+    },
+    "riesgos_omitidos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Riesgos evidentes dado el método descrito que el vídeo NO menciona. Análisis propio, no lo que dice el vídeo."
+    },
+    "saturacion_competencia": {
+      "type": ["string", "null"],
+      "enum": ["baja", "media", "alta", null],
+      "description": "Nivel de saturación/competencia del método según lo que se desprende del vídeo. Análisis propio."
+    },
+    "red_flags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Señales objetivas de alerta observables en el contenido (no opinión): promesas sin prueba, urgencia artificial, ausencia de riesgos pese a inversión alta, etc."
+    },
+    "evidencia": {
+      "type": ["string", "null"],
+      "enum": ["pruebas_verificables", "capturas_o_documentos", "solo_afirmacion", null],
+      "description": "Nivel de evidencia que el vídeo aporta para respaldar sus afirmaciones."
+    },
+    "vende_algo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "detalle"],
+      "properties": {
+        "tipo": {
+          "type": ["string", "null"],
+          "enum": ["curso", "mentoria", "enlace_afiliado", "herramienta_propia", "ninguno", "otro", null],
+          "description": "Si el vídeo termina vendiendo/promocionando algo del propio creador."
+        },
+        "detalle": {
+          "type": ["string", "null"],
+          "description": "Qué se vende o promociona exactamente, literal."
+        }
+      }
+    },
+    "sesgo_supervivencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["presente", "detalle"],
+      "properties": {
+        "presente": {
+          "type": ["boolean", "null"],
+          "description": "Si el vídeo presenta un caso de éxito como representativo sin mencionar los casos de fracaso habituales del método."
+        },
+        "detalle": {
+          "type": ["string", "null"],
+          "description": "En qué consiste el sesgo de supervivencia observado, si lo hay."
+        }
+      }
+    },
+    "publico_objetivo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nivel", "requiere_capital"],
+      "properties": {
+        "nivel": {
+          "type": ["string", "null"],
+          "enum": ["principiante", "intermedio", "avanzado", null],
+          "description": "Nivel de experiencia al que se dirige el vídeo."
+        },
+        "requiere_capital": {
+          "type": ["boolean", "null"],
+          "description": "Si el método tal y como se explica requiere disponer de capital inicial propio."
+        }
+      }
+    },
+    "incentivo_creador": {
+      "type": ["string", "null"],
+      "description": "Por qué el creador comparte esto, frase corta normalizada (p.ej. 'venta de curso', 'afiliación', 'marca personal'). Análisis propio."
+    },
+    "primitivos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mecanismo_valor", "canal_apalancamiento", "audiencia"],
+      "properties": {
+        "mecanismo_valor": {
+          "type": ["string", "null"],
+          "description": "Frase corta (2-4 palabras) normalizada: cómo se genera el valor."
+        },
+        "canal_apalancamiento": {
+          "type": ["string", "null"],
+          "description": "Frase corta normalizada: qué canal se usa para escalar el método."
+        },
+        "audiencia": {
+          "type": ["string", "null"],
+          "description": "Frase corta normalizada: a quién se dirige el método."
+        }
+      }
+    },
+    "assessment": {
+      "type": ["string", "null"],
+      "description": "Análisis y opinión propios del modelo. Único campo donde se permite juicio subjetivo libre."
+    }
+  }
+}
