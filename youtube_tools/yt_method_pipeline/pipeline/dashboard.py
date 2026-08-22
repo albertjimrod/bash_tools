@@ -24,13 +24,16 @@ def _cosine(a: list[float], b: list[float]) -> float:
     return dot / (na * nb) if na and nb else 0.0
 
 
-def _channel_label() -> str:
-    if config.CHANNEL_FILE.exists():
-        try:
-            return json.loads(config.CHANNEL_FILE.read_text(encoding="utf-8")).get("channel", "canal")
-        except Exception:
-            pass
-    return "canal"
+def _channel_label(videos: list[dict]) -> str:
+    """A partir de los canal_nombre reales de los vídeos (no de
+    data/channel.json, que se sobrescribe en cada 'fetch' y no representa
+    ya el corpus completo si mezclas fuentes)."""
+    nombres = sorted({v.get("canal_nombre") for v in videos if v.get("canal_nombre")})
+    if not nombres:
+        return "canal"
+    if len(nombres) == 1:
+        return nombres[0]
+    return f"{len(nombres)} fuentes ({', '.join(nombres)})"
 
 
 def _load_embedding(video_id: str) -> list[float] | None:
@@ -86,13 +89,16 @@ def run() -> Path:
     norm_cfg = json.loads(NORM_CONFIG.read_text(encoding="utf-8")) if NORM_CONFIG.exists() else {}
     incompatibilidades = (norm_cfg.get("incompatibilidades_mecanismo_canal") or {}).get("pares", [])
 
+    fuentes = sorted({v.get("canal_nombre") for v in videos if v.get("canal_nombre")})
+
     payload = {
-        "channel": _channel_label(),
+        "channel": _channel_label(videos),
         "videos": videos,
         "similarity": similarity,
         "coverage_pct": coverage_pct,
         "incompatibilidades_mecanismo_canal": incompatibilidades,
         "cached_ideas": _load_cached_ideas(),
+        "fuentes": fuentes,
     }
 
     template = _TEMPLATE_PATH.read_text(encoding="utf-8")

@@ -187,6 +187,18 @@
   .kpi .n { font-family: "IBM Plex Mono", monospace; font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .kpi .l { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
 
+  /* --- Filtro por fuente (persistente, visible en todas las pestañas) --- */
+  .source-filter {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 16px; margin: 0 0 24px; font-size: 12.5px;
+  }
+  .source-filter .label { font-family: "IBM Plex Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); }
+  .source-filter .chk { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .source-filter .chk .n { color: var(--ink-muted); font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+  .source-filter button { font: inherit; font-size: 11.5px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); cursor: pointer; }
+  .source-filter button:hover { border-color: var(--accent); color: var(--accent); }
+
   section { margin-top: 56px; }
   section > h2 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
   section > .lede { color: var(--ink-muted); margin: 4px 0 20px; max-width: 68ch; font-size: 14.5px; }
@@ -246,6 +258,7 @@
   ul.plain.omitted li { color: var(--warn); }
   .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
   .chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; font-size: 12px; }
+  .chip.fragile-chip { border-style: dashed; border-color: var(--warn); color: var(--warn); }
   .card-link {
     display: inline-block; margin-top: 14px; font-size: 13px; color: var(--accent);
     text-decoration: none; border-bottom: 1px solid transparent;
@@ -265,6 +278,7 @@
     border: 2px solid var(--surface);
     border-radius: 6px;
   }
+  table.heat .cell.inter-source-hi { border: 2px solid var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
   .legend-heat { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 12px; color: var(--ink-muted); }
   .legend-heat .swatches { display: flex; gap: 2px; }
   .legend-heat .sw { width: 20px; height: 12px; border-radius: 2px; }
@@ -497,6 +511,8 @@
 
   <div class="kpis" id="kpis"></div>
 
+  <div id="source-filter-bar"></div>
+
   <nav class="tabs" id="tabs">
     <button class="tab-btn active" data-tab="expediente" type="button">Expediente</button>
     <button class="tab-btn" data-tab="huecos" type="button">Rejilla de huecos</button>
@@ -679,6 +695,10 @@
       <h3 class="panorama-title">El canal repite pocos modelos: aquí se ve la concentración</h3>
       <p class="lede">Reparto de los vídeos por categoría normalizada.</p>
       <div id="panorama-concentration"></div>
+
+      <h3 class="panorama-title">En qué se diferencia cada fuente</h3>
+      <p class="lede">Comparación por fuente — siempre sobre todas las fuentes del corpus, sin aplicar el filtro global (su objetivo es precisamente compararlas entre sí).</p>
+      <div id="panorama-by-source"></div>
     </section>
   </div>
 
@@ -689,6 +709,33 @@
 
 <script>
 const DATA = __DATA_JSON__;
+
+// --- Filtro global por fuente ---
+// Todas las vistas que agregan datos consumen activeVideos()/allowedIndices()
+// en vez de DATA.videos directamente, para no duplicar la lógica de filtrado.
+// allowedIndices() se usa (en vez de un array recortado) en Similitud y
+// Combinador porque ahí los índices originales de DATA.videos/DATA.similarity
+// tienen que seguir siendo válidos (la matriz de similitud está precalculada
+// por posición original); activeVideos() vale para el resto, que no depende
+// de la posición.
+const CANAL_DESCONOCIDO = '(sin canal)';
+function videoCanal(v) { return v.canal_nombre || CANAL_DESCONOCIDO; }
+const SOURCE_OPTIONS = [...new Set(DATA.videos.map(videoCanal))].sort();
+let activeSources = new Set(SOURCE_OPTIONS);
+
+function allowedIndices() {
+  if (SOURCE_OPTIONS.length <= 1) return DATA.videos.map((_, i) => i);
+  const idxs = [];
+  DATA.videos.forEach((v, i) => { if (activeSources.has(videoCanal(v))) idxs.push(i); });
+  return idxs;
+}
+function activeVideos() {
+  if (SOURCE_OPTIONS.length <= 1) return DATA.videos;
+  return allowedIndices().map(i => DATA.videos[i]);
+}
+function computeCoveragePct(videos) {
+  return videos.length ? Math.round(100 * videos.filter(v => v.resuelto).length / videos.length) : 0;
+}
 
 const fmtPct = x => (x * 100).toFixed(0) + '%';
 
@@ -751,26 +798,34 @@ function badge(text, variant) {
 }
 
 function renderHeader() {
+  const videos = activeVideos();
+  const filtered = videos.length !== DATA.videos.length;
   document.getElementById('subtitle').textContent =
-    `${DATA.videos.length} vídeos de ${DATA.channel} — extracción por 6 bloques de dimensiones + búsqueda semántica local.`;
+    `${videos.length}${filtered ? ` de ${DATA.videos.length}` : ''} vídeos de ${DATA.channel} — extracción por 6 bloques de dimensiones + búsqueda semántica local.`;
 }
 
 function renderKpis() {
-  const n = DATA.videos.length;
-  const soloAfirmacion = DATA.videos.filter(v => v.method.evidencia === 'solo_afirmacion').length;
-  const vendeAlgo = DATA.videos.filter(v => v.method.vende_algo && v.method.vende_algo.tipo && v.method.vende_algo.tipo !== 'ninguno').length;
-  const sesgo = DATA.videos.filter(v => v.method.sesgo_supervivencia && v.method.sesgo_supervivencia.presente).length;
-  const avgFlags = (DATA.videos.reduce((s, v) => s + ((v.method.red_flags || []).length), 0) / n).toFixed(1);
+  const videos = activeVideos();
+  const n = videos.length;
+  const wrap = document.getElementById('kpis');
+  wrap.innerHTML = '';
+  if (!n) {
+    wrap.appendChild(el('p', { class: 'card-phrase' }, 'Ninguna fuente seleccionada.'));
+    return;
+  }
+  const soloAfirmacion = videos.filter(v => v.method.evidencia === 'solo_afirmacion').length;
+  const vendeAlgo = videos.filter(v => v.method.vende_algo && v.method.vende_algo.tipo && v.method.vende_algo.tipo !== 'ninguno').length;
+  const sesgo = videos.filter(v => v.method.sesgo_supervivencia && v.method.sesgo_supervivencia.presente).length;
+  const avgFlags = (videos.reduce((s, v) => s + ((v.method.red_flags || []).length), 0) / n).toFixed(1);
 
   const kpis = [
     [n, 'métodos analizados'],
-    [DATA.coverage_pct + '%', 'cobertura de normalización'],
+    [computeCoveragePct(videos) + '%', 'cobertura de normalización'],
     [fmtPct(soloAfirmacion / n), 'solo con afirmaciones (sin pruebas)'],
     [fmtPct(vendeAlgo / n), 'terminan vendiendo algo propio'],
     [fmtPct(sesgo / n), 'con sesgo de supervivencia'],
     [avgFlags, 'red flags de media por vídeo'],
   ];
-  const wrap = document.getElementById('kpis');
   for (const [n_, l] of kpis) {
     wrap.appendChild(el('div', { class: 'kpi' }, [el('div', { class: 'n' }, String(n_)), el('div', { class: 'l' }, l)]));
   }
@@ -806,6 +861,7 @@ function renderCard(v) {
     el('div', { class: 'card-title' }, v.title || v.id),
     el('p', { class: 'card-phrase' }, m.resumen_frase || m.resumen || ''),
     el('div', { class: 'badges' }, [
+      SOURCE_OPTIONS.length > 1 ? badge(videoCanal(v)) : null,
       badge(m.categoria, 'accent'),
       badge(tipoIngresoLabel[m.tipo_ingreso] || m.tipo_ingreso || '—'),
       badge(eco.inversion_inicial != null ? eco.inversion_inicial + '€ inicial' : '—'),
@@ -891,7 +947,8 @@ function renderCard(v) {
 
 function renderCards() {
   const wrap = document.getElementById('cards');
-  DATA.videos.forEach(v => wrap.appendChild(renderCard(v)));
+  wrap.innerHTML = '';
+  activeVideos().forEach(v => wrap.appendChild(renderCard(v)));
 }
 
 function heatClass(v) {
@@ -956,19 +1013,21 @@ function currentMatrix() {
   return m;
 }
 
-function greedyOrder(matrix) {
-  const n = matrix.length;
-  const visited = new Array(n).fill(false);
-  const order = [0];
-  visited[0] = true;
-  for (let k = 1; k < n; k++) {
+// idxs: qué posiciones originales de DATA.videos recorrer y en qué orden
+// empezar (respeta el filtro por fuente sin tocar la indexación de matrix,
+// que sigue siendo la de DATA.videos/DATA.similarity completos).
+function greedyOrder(matrix, idxs) {
+  const pool = idxs || matrix.map((_, i) => i);
+  const visited = new Set([pool[0]]);
+  const order = [pool[0]];
+  for (let k = 1; k < pool.length; k++) {
     const last = order[order.length - 1];
     let best = -1, bestVal = -Infinity;
-    for (let j = 0; j < n; j++) {
-      if (!visited[j] && matrix[last][j] > bestVal) { bestVal = matrix[last][j]; best = j; }
+    for (const j of pool) {
+      if (!visited.has(j) && matrix[last][j] > bestVal) { bestVal = matrix[last][j]; best = j; }
     }
     order.push(best);
-    visited[best] = true;
+    visited.add(best);
   }
   return order;
 }
@@ -977,10 +1036,13 @@ function renderHeat() {
   const table = document.getElementById('heat');
   table.innerHTML = '';
   const matrix = currentMatrix();
-  const order = simOrder || DATA.videos.map((_, i) => i);
+  const order = simOrder || allowedIndices();
   const n = order.length;
   const thead = el('tr', {}, [el('th', {}, '')].concat(order.map((oi, i) => el('th', { title: DATA.videos[oi].title }, String(i + 1)))));
   table.appendChild(thead);
+  // Con exactamente 2 fuentes activas, resaltar los pares inter-fuente muy
+  // parecidos: dos canales enseñando casi lo mismo.
+  const interSourceMode = activeSources.size === 2;
   for (let i = 0; i < n; i++) {
     const oi = order[i];
     const row = el('tr', {}, [el('th', { class: 'rowhead', title: DATA.videos[oi].title }, `${i + 1} · ${shortTitle(DATA.videos[oi].title)}`)]);
@@ -988,10 +1050,13 @@ function renderHeat() {
       const oj = order[j];
       const val = matrix[oi][oj];
       const cls = oi === oj ? 'heat-4' : heatClass(val);
+      const interSource = interSourceMode && oi !== oj && videoCanal(DATA.videos[oi]) !== videoCanal(DATA.videos[oj]);
+      const highlight = interSource && val >= 0.8;
       const cell = el('td', {}, el('div', {
-        class: 'cell ' + cls,
+        class: 'cell ' + cls + (highlight ? ' inter-source-hi' : ''),
         style: `background:var(--${cls});color:var(--heat-text-${['heat-3', 'heat-4'].includes(cls) ? 'hi' : 'lo'})`,
-        title: `${DATA.videos[oi].title} ↔ ${DATA.videos[oj].title}: ${fmtPct(val)}`,
+        title: `${DATA.videos[oi].title} (${videoCanal(DATA.videos[oi])}) ↔ ${DATA.videos[oj].title} (${videoCanal(DATA.videos[oj])}): ${fmtPct(val)}`
+          + (highlight ? '\n⚑ muy parecidos entre dos fuentes distintas' : ''),
       }, oi === oj ? '—' : fmtPct(val)));
       row.appendChild(cell);
     }
@@ -1031,7 +1096,7 @@ function setupSimilarityControls() {
     });
   });
   document.getElementById('btn-reorder').addEventListener('click', () => {
-    simOrder = greedyOrder(currentMatrix());
+    simOrder = greedyOrder(currentMatrix(), allowedIndices());
     renderHeat();
   });
   renderSliders();
@@ -1048,12 +1113,12 @@ const LOW_EVIDENCE_N = 3;
 function axisValues(key) {
   if (key === 'bucket_inversion') return BUCKET_INVERSION_ORDER;
   const set = new Set();
-  DATA.videos.forEach(v => { if (v[key]) set.add(v[key]); });
+  activeVideos().forEach(v => { if (v[key]) set.add(v[key]); });
   return [...set].sort();
 }
 
 function poolForFacet(axisKey, value) {
-  return DATA.videos.filter(v => v[axisKey] === value);
+  return activeVideos().filter(v => v[axisKey] === value);
 }
 
 function meanPotencial(vids) {
@@ -1106,7 +1171,7 @@ function scoreCellStyle(pct) {
 }
 
 function renderCoverageBanner() {
-  const pct = DATA.coverage_pct;
+  const pct = computeCoveragePct(activeVideos());
   const cls = pct >= 75 ? 'good' : pct >= 40 ? 'warn' : 'bad';
   const txt = pct >= 75
     ? 'Cobertura alta — los huecos que ves abajo son fiables.'
@@ -1116,6 +1181,11 @@ function renderCoverageBanner() {
   const wrap = document.getElementById('gap-coverage-banner');
   wrap.innerHTML = '';
   wrap.appendChild(el('div', { class: 'coverage-banner ' + cls }, [el('div', { class: 'pct' }, pct + '%'), el('div', { class: 'txt' }, txt)]));
+  if (activeSources.size > 1) {
+    wrap.appendChild(el('div', { class: 'coverage-banner warn' }, [el('div', { class: 'txt' },
+      `Filtro activo: ${activeSources.size} fuentes seleccionadas. Un hueco aquí significa "ninguna de esas ${activeSources.size} fuentes lo cubre", no que una fuente concreta no lo toque — mira la pestaña Panorama → comparación por fuente para eso.`,
+    )]));
+  }
 }
 
 // Modelo puro de la rejilla (sin tocar el DOM) — lo consumen tanto
@@ -1362,7 +1432,9 @@ function setupTabs() {
 // --- Combinador ---
 function collectPrimitivos() {
   const dims = { mecanismo_valor: [], canal_apalancamiento: [], audiencia: [] };
+  const allowed = new Set(allowedIndices());
   DATA.videos.forEach((v, idx) => {
+    if (!allowed.has(idx)) return;
     const p = v.method.primitivos || {};
     for (const key of Object.keys(dims)) {
       const val = p[key];
@@ -1373,13 +1445,14 @@ function collectPrimitivos() {
 }
 
 function fillSelect(select, options) {
+  select.innerHTML = '';
   options.forEach((o, i) => {
     select.appendChild(el('option', { value: i }, `${o.value} — ${shortTitle(o.title, 34)}`));
   });
 }
 
 function existsCombo(mec, can, aud) {
-  return DATA.videos.find(v => {
+  return activeVideos().find(v => {
     const p = v.method.primitivos || {};
     return (p.mecanismo_valor || '').toLowerCase() === mec.toLowerCase()
       && (p.canal_apalancamiento || '').toLowerCase() === can.toLowerCase()
@@ -1401,11 +1474,15 @@ function avgSimilarity(idxs) {
 }
 
 function renderCombinatorResult(dims, mecSel, canSel, audSel) {
+  const resultEl = document.getElementById('combi-result');
+  resultEl.innerHTML = '';
+  if (!dims.mecanismo_valor.length || !dims.canal_apalancamiento.length || !dims.audiencia.length) {
+    resultEl.appendChild(el('p', { class: 'card-phrase' }, 'No hay suficientes primitivos con el filtro de fuente actual.'));
+    return;
+  }
   const mec = dims.mecanismo_valor[mecSel.value];
   const can = dims.canal_apalancamiento[canSel.value];
   const aud = dims.audiencia[audSel.value];
-  const resultEl = document.getElementById('combi-result');
-  resultEl.innerHTML = '';
 
   const phrase = el('div', { class: 'combi-phrase' }, `${mec.value} × ${can.value} × ${aud.value}`);
   const existing = existsCombo(mec.value, can.value, aud.value);
@@ -1448,7 +1525,10 @@ function renderCombinator() {
   fillSelect(audSel, dims.audiencia);
 
   const update = () => renderCombinatorResult(dims, mecSel, canSel, audSel);
-  [mecSel, canSel, audSel].forEach(s => s.addEventListener('change', update));
+  // .onchange (no addEventListener): renderCombinator() se vuelve a llamar
+  // al cambiar el filtro de fuente, y así no se acumulan listeners viejos
+  // apuntando a un 'dims' obsoleto.
+  mecSel.onchange = canSel.onchange = audSel.onchange = update;
   update();
 
   return { dims, mecSel, canSel, audSel };
@@ -1456,10 +1536,11 @@ function renderCombinator() {
 
 // --- Sugerencias automáticas (repetible: cada clic saca el siguiente lote, cíclico) ---
 function renderSuggestions(combi) {
-  const n = DATA.videos.length;
+  const idxs = allowedIndices();
   const pairs = [];
-  for (let i = 0; i < n; i++) {
-    for (let j = i + 1; j < n; j++) {
+  for (let a = 0; a < idxs.length; a++) {
+    for (let b = a + 1; b < idxs.length; b++) {
+      const i = idxs[a], j = idxs[b];
       pairs.push({ i, j, sim: DATA.similarity[i][j] });
     }
   }
@@ -1469,12 +1550,14 @@ function renderSuggestions(combi) {
   const btn = document.getElementById('btn-more-suggestions');
   const BATCH = 4;
   let cursor = 0;
+  wrap.innerHTML = '';
 
   if (!pairs.length) {
-    wrap.appendChild(el('p', { class: 'card-phrase' }, 'Hacen falta al menos 2 métodos indexados para generar sugerencias.'));
+    wrap.appendChild(el('p', { class: 'card-phrase' }, 'Hacen falta al menos 2 métodos indexados (con el filtro de fuente actual) para generar sugerencias.'));
     btn.style.display = 'none';
     return;
   }
+  btn.style.display = '';
 
   function renderBatch() {
     const batch = [];
@@ -1509,16 +1592,17 @@ function renderSuggestions(combi) {
     });
   }
 
+  btn.textContent = pairs.length <= BATCH ? '🔀 Otro orden de sugerencias' : '🔀 Más sugerencias';
   renderBatch();
   if (pairs.length <= 1) {
     btn.style.display = 'none';
-  } else if (pairs.length <= BATCH) {
-    btn.textContent = '🔀 Otro orden de sugerencias';
   }
-  btn.addEventListener('click', () => {
+  // .onclick (no addEventListener): renderSuggestions() se vuelve a llamar
+  // al cambiar el filtro, y así no se acumulan listeners viejos sobre 'pairs'.
+  btn.onclick = () => {
     wrap.innerHTML = '';
     renderBatch();
-  });
+  };
 }
 
 // --- Comparador manual de dos vídeos ---
@@ -1529,9 +1613,13 @@ function combinedIdea(i, j) {
 }
 
 function renderCompareResult(aSel, bSel) {
-  const i = Number(aSel.value), j = Number(bSel.value);
   const resultEl = document.getElementById('compare-result');
   resultEl.innerHTML = '';
+  if (!aSel.options.length || !bSel.options.length) {
+    resultEl.appendChild(el('p', { class: 'card-phrase' }, 'No hay suficientes vídeos con el filtro de fuente actual.'));
+    return;
+  }
+  const i = Number(aSel.value), j = Number(bSel.value);
   if (i === j) {
     resultEl.appendChild(el('p', { class: 'card-phrase' }, 'Elige dos vídeos distintos para comparar.'));
     return;
@@ -1549,13 +1637,17 @@ function renderCompareResult(aSel, bSel) {
 function renderComparator() {
   const aSel = document.getElementById('sel-video-a');
   const bSel = document.getElementById('sel-video-b');
-  DATA.videos.forEach((v, i) => {
+  aSel.innerHTML = '';
+  bSel.innerHTML = '';
+  const idxs = allowedIndices();
+  idxs.forEach(i => {
+    const v = DATA.videos[i];
     aSel.appendChild(el('option', { value: i }, `${i + 1} · ${shortTitle(v.title, 40)}`));
     bSel.appendChild(el('option', { value: i }, `${i + 1} · ${shortTitle(v.title, 40)}`));
   });
-  if (DATA.videos.length > 1) bSel.value = 1;
+  if (idxs.length > 1) bSel.value = idxs[1];
   const update = () => renderCompareResult(aSel, bSel);
-  [aSel, bSel].forEach(s => s.addEventListener('change', update));
+  aSel.onchange = bSel.onchange = update;
   update();
 }
 
@@ -1572,6 +1664,57 @@ renderHeat();
 const combi = renderCombinator();
 renderSuggestions(combi);
 renderComparator();
+renderSourceFilterBar();
+
+// --- Filtro global por fuente: recalcula todas las vistas que agregan datos ---
+function renderSourceFilterBar() {
+  const wrap = document.getElementById('source-filter-bar');
+  wrap.innerHTML = '';
+  if (SOURCE_OPTIONS.length <= 1) return;
+
+  const bar = el('div', { class: 'source-filter' });
+  bar.appendChild(el('span', { class: 'label' }, `Fuente (${activeSources.size}/${SOURCE_OPTIONS.length})`));
+  SOURCE_OPTIONS.forEach(canal => {
+    const n = DATA.videos.filter(v => videoCanal(v) === canal).length;
+    const id = 'src-chk-' + canal.replace(/[^a-zA-Z0-9]+/g, '-');
+    const input = el('input', { type: 'checkbox', id });
+    input.checked = activeSources.has(canal);
+    input.addEventListener('change', () => {
+      if (input.checked) activeSources.add(canal);
+      else activeSources.delete(canal);
+      if (activeSources.size === 0) { activeSources.add(canal); input.checked = true; }
+      applySourceFilter();
+    });
+    bar.appendChild(el('label', { class: 'chk', for: id }, [input, el('span', {}, canal), el('span', { class: 'n' }, `(${n})`)]));
+  });
+  const btnAll = el('button', { type: 'button' }, 'Todas');
+  btnAll.addEventListener('click', () => {
+    activeSources = new Set(SOURCE_OPTIONS);
+    applySourceFilter();
+  });
+  bar.appendChild(btnAll);
+  wrap.appendChild(bar);
+}
+
+// Re-renderiza exactamente las vistas que agregan datos sobre DATA.videos.
+// El orden importa poco salvo que renderCombinator() debe ir antes que
+// renderSuggestions()/renderComparator(), que dependen de su resultado.
+function applySourceFilter() {
+  simOrder = null; // podría apuntar a índices que ya no están visibles
+  panoramaCache = null; // se invalida: sus agregados dependían del filtro anterior
+  renderSourceFilterBar();
+  renderHeader();
+  renderKpis();
+  renderCards();
+  renderCoverageBanner();
+  renderGapGrid();
+  renderHeat();
+  const freshCombi = renderCombinator();
+  renderSuggestions(freshCombi);
+  renderComparator();
+  renderConstructor();
+  renderPanorama();
+}
 
 // --- Exportación del informe (Markdown / PDF) ---
 // Todo el módulo es de solo lectura sobre DATA y el estado actual de los
@@ -1606,8 +1749,9 @@ function mdIdea(idea) {
 }
 
 function mdExpediente() {
-  const lines = [`## Expediente — vídeos analizados (${DATA.videos.length})`, ''];
-  DATA.videos.forEach((v, idx) => {
+  const videos = activeVideos();
+  const lines = [`## Expediente — vídeos analizados (${videos.length}${videos.length !== DATA.videos.length ? ` de ${DATA.videos.length}, filtrado por fuente` : ''})`, ''];
+  videos.forEach((v, idx) => {
     const m = v.method;
     const eco = m.economia || {};
     const req = m.requisitos || {};
@@ -1715,7 +1859,7 @@ function mdGapGrid() {
 }
 
 function mdSimilitud() {
-  const order = simOrder || DATA.videos.map((_, i) => i);
+  const order = simOrder || allowedIndices();
   const matrix = currentMatrix();
   const lines = [
     `## Similitud entre métodos — modo ${simMode === 'tematica' ? 'temática (embeddings)' : 'ponderada (facetas)'}, ${simOrder ? 'reordenado por similitud' : 'orden original'}`,
@@ -1791,9 +1935,13 @@ function mdCombinador() {
 
 function buildFullReportMarkdown() {
   const now = new Date().toLocaleString('es-ES');
+  const videos = activeVideos();
+  const filtro = activeSources.size < SOURCE_OPTIONS.length
+    ? ` · filtro de fuente: ${[...activeSources].join(', ')}`
+    : '';
   return [
     `# Informe — ${DATA.channel}`, '',
-    `_Generado el ${now} desde el dashboard local (${DATA.videos.length} vídeos analizados, cobertura de normalización ${DATA.coverage_pct}%)._`,
+    `_Generado el ${now} desde el dashboard local (${videos.length} vídeos analizados, cobertura de normalización ${computeCoveragePct(videos)}%${filtro})._`,
     '', '---', '',
     mdExpediente(), mdGapGrid(), mdSimilitud(), mdCombinador(),
   ].join('\n');
@@ -1898,7 +2046,7 @@ function facetValue(v, facet) { return facet === 'evidencia' ? (v.method || {}).
 function constructorAxisValues(facet) {
   if (facet === 'bucket_inversion') return BUCKET_INVERSION_ORDER;
   const set = new Set();
-  DATA.videos.forEach(v => { const val = facetValue(v, facet); if (val) set.add(val); });
+  activeVideos().forEach(v => { const val = facetValue(v, facet); if (val) set.add(val); });
   if (facet === 'evidencia') {
     const known = EVIDENCIA_ORDER.filter(v => set.has(v));
     const rest = [...set].filter(v => !EVIDENCIA_ORDER.includes(v)).sort();
@@ -1909,7 +2057,7 @@ function constructorAxisValues(facet) {
 
 // vídeos que cumplen todas las facetas fijadas EXCEPTO 'excludeFacet' (si se pasa)
 function constructorPool(state, excludeFacet) {
-  return DATA.videos.filter(v => CONSTRUCTOR_FACETS.every(f => {
+  return activeVideos().filter(v => CONSTRUCTOR_FACETS.every(f => {
     if (f === excludeFacet) return true;
     const fixed = state[f];
     return fixed == null || facetValue(v, f) === fixed;
@@ -1917,7 +2065,7 @@ function constructorPool(state, excludeFacet) {
 }
 
 function facetSupportCount(facet, val) {
-  return DATA.videos.filter(v => facetValue(v, facet) === val).length;
+  return activeVideos().filter(v => facetValue(v, facet) === val).length;
 }
 
 // para una faceta aún libre (o no), qué valores quedan viables dado el resto de la selección
@@ -2124,9 +2272,9 @@ renderConstructor();
 let panoramaCache = null;
 const SAT_ORDER = ['baja', 'media', 'alta'];
 
-function panoramaBuildMatrix(rows, cols, rowKeyFn, colKeyFn) {
+function panoramaBuildMatrix(rows, cols, rowKeyFn, colKeyFn, videos) {
   const cellVids = {};
-  DATA.videos.forEach(v => {
+  (videos || activeVideos()).forEach(v => {
     const r = rowKeyFn(v), c = colKeyFn(v);
     if (r == null || c == null) return;
     const key = r + '' + c;
@@ -2169,7 +2317,9 @@ function getPanoramaData() {
     v => v.categoria_norm, v => (v.bucket_inversion == null ? 's/d' : v.bucket_inversion),
   );
 
-  const scatterPoints = DATA.videos
+  const videos = activeVideos();
+
+  const scatterPoints = videos
     .filter(v => v.method.saturacion_competencia && SAT_ORDER.includes(v.method.saturacion_competencia))
     .map(v => ({
       id: v.id, title: v.title,
@@ -2184,18 +2334,39 @@ function getPanoramaData() {
   ['mecanismo_norm', 'canal_norm', 'audiencia_norm'].forEach(facet => {
     barsData[facet] = axisValues(facet).map(val => {
       const pool = poolForFacet(facet, val);
-      return { value: val, n: pool.length, score: meanPotencial(pool), cuota: pool.length / DATA.videos.length };
+      return { value: val, n: pool.length, score: meanPotencial(pool), cuota: pool.length / videos.length };
     }).sort((a, b) => b.score - a.score);
   });
 
   const catCounts = {};
-  DATA.videos.forEach(v => { if (v.categoria_norm) catCounts[v.categoria_norm] = (catCounts[v.categoria_norm] || 0) + 1; });
+  videos.forEach(v => { if (v.categoria_norm) catCounts[v.categoria_norm] = (catCounts[v.categoria_norm] || 0) + 1; });
   const concentration = Object.entries(catCounts)
-    .map(([value, n]) => ({ value, n, pct: n / DATA.videos.length }))
+    .map(([value, n]) => ({ value, n, pct: n / videos.length }))
     .sort((a, b) => b.n - a.n);
 
-  panoramaCache = { matrixMecCanal, matrixCatInv, scatterPoints, barsData, concentration };
+  const bySource = computeSourceComparison();
+
+  panoramaCache = { matrixMecCanal, matrixCatInv, scatterPoints, barsData, concentration, bySource };
   return panoramaCache;
+}
+
+// Comparación por fuente: SIEMPRE sobre todos los vídeos, sin aplicar el
+// filtro global — su objetivo es precisamente comparar las fuentes entre sí.
+function computeSourceComparison() {
+  const byCanal = {};
+  DATA.videos.forEach(v => { (byCanal[videoCanal(v)] = byCanal[videoCanal(v)] || []).push(v); });
+  return Object.entries(byCanal).map(([canal, vids]) => {
+    const categorias = {};
+    vids.forEach(v => { if (v.categoria_norm) categorias[v.categoria_norm] = (categorias[v.categoria_norm] || 0) + 1; });
+    const evidencias = {};
+    vids.forEach(v => { const e = v.method.evidencia; if (e) evidencias[e] = (evidencias[e] || 0) + 1; });
+    return {
+      canal, n: vids.length,
+      score: meanPotencial(vids),
+      categorias: Object.entries(categorias).map(([value, n]) => ({ value, n })).sort((a, b) => b.n - a.n),
+      evidencias: Object.entries(evidencias).map(([value, n]) => ({ value, n })).sort((a, b) => b.n - a.n),
+    };
+  }).sort((a, b) => b.n - a.n);
 }
 
 function renderPanoramaLegend() {
@@ -2352,6 +2523,32 @@ function renderPanoramaConcentration(concentration) {
   concentration.forEach(c => wrap.appendChild(meterEl(`${c.value} — n=${c.n} (${fmtPct(c.pct)})`, Math.round(c.pct * 100))));
 }
 
+function renderPanoramaBySource(bySource) {
+  const wrap = document.getElementById('panorama-by-source');
+  wrap.innerHTML = '';
+  if (bySource.length <= 1) {
+    wrap.appendChild(el('p', { class: 'card-phrase' }, 'Solo hay una fuente en el corpus todavía — esta vista se activa en cuanto mezcles varias.'));
+    return;
+  }
+  bySource.forEach(({ canal, n, score, categorias, evidencias }) => {
+    const block = el('div', { class: 'panorama-bars-block' }, [
+      el('h4', {}, `${canal} — n=${n}${n === 1 ? ' ⚠ frágil' : ''}`),
+    ]);
+    const meter = meterEl('Potencial medio', Math.round(score), { potential: true });
+    meter.title = 'Potencial medio comprimido (ordenador, no nota objetiva sobre 100).';
+    block.appendChild(meter);
+    block.appendChild(el('p', { class: 'card-phrase', style: 'margin-top:10px' }, 'Categorías:'));
+    const catChips = el('div', { class: 'chips' });
+    categorias.forEach(({ value, n: cn }) => catChips.appendChild(el('span', { class: 'chip' + (cn === 1 ? ' fragile-chip' : '') }, `${value} (${cn})`)));
+    block.appendChild(catChips);
+    block.appendChild(el('p', { class: 'card-phrase', style: 'margin-top:10px' }, 'Evidencia:'));
+    const eviChips = el('div', { class: 'chips' });
+    evidencias.forEach(({ value, n: en }) => eviChips.appendChild(el('span', { class: 'chip' + (en === 1 ? ' fragile-chip' : '') }, `${value} (${en})`)));
+    block.appendChild(eviChips);
+    wrap.appendChild(block);
+  });
+}
+
 function renderPanorama() {
   const data = getPanoramaData();
   renderPanoramaLegend();
@@ -2365,6 +2562,7 @@ function renderPanorama() {
   renderPanoramaScatter(data.scatterPoints);
   renderPanoramaBars(data.barsData);
   renderPanoramaConcentration(data.concentration);
+  renderPanoramaBySource(data.bySource);
 }
 
 renderPanorama();

@@ -45,7 +45,17 @@ def _load_videos() -> list[dict]:
             continue
         method = json.loads(method_path.read_text(encoding="utf-8"))
         meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
-        videos.append({"id": video_dir.name, "title": meta.get("title"), "url": meta.get("url"), "method": method})
+        videos.append({
+            "id": video_dir.name,
+            "title": meta.get("title"),
+            "url": meta.get("url"),
+            "method": method,
+            "canal_nombre": meta.get("canal_nombre"),
+            "canal_id": meta.get("canal_id"),
+            "fuente_origen": meta.get("fuente_origen"),
+            "fuente_detalle": meta.get("fuente_detalle"),
+            "resuelto_por_titulo": meta.get("resuelto_por_titulo", False),
+        })
     return videos
 
 
@@ -149,6 +159,11 @@ def _normalize_video(video: dict, norm_cfg: dict, pending: dict) -> dict:
         "potencial": potencial,
         "potencial_breakdown": potencial_breakdown,
         "resuelto": resuelto,
+        "canal_nombre": video.get("canal_nombre"),
+        "canal_id": video.get("canal_id"),
+        "fuente_origen": video.get("fuente_origen"),
+        "fuente_detalle": video.get("fuente_detalle"),
+        "resuelto_por_titulo": video.get("resuelto_por_titulo", False),
     }
 
 
