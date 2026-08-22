@@ -8,12 +8,13 @@ de nada).
 
 ## Qué hace esto, en una frase
 
-A partir de un canal de YouTube, descarga las transcripciones, se queda solo
-con los vídeos que explican un método de generar ingresos (descarta
-entrevistas y demás), extrae esa información en un formato estructurado,
-la limpia/normaliza, y te da un dashboard interactivo para explorar los
-métodos, ver huecos de mercado y combinar ideas — todo corriendo en tu
-máquina, sin mandar nada a ningún servicio de pago.
+A partir de una o varias fuentes de YouTube (uno o varios canales, playlists,
+vídeos sueltos o búsquedas por título), descarga las transcripciones, se
+queda solo con los vídeos que explican un método de generar ingresos
+(descarta entrevistas y demás), extrae esa información en un formato
+estructurado, la limpia/normaliza, y te da un dashboard interactivo para
+explorar los métodos, ver huecos de mercado y combinar ideas — todo
+corriendo en tu máquina, sin mandar nada a ningún servicio de pago.
 
 ## 0. Requisitos previos
 
@@ -113,20 +114,86 @@ trabajo ya hecho.
 .venv/bin/python cli.py fetch @NombreCanal --limit 20
 ```
 
-**Qué hace**: lista los vídeos del canal (vía `yt-dlp`) y descarga la
-transcripción de cada uno (primero con `youtube_transcript_api`, y si falla,
-con los subtítulos de `yt-dlp` como alternativa).
+**Qué hace**: resuelve una o varias entradas (vía `yt-dlp`, sin descargar
+nada todavía) a una lista de vídeos, y descarga la transcripción de cada uno
+(primero con `youtube_transcript_api`, y si falla, con los subtítulos de
+`yt-dlp` como alternativa).
+
+**Entradas mixtas**: `fetch` acepta varias entradas a la vez, mezclables
+libremente, autodetectadas por su forma:
+
+```bash
+# canal (comportamiento clásico)
+.venv/bin/python cli.py fetch @AdrianSaenz --limit 50
+
+# canal + playlist + un par de vídeos sueltos + un fichero de lista, todo junto
+.venv/bin/python cli.py fetch @AdrianSaenz \
+  "https://www.youtube.com/playlist?list=XXXX" \
+  "https://youtu.be/XXXXXXXXXXX" \
+  --list mis_videos.txt
+
+# búsqueda por título (marca resuelto_por_titulo=true para que lo revises)
+.venv/bin/python cli.py fetch "titulo:Cómo Ganar Dinero Con TikTok Sin Enseñar La Cara" \
+  --title-channel @AdrianSaenz
+```
+
+- `@canal` o URL de canal → todos sus vídeos (usa `--limit` para acotar).
+- URL de playlist → yt-dlp la expande sola; el canal real de cada vídeo se
+  guarda por-vídeo, porque una playlist puede mezclar canales.
+- URL o ID de vídeo suelto.
+- `--list fichero.txt` (repetible) — una URL/ID por línea; usa el soporte
+  nativo de `-a` de `yt-dlp`, así que las líneas vacías y las que empiezan
+  por `#` se ignoran solas.
+- `"titulo:texto a buscar"` — se resuelve con `ytsearch` (top 5, no solo el
+  primero). Con `--title-channel @canal` prefiere, de esos 5, el resultado
+  de ese canal exacto en vez de quedarse a ciegas con el primero. Si una
+  búsqueda no encuentra nada, se registra un aviso y el resto de entradas de
+  la misma llamada se sigue procesando — no aborta la ejecución.
+
+Todas las entradas se deduplican por `video_id`: si el mismo vídeo llega por
+dos fuentes distintas en la misma llamada, se procesa una sola vez.
 
 **Por qué es el primer paso**: todo lo demás analiza *texto*, no vídeo —
 necesitas el texto en disco antes de poder hacer nada con IA.
 
 **Por qué es idempotente**: si `transcript.txt` ya existe para un
 `video_id`, se salta. Puedes ir subiendo el `--limit` poco a poco (10, luego
-50, luego 100) y nunca vuelve a descargar lo que ya tenías. El nombre de la
-carpeta de cada vídeo lleva el `video_id` como sufijo (no solo el título)
-para que, si el canal le cambia el título a un vídeo más adelante, el
-pipeline lo siga reconociendo como "ya descargado" en vez de intentar
-bajarlo de nuevo.
+50, luego 100), o añadir fuentes nuevas en llamadas sucesivas, y nunca vuelve
+a descargar lo que ya tenías. El nombre de la carpeta de cada vídeo lleva el
+`video_id` como sufijo (no solo el título) para que, si el canal le cambia
+el título a un vídeo más adelante, el pipeline lo siga reconociendo como "ya
+descargado" en vez de intentar bajarlo de nuevo.
+
+**Procedencia en `meta.json`**: cada vídeo descargado guarda de dónde vino,
+en campos separados del canal real al que pertenece:
+```json
+{
+  "canal_nombre": "Adrián Sáenz",
+  "canal_id": "UCVt4ugq2txl_szlXAO7B3-g",
+  "fuente_origen": "canal",
+  "fuente_detalle": "@AdrianSaenz",
+  "resuelto_por_titulo": false
+}
+```
+`fuente_origen` es uno de `canal` / `playlist` / `video` / `lista_fichero` /
+`busqueda_titulo`. `canal_nombre`/`canal_id` son el canal real del vídeo,
+no la fuente por la que entró (relevante en playlists mixtas). Estos campos
+llegan hasta el dashboard vía `normalize` (ver más abajo el filtro por
+fuente).
+
+**`reannotate` — rellenar la procedencia en vídeos ya descargados**:
+```bash
+.venv/bin/python cli.py reannotate --channel-hint @AdrianSaenz
+```
+Si ya tenías vídeos descargados antes de que existiera este campo, sus
+`meta.json` no tienen `canal_nombre`/`fuente_origen`/etc. `reannotate` los
+recorre, resuelve el canal real de cada uno contra YouTube (sin descargar
+ninguna transcripción) y rellena solo lo que falte. Como esos vídeos solo
+pudieron llegar por el flujo antiguo de "un canal a la vez", se les asigna
+`fuente_origen="canal"` y `fuente_detalle` = el valor que le pases en
+`--channel-hint` (indícalo tú explícitamente; no se adivina de
+`data/channel.json`, que se sobrescribe en cada `fetch` y puede llevar a
+etiquetar mal vídeos antiguos si mientras tanto ya usaste otra fuente).
 
 **Variables relevantes** (en `.env`):
 - `YT_COOKIES_FROM_BROWSER=brave` — de qué navegador coger cookies, para
@@ -307,16 +374,32 @@ seis vistas:
   el resultado sigue siendo editable, no es una respuesta cerrada. El
   mismo botón "Generar idea" de la rejilla está aquí también, en cuanto
   fijas exactamente dos facetas compatibles.
-- **Panorama** — vista de solo diagnóstico (no genera ideas) con cinco
+- **Panorama** — vista de solo diagnóstico (no genera ideas) con seis
   gráficos para leer el terreno antes de decidir: mapas de calor
   mecanismo×canal y categoría×inversión (color = potencial medio, número =
   n, gris = hueco real, borde discontinuo = n=1 frágil, rayado = pareja
   marcada incompatible), una dispersión de potencial contra saturación de
   competencia coloreada por evidencia (con la zona "potencial alto +
   saturación baja/media" sombreada), barras de potencial medio y cuota por
-  cada valor de mecanismo/canal/audiencia, y el reparto de vídeos por
+  cada valor de mecanismo/canal/audiencia, el reparto de vídeos por
   categoría para ver de un vistazo en cuántos modelos distintos se
-  concentra realmente el canal.
+  concentra realmente el canal, y "En qué se diferencia cada fuente"
+  (n, potencial medio, categorías y evidencia por canal — esta última
+  siempre sobre todas las fuentes, sin aplicar el filtro de abajo, porque
+  su objetivo es precisamente compararlas).
+
+**Filtro por fuente**: si el corpus mezcla vídeos de más de un canal (ver
+`fetch` con entradas mixtas, arriba), aparece un control de checkboxes
+("Fuente") justo encima de las pestañas, visible en todas ellas. Huecos,
+Similitud, Combinador, Constructor y Panorama (salvo la comparación por
+fuente) recalculan solo con los vídeos de las fuentes marcadas; el
+Expediente muestra de qué canal es cada vídeo y la exportación a
+Markdown/PDF refleja el filtro activo. Con una sola fuente en el corpus el
+control ni siquiera se muestra, y todo se comporta exactamente igual que
+si esta función no existiera. En Similitud, si filtras a exactamente dos
+fuentes, los pares muy parecidos entre canales distintos se resaltan con
+un borde de acento — es la señal de que dos canales están enseñando casi
+lo mismo.
 
 En el Expediente, además, dos botones — **"⬇ Descargar Markdown"** y
 **"🖨 Exportar a PDF"** — vuelcan a un único informe el estado actual de
@@ -467,7 +550,8 @@ cp .env.example .env
 ollama pull qwen3:14b
 ollama pull qwen3-embedding:8b
 
-# 3: el pipeline
+# 3: el pipeline (run acepta las mismas entradas mezclables que fetch:
+# canal, playlist, vídeo suelto, --list, "titulo:...")
 .venv/bin/python cli.py run @NombreCanal --limit 100
 .venv/bin/python cli.py normalize
 # -> abrir data/normalization_report.html, completar configs/normalization.json, repetir

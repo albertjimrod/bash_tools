@@ -1,13 +1,20 @@
 # yt_method_pipeline
 
-Pipeline reanudable, 100% local (Ollama), que a partir de un canal de YouTube
-extrae y analiza los métodos de generar ingresos explicados en sus vídeos:
+Pipeline reanudable, 100% local (Ollama), que a partir de una o varias
+fuentes de YouTube extrae y analiza los métodos de generar ingresos
+explicados en sus vídeos:
 
-1. **fetch** — descarga transcripciones (yt-dlp para listar el canal,
-   `youtube-transcript-api` para el texto con fallback a subtítulos de
-   yt-dlp si falla o está bloqueado). Idempotente: si `transcript.txt` ya
-   existe para un `video_id`, se salta — relanzar `fetch` nunca borra ni
-   repite descargas, solo añade vídeos nuevos.
+1. **fetch** — resuelve una o varias entradas mezclables (canal, playlist,
+   vídeo suelto, fichero de lista con `--list`, o `"titulo:..."` buscado vía
+   `ytsearch`) a una lista de vídeos deduplicada por `video_id`, y descarga
+   la transcripción de cada uno (`youtube-transcript-api`, con fallback a
+   subtítulos de yt-dlp si falla o está bloqueado). Cada `meta.json` guarda
+   su procedencia (`canal_nombre`/`canal_id` reales, `fuente_origen`,
+   `fuente_detalle`, `resuelto_por_titulo`). Idempotente: si `transcript.txt`
+   ya existe para un `video_id`, se salta — relanzar `fetch` nunca borra ni
+   repite descargas, solo añade vídeos nuevos. `reannotate` rellena esos
+   campos de procedencia en vídeos descargados antes de que existiera este
+   campo, sin volver a bajar ninguna transcripción.
 2. **classify** — filtra los vídeos descargados, quedándose solo con los que
    explican un método de negocio replicable (nada de entrevistas, noticias,
    documentales...). Ve el título + el principio de la transcripción, no solo
@@ -51,10 +58,15 @@ extrae y analiza los métodos de generar ingresos explicados en sus vídeos:
    operativo"), **Constructor de proyecto** (fijas tú mismo, faceta a
    faceta, la composición de un proyecto y ves en vivo qué respaldo tiene en
    el canal, con autocompletado y el mismo generador de ideas) y
-   **Panorama** (cinco gráficos de solo diagnóstico — mapas de calor
+   **Panorama** (seis gráficos de solo diagnóstico — mapas de calor
    mecanismo×canal y categoría×inversión, dispersión potencial/saturación
-   coloreada por evidencia, barras de potencial y cuota por primitivo, y
-   concentración por categoría — para leer el terreno antes de decidir).
+   coloreada por evidencia, barras de potencial y cuota por primitivo,
+   concentración por categoría, y comparación por fuente — para leer el
+   terreno antes de decidir). Si el corpus mezcla vídeos de más de una
+   fuente (ver `fetch` con entradas mixtas), aparece un filtro global por
+   fuente que recalcula Huecos/Similitud/Combinador/Constructor/Panorama
+   sobre el subconjunto elegido; con una sola fuente no se muestra y nada
+   cambia respecto al comportamiento anterior.
 7. **idea-server** — servidor HTTP local (`localhost:8765`) que el botón
    "Generar idea" del dashboard llama por `fetch()`. Necesario porque un HTML
    abierto por `file://` no puede llamar a un LLM sin exponer credenciales en
@@ -91,9 +103,15 @@ en `.env` y rellena `ANTHROPIC_API_KEY`.
 ## Uso
 
 ```bash
-# Paso 1: descargar transcripciones de un canal (idempotente)
+# Paso 1: descargar transcripciones (idempotente). Entradas mezclables:
+# canal, playlist, vídeo suelto, --list fichero.txt, "titulo:..." (ytsearch)
 .venv/bin/python cli.py fetch @NombreCanal
 .venv/bin/python cli.py fetch @NombreCanal --limit 20
+.venv/bin/python cli.py fetch @NombreCanal "https://youtu.be/XXXXXXXXXXX" --list otros.txt
+.venv/bin/python cli.py fetch "titulo:texto a buscar" --title-channel @NombreCanal
+
+# Rellena canal_nombre/fuente_origen en vídeos descargados antes de este campo
+.venv/bin/python cli.py reannotate --channel-hint @NombreCanal
 
 # Paso 2: filtrar vídeos que no sean métodos de negocio (entrevistas, etc.)
 .venv/bin/python cli.py classify
