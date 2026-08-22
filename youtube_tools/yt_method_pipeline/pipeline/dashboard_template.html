@@ -150,6 +150,27 @@
   header.top h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; }
   header.top p { margin: 0; color: var(--ink-muted); max-width: 62ch; }
 
+  .export-bar { display: flex; gap: 10px; margin: 10px 0 4px; }
+
+  /* --- Exportación a PDF: solo se ve durante la impresión, oculta el resto --- */
+  #print-report { display: none; }
+  @media print {
+    body { background: #fff; }
+    .wrap { display: none !important; }
+    #print-report { display: block !important; color: #111; background: #fff; font-family: Arial, Helvetica, sans-serif; }
+    .print-doc h2 { font-size: 22px; margin: 0 0 14px; }
+    .print-doc h3 { font-size: 17px; margin: 22px 0 10px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    .print-doc > h3:not(:first-of-type) { page-break-before: always; }
+    .print-doc h4 { font-size: 14px; margin: 16px 0 6px; }
+    .print-doc h5 { font-size: 12.5px; margin: 12px 0 4px; }
+    .print-doc p { font-size: 11.5px; line-height: 1.5; margin: 4px 0; }
+    .print-doc ul.print-list, .print-doc ol.print-list { margin: 4px 0 10px 18px; font-size: 11.5px; }
+    .print-table { border-collapse: collapse; width: 100%; margin: 8px 0 14px; font-size: 10px; }
+    .print-table th, .print-table td { border: 1px solid #ccc; padding: 3px 5px; text-align: left; }
+    .print-doc hr { border: none; border-top: 1px solid #ddd; margin: 14px 0; }
+    .print-doc a { color: #1a4b8c; }
+  }
+
   .kpis {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -419,6 +440,10 @@
     <div class="eyebrow" id="eyebrow">EXPEDIENTE DE MÉTODOS</div>
     <h1 id="h1title">Métodos de ingresos analizados</h1>
     <p id="subtitle"></p>
+    <div class="export-bar">
+      <button class="btn ghost" id="btn-export-md" type="button">⬇ Descargar Markdown</button>
+      <button class="btn ghost" id="btn-export-pdf" type="button">🖨 Exportar a PDF</button>
+    </div>
   </header>
 
   <div class="kpis" id="kpis"></div>
@@ -564,6 +589,8 @@
 
   <footer>Generado localmente a partir de <span class="mono">methods_norm.json</span> + <span class="mono">embedding.json</span> de cada vídeo. Sin llamadas externas.</footer>
 </div>
+
+<div id="print-report"></div>
 
 <script>
 const DATA = __DATA_JSON__;
@@ -996,9 +1023,10 @@ function renderCoverageBanner() {
   wrap.appendChild(el('div', { class: 'coverage-banner ' + cls }, [el('div', { class: 'pct' }, pct + '%'), el('div', { class: 'txt' }, txt)]));
 }
 
-function renderGapGrid() {
-  const [axisA, axisB] = document.getElementById('sel-gap-axes').value.split('|');
-  const soloAdyacentes = document.getElementById('chk-adyacentes').checked;
+// Modelo puro de la rejilla (sin tocar el DOM) — lo consumen tanto
+// renderGapGrid() (pintado interactivo) como el exportador de informes, para
+// que ambos vean siempre exactamente los mismos datos.
+function buildGapGridModel(axisA, axisB, soloAdyacentes) {
   const valsA = axisValues(axisA);
   const valsB = axisValues(axisB);
 
@@ -1016,67 +1044,86 @@ function renderGapGrid() {
   }));
 
   const candidates = [];
+  const rows = valsA.map(a => {
+    const cells = valsB.map(b => {
+      const vids = exactCells[a + '|' + b] || [];
+      if (vids.length > 0) return { a, b, kind: 'filled', vids };
+
+      const cached = cachedIdeaFor(axisA, a, axisB, b);
+      const discardedByIdea = cached && !ideaIsViable(cached);
+      const configIncompatible = isIncompatible(axisA, a, axisB, b);
+      if (configIncompatible || discardedByIdea) {
+        return { a, b, kind: 'discarded', cached, configIncompatible };
+      }
+
+      const adjacent = filledRows.has(a) || filledCols.has(b);
+      if (soloAdyacentes && !adjacent) return { a, b, kind: 'hidden' };
+
+      const pool = [...new Set([...poolForFacet(axisA, a), ...poolForFacet(axisB, b)])];
+      const n = pool.length;
+      const score = meanPotencial(pool);
+      const lowEvidence = n > 0 && n < LOW_EVIDENCE_N;
+      const lowConfidence = ideaIsLowConfidence(cached || {});
+      candidates.push({ a, b, score: score || 0, n });
+      return { a, b, kind: 'empty', n, score, lowEvidence, lowConfidence, cached };
+    });
+    return { a, cells };
+  });
+
+  return { axisA, axisB, valsA, valsB, rows, candidates };
+}
+
+function renderGapGrid() {
+  const [axisA, axisB] = document.getElementById('sel-gap-axes').value.split('|');
+  const soloAdyacentes = document.getElementById('chk-adyacentes').checked;
+  const model = buildGapGridModel(axisA, axisB, soloAdyacentes);
 
   const table = document.getElementById('gap-table');
   table.innerHTML = '';
-  table.appendChild(el('tr', {}, [el('th', { class: 'corner' }, '')].concat(valsB.map(b => el('th', {}, b)))));
+  table.appendChild(el('tr', {}, [el('th', { class: 'corner' }, '')].concat(model.valsB.map(b => el('th', {}, b)))));
 
-  valsA.forEach(a => {
+  model.rows.forEach(({ a, cells }) => {
     const row = el('tr', {}, [el('th', {}, a)]);
-    valsB.forEach(b => {
-      const vids = exactCells[a + '|' + b] || [];
+    cells.forEach(c => {
       let div;
-      if (vids.length > 0) {
-        const heatCls = heatClass(Math.min(1, vids.length / 4));
+      if (c.kind === 'filled') {
+        const heatCls = heatClass(Math.min(1, c.vids.length / 4));
         div = el('div', {
           class: 'gap-cell filled ' + heatCls,
           style: `background:var(--${heatCls});color:var(--heat-text-${['heat-3', 'heat-4'].includes(heatCls) ? 'hi' : 'lo'})`,
-          title: vids.map(v => v.title).join('\n'),
-        }, String(vids.length));
-        div.addEventListener('click', () => showGapPanel(a, b, axisA, axisB, vids, null, null));
+          title: c.vids.map(v => v.title).join('\n'),
+        }, String(c.vids.length));
+        div.addEventListener('click', () => showGapPanel(c.a, c.b, axisA, axisB, c.vids, null, null));
+      } else if (c.kind === 'discarded') {
+        const title = c.cached && !c.configIncompatible
+          ? `Descartada por el generador de ideas: ${c.cached.motivo || 'combinación económicamente incompatible'}`
+          : 'Descartada: combinación incompatible declarada en configs/normalization.json';
+        div = el('div', { class: 'gap-cell discarded', title }, '✕');
+      } else if (c.kind === 'hidden') {
+        div = el('div', {
+          class: 'gap-cell empty', style: 'opacity:.3',
+          title: 'Hueco no adyacente, oculto por el filtro. Desmarca "solo huecos adyacentes" para verlo.',
+        }, '·');
       } else {
-        const cached = cachedIdeaFor(axisA, a, axisB, b);
-        const discardedByIdea = cached && !ideaIsViable(cached);
-        if (isIncompatible(axisA, a, axisB, b) || discardedByIdea) {
-          const title = discardedByIdea
-            ? `Descartada por el generador de ideas: ${cached.motivo || 'combinación económicamente incompatible'}`
-            : 'Descartada: combinación incompatible declarada en configs/normalization.json';
-          div = el('div', { class: 'gap-cell discarded', title }, '✕');
-        } else {
-          const adjacent = filledRows.has(a) || filledCols.has(b);
-          if (soloAdyacentes && !adjacent) {
-            div = el('div', {
-              class: 'gap-cell empty', style: 'opacity:.3',
-              title: 'Hueco no adyacente, oculto por el filtro. Desmarca "solo huecos adyacentes" para verlo.',
-            }, '·');
-          } else {
-            const pool = [...new Set([...poolForFacet(axisA, a), ...poolForFacet(axisB, b)])];
-            const n = pool.length;
-            const score = meanPotencial(pool);
-            const lowEvidence = n > 0 && n < LOW_EVIDENCE_N;
-            const lowConfidence = ideaIsLowConfidence(cached || {});
-            const title = `Hueco: ${AXIS_LABELS[axisA]} "${a}" × ${AXIS_LABELS[axisB]} "${b}" — score estimado ${score != null ? Math.round(score) : '—'} (n=${n})`
-              + (cached ? (lowConfidence ? ' — 💡 idea generada, confianza baja (se apoya en un solo vídeo)' : ' — 💡 idea ya generada') : '');
-            div = el('div', {
-              class: 'gap-cell empty' + (lowEvidence ? ' low-evidence' : '') + (lowConfidence ? ' low-confidence' : ''),
-              style: score != null ? scoreCellStyle(score) : '',
-              title,
-            }, [
-              score != null ? String(Math.round(score)) : '·',
-              lowEvidence ? el('span', { class: 'flag' }, '⚠') : null,
-              lowConfidence ? el('span', { class: 'flag confidence' }, '◐') : null,
-            ]);
-            div.addEventListener('click', () => showGapPanel(a, b, axisA, axisB, [], score, n));
-            candidates.push({ a, b, score: score || 0, n });
-          }
-        }
+        const title = `Hueco: ${AXIS_LABELS[axisA]} "${c.a}" × ${AXIS_LABELS[axisB]} "${c.b}" — score estimado ${c.score != null ? Math.round(c.score) : '—'} (n=${c.n})`
+          + (c.cached ? (c.lowConfidence ? ' — 💡 idea generada, confianza baja (se apoya en un solo vídeo)' : ' — 💡 idea ya generada') : '');
+        div = el('div', {
+          class: 'gap-cell empty' + (c.lowEvidence ? ' low-evidence' : '') + (c.lowConfidence ? ' low-confidence' : ''),
+          style: c.score != null ? scoreCellStyle(c.score) : '',
+          title,
+        }, [
+          c.score != null ? String(Math.round(c.score)) : '·',
+          c.lowEvidence ? el('span', { class: 'flag' }, '⚠') : null,
+          c.lowConfidence ? el('span', { class: 'flag confidence' }, '◐') : null,
+        ]);
+        div.addEventListener('click', () => showGapPanel(c.a, c.b, axisA, axisB, [], c.score, c.n));
       }
       row.appendChild(el('td', {}, div));
     });
     table.appendChild(row);
   });
 
-  renderTopHuecos(candidates, axisA, axisB);
+  renderTopHuecos(model.candidates, axisA, axisB);
 }
 
 function renderTopHuecos(candidates, axisA, axisB) {
@@ -1430,6 +1477,311 @@ renderHeat();
 const combi = renderCombinator();
 renderSuggestions(combi);
 renderComparator();
+
+// --- Exportación del informe (Markdown / PDF) ---
+// Todo el módulo es de solo lectura sobre DATA y el estado actual de los
+// controles (ejes elegidos, modo de similitud, selección del combinador):
+// no modifica el comportamiento de ninguna otra pestaña.
+function fmtValue(v) { return v == null || v === '' ? '—' : String(v); }
+function mdList(items) { return (items && items.length) ? items.map(i => `- ${i}`).join('\n') : '_Ninguno._'; }
+function mdCell(v) { return String(v == null ? '' : v).replace(/\|/g, '\\|').replace(/\n/g, ' '); }
+
+function mdIdea(idea) {
+  if (!ideaIsViable(idea)) {
+    return [
+      '**Idea descartada — no viable**',
+      `- Motivo: ${fmtValue(idea.motivo)}`,
+      idea.alternativa ? `- Alternativa sugerida: ${idea.alternativa}` : null,
+    ].filter(Boolean).join('\n');
+  }
+  return [
+    `**${fmtValue(idea.nombre_idea)}**${idea.confianza === 'baja' ? ' _(confianza baja: alguna faceta se apoya en un solo vídeo)_' : ''}`,
+    fmtValue(idea.en_una_frase),
+    '',
+    `- Cliente objetivo: ${fmtValue(idea.cliente_objetivo)}`,
+    `- Propuesta de valor: ${fmtValue(idea.propuesta_valor)}`,
+    `- Por qué encaja: ${fmtValue(idea.por_que_encaja)}`,
+    '',
+    'Primeros pasos:',
+    mdList(idea.primeros_3_pasos),
+    `- Herramientas sugeridas: ${(idea.herramientas_sugeridas || []).join(', ') || '—'}`,
+    'Riesgos a vigilar:',
+    mdList(idea.riesgos_a_vigilar),
+  ].join('\n');
+}
+
+function mdExpediente() {
+  const lines = [`## Expediente — vídeos analizados (${DATA.videos.length})`, ''];
+  DATA.videos.forEach((v, idx) => {
+    const m = v.method;
+    const eco = m.economia || {};
+    const req = m.requisitos || {};
+    const vende = m.vende_algo || {};
+    const sesgo = m.sesgo_supervivencia || {};
+    const publico = m.publico_objetivo || {};
+    const prim = m.primitivos || {};
+    lines.push(
+      `### ${idx + 1}. ${v.title || v.id}`, '',
+      `[Ver vídeo](${v.url})`, '',
+      `**Resumen:** ${fmtValue(m.resumen_frase || m.resumen)}`,
+      `**Potencial operativo:** ${potentialScore(m)} · **Potencial (normalizado):** ${fmtValue(v.potencial)}`, '',
+      '**1 · Identificación**',
+      `- Resumen: ${fmtValue(m.resumen)}`,
+      `- Evergreen: ${m.evergreen === true ? 'sí' : m.evergreen === false ? 'no' : '—'}`, '',
+      '**2 · Economía**',
+      `- Ingreso declarado: ${fmtValue(eco.ingreso_declarado)}`,
+      `- Inversión inicial: ${fmtValue(eco.inversion_inicial)}`,
+      `- Costes recurrentes: ${fmtValue(eco.costes_recurrentes)}`,
+      `- Primer ingreso: ${fmtValue(eco.tiempo_primer_ingreso)}`,
+      `- Monetización: ${fmtValue(eco.mecanismo_monetizacion)}`,
+      `- Escalabilidad: ${fmtValue(eco.escalabilidad)}`, '',
+      '**3 · Requisitos y barreras**',
+      `- Conocimiento previo: ${fmtValue(req.conocimiento_previo)}`,
+      `- Dedicación: ${req.dedicacion_horas_semana ? req.dedicacion_horas_semana + ' h/semana' : '—'}`,
+      `- Habilidades necesarias: ${(req.habilidades_necesarias || []).join(', ') || '—'}`,
+      `- Herramientas: ${(m.herramientas || []).join(', ') || '—'}`, '',
+      '**4 · Ejecución**', 'Pasos:', mdList(m.pasos),
+      `- Tácticas: ${(m.tacticas || []).join(', ') || '—'}`,
+      `- Recursos citados: ${(m.recursos_citados || []).join(', ') || '—'}`, '',
+      '**5 · Credibilidad y riesgo**',
+      `- Saturación/competencia: ${fmtValue(m.saturacion_competencia)}`,
+      `- Evidencia: ${fmtValue(m.evidencia)}`,
+      `- Vende algo propio: ${vende.tipo === 'ninguno' || !vende.tipo ? 'no' : `${vende.tipo} — ${vende.detalle || ''}`}`,
+      `- Sesgo de supervivencia: ${sesgo.presente ? `sí — ${sesgo.detalle || ''}` : 'no'}`,
+      'Riesgos declarados:', mdList(m.riesgos_declarados),
+      'Riesgos omitidos (análisis):', mdList(m.riesgos_omitidos),
+      'Red flags:', mdList(m.red_flags), '',
+      '**6 · Meta / fuente**',
+      `- Público objetivo: ${fmtValue(publico.nivel)}`,
+      `- Requiere capital: ${publico.requiere_capital === true ? 'sí' : publico.requiere_capital === false ? 'no' : '—'}`,
+      `- Incentivo del creador: ${fmtValue(m.incentivo_creador)}`, '',
+      `**Primitivos:** ${prim.mecanismo_valor || '—'} × ${prim.canal_apalancamiento || '—'} × ${prim.audiencia || '—'}`,
+      `**Normalización (categoría/canal/mecanismo/audiencia):** ${[v.categoria_norm, v.canal_norm, v.mecanismo_norm, v.audiencia_norm].map(x => x || '—').join(' · ')}`,
+    );
+    if (m.assessment) lines.push('', `**Análisis propio:** ${m.assessment}`);
+    lines.push('', '---', '');
+  });
+  return lines.join('\n');
+}
+
+function mdGapGrid() {
+  const [axisA, axisB] = document.getElementById('sel-gap-axes').value.split('|');
+  const soloAdyacentes = document.getElementById('chk-adyacentes').checked;
+  const model = buildGapGridModel(axisA, axisB, soloAdyacentes);
+
+  const lines = [
+    `## Rejilla de huecos — ${AXIS_LABELS[axisA]} × ${AXIS_LABELS[axisB]}`, '',
+    `Cobertura de normalización: ${DATA.coverage_pct}% · Filtro "solo huecos adyacentes": ${soloAdyacentes ? 'activado' : 'desactivado'}`, '',
+  ];
+
+  const header = ['', ...model.valsB.map(mdCell)];
+  lines.push('| ' + header.join(' | ') + ' |', '|' + header.map(() => '---').join('|') + '|');
+  model.rows.forEach(({ a, cells }) => {
+    const rowCells = cells.map(c => {
+      if (c.kind === 'filled') return String(c.vids.length);
+      if (c.kind === 'discarded') return '✕';
+      if (c.kind === 'hidden') return '·';
+      const parts = [c.score != null ? String(Math.round(c.score)) : '·'];
+      if (c.lowEvidence) parts.push('⚠');
+      if (c.lowConfidence) parts.push('◐');
+      else if (c.cached) parts.push('💡');
+      return parts.join(' ');
+    });
+    lines.push('| ' + [mdCell(a), ...rowCells].join(' | ') + ' |');
+  });
+  lines.push(
+    '',
+    'Leyenda: número = vídeos que cubren la celda · ✕ = descartada (incompatible por config o idea inviable) · ' +
+    'número en celda vacía = score estimado del hueco · ⚠ = baja evidencia (n<3) · ◐ = idea generada con confianza baja · 💡 = idea ya generada.',
+    '',
+  );
+
+  const top = [...model.candidates].sort((x, y) => y.score - x.score).slice(0, 50);
+  lines.push('### Top 50 huecos', '');
+  if (!top.length) {
+    lines.push('_No hay huecos que cumplan los filtros actuales._');
+  } else {
+    top.forEach(({ a, b, score, n }, i) => {
+      lines.push(`${i + 1}. **${a} × ${b}** — score ${Math.round(score)} · n=${n}${n < LOW_EVIDENCE_N ? ' · ⚠ baja evidencia' : ''}`);
+    });
+  }
+  lines.push('');
+
+  const ideaEntries = [];
+  model.rows.forEach(({ cells }) => cells.forEach(c => { if (c.cached) ideaEntries.push({ a: c.a, b: c.b, idea: c.cached }); }));
+  lines.push('### Ideas de negocio generadas para este par de ejes', '');
+  if (!ideaEntries.length) {
+    lines.push('_Ninguna idea generada todavía para esta combinación de ejes. Genera alguna desde el dashboard (botón "Generar idea") y vuelve a exportar._');
+  } else {
+    ideaEntries.forEach(({ a, b, idea }) => lines.push(`#### ${a} × ${b}`, '', mdIdea(idea), ''));
+  }
+  lines.push('');
+  return lines.join('\n');
+}
+
+function mdSimilitud() {
+  const order = simOrder || DATA.videos.map((_, i) => i);
+  const matrix = currentMatrix();
+  const lines = [
+    `## Similitud entre métodos — modo ${simMode === 'tematica' ? 'temática (embeddings)' : 'ponderada (facetas)'}, ${simOrder ? 'reordenado por similitud' : 'orden original'}`,
+    '',
+  ];
+  if (simMode === 'ponderada') {
+    lines.push('Pesos de las facetas:');
+    SLIDER_FACETS.forEach(({ key, label }) => lines.push(`- ${label}: ${sliderWeights[key]}`));
+    lines.push('');
+  }
+  const header = ['', ...order.map((_, i) => String(i + 1))];
+  lines.push('| ' + header.join(' | ') + ' |', '|' + header.map(() => '---').join('|') + '|');
+  order.forEach(oi => {
+    const row = [mdCell(DATA.videos[oi].title)];
+    order.forEach(oj => row.push(oi === oj ? '—' : fmtPct(matrix[oi][oj])));
+    lines.push('| ' + row.join(' | ') + ' |');
+  });
+  lines.push('', 'Índice de vídeos:', '');
+  order.forEach((oi, i) => lines.push(`${i + 1}. ${DATA.videos[oi].title}`));
+  lines.push('');
+  return lines.join('\n');
+}
+
+function mdCombinador() {
+  const dims = collectPrimitivos();
+  const mecSel = document.getElementById('sel-mecanismo');
+  const canSel = document.getElementById('sel-canal');
+  const audSel = document.getElementById('sel-audiencia');
+  const lines = ['## Combinador de primitivos', ''];
+
+  if (dims.mecanismo_valor.length && dims.canal_apalancamiento.length && dims.audiencia.length && mecSel.value !== '') {
+    const mec = dims.mecanismo_valor[mecSel.value];
+    const can = dims.canal_apalancamiento[canSel.value];
+    const aud = dims.audiencia[audSel.value];
+    const existing = existsCombo(mec.value, can.value, aud.value);
+    const idxs = [mec.videoIdx, can.videoIdx, aud.videoIdx];
+    const sim = avgSimilarity(idxs);
+    lines.push(
+      `**Selección actual:** ${mec.value} × ${can.value} × ${aud.value}`,
+      `- Mecanismo tomado de: ${DATA.videos[mec.videoIdx].title}`,
+      `- Canal tomado de: ${DATA.videos[can.videoIdx].title}`,
+      `- Audiencia tomada de: ${DATA.videos[aud.videoIdx].title}`,
+      `- Estado: ${existing ? `ya existe — ${existing.title}` : 'combinación nueva'}`,
+      sim !== null ? `- Afinidad entre los métodos de origen: ${fmtPct(sim)}` : '- Los tres primitivos vienen del mismo vídeo',
+      `- Potencial operativo combinado: ${avgPotential(idxs)}`, '',
+    );
+  } else {
+    lines.push('_Sin datos suficientes de primitivos para mostrar una selección._', '');
+  }
+
+  const aSel = document.getElementById('sel-video-a');
+  const bSel = document.getElementById('sel-video-b');
+  lines.push('### Comparador manual de dos métodos', '');
+  if (aSel.value === '' || bSel.value === '') {
+    lines.push('_Sin selección en el comparador._');
+  } else {
+    const i = Number(aSel.value), j = Number(bSel.value);
+    if (i === j) {
+      lines.push('_Elige dos vídeos distintos para comparar._');
+    } else {
+      const simAB = DATA.similarity[i][j];
+      lines.push(
+        `**${DATA.videos[i].title}** ↔ **${DATA.videos[j].title}**`,
+        `- Idea combinada: ${combinedIdea(i, j)}`,
+        `- Afinidad: ${fmtPct(simAB)}`,
+        `- Potencial operativo combinado: ${avgPotential([i, j])}`,
+      );
+    }
+  }
+  lines.push('');
+  return lines.join('\n');
+}
+
+function buildFullReportMarkdown() {
+  const now = new Date().toLocaleString('es-ES');
+  return [
+    `# Informe — ${DATA.channel}`, '',
+    `_Generado el ${now} desde el dashboard local (${DATA.videos.length} vídeos analizados, cobertura de normalización ${DATA.coverage_pct}%)._`,
+    '', '---', '',
+    mdExpediente(), mdGapGrid(), mdSimilitud(), mdCombinador(),
+  ].join('\n');
+}
+
+// Convierte el subconjunto de Markdown que generan las funciones de arriba
+// (encabezados #-####, listas -/1., tablas |...|, ---, **negrita**, _cursiva_)
+// a DOM, para la vista de impresión. Reutiliza el mismo texto que el export
+// a Markdown, así que ambos formatos nunca pueden divergir en contenido.
+function markdownToPrintable(md) {
+  const container = el('div', { class: 'print-doc' });
+  const lines = md.split('\n');
+  let listBuffer = null;
+  let tableRows = null;
+
+  function flushList() { if (listBuffer) { container.appendChild(listBuffer.el); listBuffer = null; } }
+  function flushTable() {
+    if (!tableRows) return;
+    const table = el('table', { class: 'print-table' });
+    tableRows.forEach((cells, ri) => table.appendChild(el('tr', {}, cells.map(c => el(ri === 0 ? 'th' : 'td', {}, inline(c))))));
+    container.appendChild(table);
+    tableRows = null;
+  }
+  function inline(text) {
+    const escaped = String(text)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/_(.+?)_/g, '<em>$1</em>');
+    return el('span', { html: escaped });
+  }
+
+  for (const line of lines) {
+    if (/^\|/.test(line)) {
+      if (!/^\|[\s\-:|]+\|$/.test(line)) {
+        if (!tableRows) tableRows = [];
+        tableRows.push(line.slice(1, -1).split('|').map(c => c.trim()));
+      }
+      continue;
+    }
+    flushTable();
+
+    if (/^- /.test(line)) {
+      if (!listBuffer || listBuffer.tag !== 'ul') { flushList(); listBuffer = { tag: 'ul', el: el('ul', { class: 'print-list' }) }; }
+      listBuffer.el.appendChild(el('li', {}, inline(line.slice(2))));
+      continue;
+    }
+    if (/^\d+\.\s/.test(line)) {
+      if (!listBuffer || listBuffer.tag !== 'ol') { flushList(); listBuffer = { tag: 'ol', el: el('ol', { class: 'print-list' }) }; }
+      listBuffer.el.appendChild(el('li', {}, inline(line.replace(/^\d+\.\s/, ''))));
+      continue;
+    }
+    flushList();
+
+    if (line.trim() === '---') { container.appendChild(el('hr')); continue; }
+    if (line.trim() === '') continue;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if (h) { container.appendChild(el('h' + (h[1].length + 1), {}, inline(h[2]))); continue; }
+    container.appendChild(el('p', {}, inline(line)));
+  }
+  flushList();
+  flushTable();
+  return container;
+}
+
+document.getElementById('btn-export-md').addEventListener('click', () => {
+  const blob = new Blob([buildFullReportMarkdown()], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'informe_dashboard.md';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('btn-export-pdf').addEventListener('click', () => {
+  const container = document.getElementById('print-report');
+  container.innerHTML = '';
+  container.appendChild(markdownToPrintable(buildFullReportMarkdown()));
+  window.print();
+});
 </script>
 </body>
 </html>
