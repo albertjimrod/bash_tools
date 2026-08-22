@@ -600,9 +600,11 @@ def capture_tab(pestana: str, enfoque: str, out_path: Path, n_total: int) -> Non
                 n_total,
             )
         page.click(f'.tab-btn[data-tab="{pestana}"]')
-        panel = page.locator(f'.tab-panel[data-tab="{pestana}"]')
-        panel.wait_for(state="visible")
-        panel.screenshot(path=str(out_path))
+        page.locator(f'.tab-panel[data-tab="{pestana}"]').wait_for(state="visible")
+        # Página completa, no solo el panel: cabecera, KPIs, barra de
+        # pestañas y todo el contenido de la pestaña activa (las demás
+        # pestañas están en display:none, así que no aparecen).
+        page.screenshot(path=str(out_path), full_page=True)
         browser.close()
     logger.info("captura guardada: %s", out_path)
 
