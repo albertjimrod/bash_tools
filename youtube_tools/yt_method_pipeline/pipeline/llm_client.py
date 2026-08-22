@@ -52,7 +52,28 @@ def _call_anthropic(prompt: str, tool: dict, max_tokens: int) -> dict[str, Any]:
     )
 
 
+# Contexto pequeño -> el modelo cabe entero en VRAM (rápido). Contexto grande
+# (config.OLLAMA_NUM_CTX, el techo configurado) -> se reparte entre CPU/GPU si
+# no hay VRAM suficiente (mucho más lento). Se elige el bucket más pequeño que
+# quepa el prompt en vez de usar siempre el techo, para no pagar ese coste en
+# vídeos cortos/medios que no lo necesitan.
+_CTX_BUCKETS = (8192, 16384, 32768)
+
+
+def _pick_num_ctx(prompt: str, max_tokens: int) -> int:
+    ceiling = config.OLLAMA_NUM_CTX
+    needed = len(prompt) // 3 + max_tokens + 1536  # margen: estimación de tokens + salida + colchón
+    for bucket in _CTX_BUCKETS:
+        if bucket >= ceiling:
+            break
+        if needed <= bucket:
+            return bucket
+    return ceiling
+
+
 def _call_ollama(prompt: str, tool: dict, max_tokens: int, think: bool) -> dict[str, Any]:
+    num_ctx = _pick_num_ctx(prompt, max_tokens)
+
     def _do_call():
         response = httpx.post(
             f"{config.OLLAMA_HOST}/api/chat",
@@ -64,11 +85,11 @@ def _call_ollama(prompt: str, tool: dict, max_tokens: int, think: bool) -> dict[
                 "think": think,
                 "options": {
                     "temperature": 0,
-                    "num_ctx": config.OLLAMA_NUM_CTX,
+                    "num_ctx": num_ctx,
                     "num_predict": max_tokens,
                 },
             },
-            timeout=600,
+            timeout=1800,
         )
         response.raise_for_status()
         content = response.json()["message"]["content"]

@@ -4,3 +4,4 @@ anthropic
 httpx
 jsonschema
 python-dotenv
+secretstorage

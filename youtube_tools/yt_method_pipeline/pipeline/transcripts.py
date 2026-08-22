@@ -4,10 +4,11 @@ import logging
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 from typing import Optional
 
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import AgeRestricted, RequestBlocked, YouTubeTranscriptApi
 
 import config
 from .channel import list_channel_videos
@@ -16,8 +17,22 @@ from .utils import clean_subtitle_text, retry_call, slugify, strip_sound_tags, a
 logger = logging.getLogger(__name__)
 _YTDLP_CMD = [sys.executable, "-m", "yt_dlp"]
 
+# Una vez YouTube bloquea la IP para youtube_transcript_api, seguir reintentando
+# esa misma vía en los vídeos siguientes es inútil (el bloqueo no se levanta en
+# segundos) y solo desperdicia tiempo. Se marca a nivel de módulo y el resto de
+# la ejecución de 'fetch' va directa al fallback de yt-dlp (cookies, camino
+# distinto).
+_transcript_api_blocked = False
+
 
 def _video_dir(video_id: str, title: str) -> Path:
+    """Directorio del vídeo: reutiliza uno ya existente para ese video_id aunque
+    el título haya cambiado en YouTube desde que se descargó (algunos canales
+    editan títulos), para no perder la idempotencia y volver a intentar un
+    fetch innecesario (y potencialmente fallido si hay un bloqueo de IP)."""
+    existing = list(config.TRANSCRIPTS_DIR.glob(f"*-{video_id}"))
+    if existing:
+        return existing[0]
     slug = slugify(title)[:80] or "video"
     return config.TRANSCRIPTS_DIR / f"{slug}-{video_id}"
 
@@ -53,27 +68,36 @@ def _find_sub_file(tmp_dir: Path, video_id: str) -> Optional[Path]:
 
 
 def _fetch_via_ytdlp(video_id: str, url: str) -> Optional[tuple[str, str, str]]:
-    """Prueba subs manuales y luego automáticos, en orden de LANG_PRIORITY. Devuelve (texto, idioma, tipo)."""
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp_path = Path(tmp)
-        for lang in config.LANG_PRIORITY:
-            for flag, sub_type in (("--write-sub", "manual"), ("--write-auto-sub", "auto")):
-                cmd = [
-                    *_YTDLP_CMD, "--skip-download", flag,
-                    "--sub-langs", lang, "--sub-format", "vtt/srt/best",
-                ]
-                if config.YT_COOKIES_FROM_BROWSER:
-                    cmd += ["--cookies-from-browser", config.YT_COOKIES_FROM_BROWSER]
-                cmd += ["-o", str(tmp_path / "%(id)s.%(ext)s"), url]
+    """Prueba subs manuales y luego automáticos, en orden de LANG_PRIORITY.
 
-                subprocess.run(cmd, capture_output=True, text=True)
-                found = _find_sub_file(tmp_path, video_id)
-                if found:
-                    text = clean_subtitle_text(found.read_text(encoding="utf-8", errors="ignore"))
-                    return strip_sound_tags(text), lang, sub_type
+    Primero SIN cookies: las cookies de Brave (aunque se descifren bien) hacen
+    que YouTube devuelva 'the page needs to be reloaded' en la mayoría de
+    peticiones — es más fiable no mandarlas. Solo si esa pasada entera falla
+    se reintenta CON cookies, que hace falta para contenido con restricción de
+    edad (a costa de arriesgarse a ese mismo error). Devuelve (texto, idioma, tipo).
+    """
+    cookie_passes = [False, True] if config.YT_COOKIES_FROM_BROWSER else [False]
+    for use_cookies in cookie_passes:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            for lang in config.LANG_PRIORITY:
+                for flag, sub_type in (("--write-sub", "manual"), ("--write-auto-sub", "auto")):
+                    cmd = [
+                        *_YTDLP_CMD, "--skip-download", flag,
+                        "--sub-langs", lang, "--sub-format", "vtt/srt/best",
+                    ]
+                    if use_cookies:
+                        cmd += ["--cookies-from-browser", config.YT_COOKIES_FROM_BROWSER]
+                    cmd += ["-o", str(tmp_path / "%(id)s.%(ext)s"), url]
 
-                for f in tmp_path.iterdir():
-                    f.unlink(missing_ok=True)
+                    subprocess.run(cmd, capture_output=True, text=True)
+                    found = _find_sub_file(tmp_path, video_id)
+                    if found:
+                        text = clean_subtitle_text(found.read_text(encoding="utf-8", errors="ignore"))
+                        return strip_sound_tags(text), lang, sub_type
+
+                    for f in tmp_path.iterdir():
+                        f.unlink(missing_ok=True)
     return None
 
 
@@ -88,18 +112,27 @@ def download_transcript(video: dict) -> str:
         logger.info("skip (ya existe): %s", out_dir.name)
         return "skip"
 
+    global _transcript_api_blocked
     text = lang = source = None
 
-    try:
-        result = retry_call(
-            _fetch_via_transcript_api, video_id,
-            max_retries=config.MAX_RETRIES, base=config.BACKOFF_BASE,
-        )
-        if result:
-            text, lang = result
-            source = "youtube_transcript_api"
-    except Exception as exc:
-        logger.warning("transcript-api falló para %s (%s): %s", video_id, title, exc)
+    if not _transcript_api_blocked:
+        try:
+            result = retry_call(
+                _fetch_via_transcript_api, video_id,
+                max_retries=config.MAX_RETRIES, base=config.BACKOFF_BASE,
+                no_retry=(RequestBlocked, AgeRestricted),
+            )
+            if result:
+                text, lang = result
+                source = "youtube_transcript_api"
+        except RequestBlocked:
+            _transcript_api_blocked = True
+            logger.warning(
+                "YouTube ha bloqueado la IP para youtube_transcript_api; "
+                "el resto de esta ejecución usará solo el fallback de yt-dlp"
+            )
+        except Exception as exc:
+            logger.warning("transcript-api falló para %s (%s): %s", video_id, title, exc)
 
     if text is None:
         fallback = _fetch_via_ytdlp(video_id, video["url"])
@@ -132,6 +165,9 @@ def download_transcript(video: dict) -> str:
 
 
 def run(channel: str, limit: Optional[int] = None) -> None:
+    global _transcript_api_blocked
+    _transcript_api_blocked = False
+
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)
     config.TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
     config.LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -146,7 +182,10 @@ def run(channel: str, limit: Optional[int] = None) -> None:
     counts = {"ok": 0, "skip": 0, "fail": 0}
     for i, video in enumerate(videos, 1):
         logger.info("[%d/%d] %s", i, len(videos), video["title"])
-        counts[download_transcript(video)] += 1
+        result = download_transcript(video)
+        counts[result] += 1
+        if result != "skip":
+            time.sleep(config.FETCH_DELAY)
 
     logger.info(
         "Paso 1 completado: %(ok)d nuevas, %(skip)d ya existían, %(fail)d sin transcripción",

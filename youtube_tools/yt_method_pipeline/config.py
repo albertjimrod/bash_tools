@@ -36,3 +36,4 @@ MAX_RETRIES = int(os.environ.get("PIPELINE_MAX_RETRIES", "4"))
 BACKOFF_BASE = float(os.environ.get("PIPELINE_BACKOFF_BASE", "2.0"))
 
 YT_COOKIES_FROM_BROWSER = os.environ.get("YT_COOKIES_FROM_BROWSER") or None
+FETCH_DELAY = float(os.environ.get("FETCH_DELAY", "1.5"))

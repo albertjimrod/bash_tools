@@ -106,6 +106,11 @@ def run() -> None:
     all_dirs = sorted(p for p in config.TRANSCRIPTS_DIR.iterdir() if p.is_dir())
     excluded = [d for d in all_dirs if is_excluded(d)]
     video_dirs = [d for d in all_dirs if d not in excluded]
+    # de transcripción más corta a más larga: agrupa los vídeos que necesitan
+    # poco contexto (rápidos, caben enteros en VRAM) antes que los que
+    # necesitan mucho, minimizando cuántas veces Ollama recarga el modelo
+    # al cambiar de tamaño de contexto (ver pipeline.llm_client._pick_num_ctx)
+    video_dirs.sort(key=lambda d: (d / "transcript.txt").stat().st_size)
     logger.info(
         "Paso 2: %d directorios de transcripción encontrados (%d excluidos por 'classify')",
         len(video_dirs), len(excluded),
