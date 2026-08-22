@@ -269,7 +269,7 @@ más concreto y con menos margen de ambigüedad para el LLM), usando el mapa
 
 **Qué hace**: genera un único HTML autónomo (tipografías y datos
 incrustados, cero peticiones de red salvo el botón de generar idea) con
-cuatro vistas:
+seis vistas:
 - **Expediente** — las respuestas de los 6 bloques de cada vídeo, en
   formato legible, más su `potencial`.
 - **Rejilla de huecos** — combinaciones normalizadas (mecanismo × canal,
@@ -281,10 +281,12 @@ cuatro vistas:
   evidencia", porque un score alto sostenido por 1 solo vídeo es frágil.
   Las combinaciones que declares incompatibles en el config (p.ej.
   invertir en bolsa vía un marketplace no tiene sentido) se pintan como
-  descartadas y no entran en el ranking. El toggle "solo huecos
+  descartadas y no entran en el ranking; si el propio generador de ideas
+  (ver más abajo) descarta una celda por inviable, también se pinta como
+  descartada aunque no esté en el config. El toggle "solo huecos
   adyacentes" (activado por defecto) oculta huecos "de dos saltos" —
   combinaciones que no comparten fila ni columna con nada que el canal ya
-  haga, y que por tanto son más especulativas. El panel "Top 10 huecos"
+  haga, y que por tanto son más especulativas. El panel "Top 50 huecos"
   ordena los mejores candidatos. Depende directamente de `normalize`: si
   la cobertura es baja, avisa de que los huecos pueden ser artefactos de
   datos sin mapear, no huecos reales.
@@ -292,11 +294,44 @@ cuatro vistas:
   con sliders qué facetas pesan).
 - **Combinador** — mezcla primitivos de vídeos distintos y comprueba si la
   combinación ya existe o es nueva, con sugerencias automáticas.
+- **Constructor de proyecto** — en vez de partir de una celda vacía de la
+  rejilla, fijas tú mismo, faceta a faceta (mecanismo, canal, audiencia,
+  categoría, inversión inicial, evidencia), la composición de un proyecto,
+  y ves en vivo cuántos vídeos y qué potencial medio la sostienen. Para
+  cada faceta que dejes en "(cualquiera)" te enseña qué valores siguen
+  teniendo respaldo (con su n y potencial) dada la selección actual, y
+  atenúa tanto los que se quedarían sin vídeos como los que serían
+  incompatibles mecanismo×canal. El botón "Completar composición" rellena
+  las facetas que dejes libres a partir de una o dos anclas, maximizando
+  potencial×respaldo sin colar una incompatibilidad ni un hueco vacío —
+  el resultado sigue siendo editable, no es una respuesta cerrada. El
+  mismo botón "Generar idea" de la rejilla está aquí también, en cuanto
+  fijas exactamente dos facetas compatibles.
+- **Panorama** — vista de solo diagnóstico (no genera ideas) con cinco
+  gráficos para leer el terreno antes de decidir: mapas de calor
+  mecanismo×canal y categoría×inversión (color = potencial medio, número =
+  n, gris = hueco real, borde discontinuo = n=1 frágil, rayado = pareja
+  marcada incompatible), una dispersión de potencial contra saturación de
+  competencia coloreada por evidencia (con la zona "potencial alto +
+  saturación baja/media" sombreada), barras de potencial medio y cuota por
+  cada valor de mecanismo/canal/audiencia, y el reparto de vídeos por
+  categoría para ver de un vistazo en cuántos modelos distintos se
+  concentra realmente el canal.
+
+En el Expediente, además, dos botones — **"⬇ Descargar Markdown"** y
+**"🖨 Exportar a PDF"** — vuelcan a un único informe el estado actual de
+las cuatro primeras vistas: la ficha completa de todos los vídeos, la
+rejilla de huecos con el par de ejes que tengas seleccionado (más las
+ideas ya generadas para esa combinación), la matriz de similitud en el
+modo/orden que tengas activo, y tu selección vigente del combinador. El
+PDF usa el diálogo de impresión nativo del navegador — sin librerías ni
+conexión.
 
 **Por qué depende de `methods_norm.json` y no del `method.json` crudo**:
-porque la rejilla de huecos y el combinador solo tienen sentido con
-vocabulario homogéneo — comparar "redes_sociales" con "instagram" como si
-fueran cosas distintas rompería el propósito de la herramienta.
+porque la rejilla de huecos, el combinador, el constructor y el panorama
+solo tienen sentido con vocabulario homogéneo — comparar "redes_sociales"
+con "instagram" como si fueran cosas distintas rompería el propósito de
+la herramienta.
 
 ### Paso 6b — `idea-server`: el botón "Generar idea"
 
@@ -304,12 +339,23 @@ fueran cosas distintas rompería el propósito de la herramienta.
 .venv/bin/python cli.py idea-server    # en una terminal aparte, la dejas corriendo
 ```
 
-**Qué hace**: en la Rejilla de huecos, cada celda vacía (y cada entrada del
-Top 10) tiene un botón "Generar idea" que le pide al LLM configurado una
-propuesta de negocio concreta para esa combinación — nombre, cliente
-objetivo, propuesta de valor, primeros 3 pasos, herramientas sugeridas,
-por qué encaja (referenciando los vídeos reales que combina) y riesgos a
-vigilar.
+**Qué hace**: en la Rejilla de huecos (o en el Constructor de proyecto,
+fijando exactamente dos facetas) cada celda vacía o entrada del Top 50
+tiene un botón "Generar idea" que le pide al LLM configurado una
+propuesta de negocio concreta para esa combinación. El prompt
+(`prompts/generate_idea.md`, editable a mano) trabaja en dos fases:
+primero verifica si las dos facetas son económicamente compatibles
+(p.ej. un mecanismo de renta pasiva sobre un activo propio no encaja con
+un canal de venta consultiva salvo que haya un puente de negocio
+explícito) — si no lo son, devuelve solo un motivo y una alternativa, sin
+inventar una idea que no se sostiene; si sí lo son, redacta la
+propuesta —nombre, cliente objetivo, propuesta de valor, primeros 3
+pasos, herramientas sugeridas, por qué encaja (referenciando los vídeos
+reales) y riesgos a vigilar— y marca `confianza: "baja"` si alguna de las
+dos facetas se apoya en un solo vídeo del canal. La rejilla y el
+constructor reflejan ambas señales: celdas descartadas por inviables se
+pintan igual que las incompatibles por config, y las de confianza baja
+llevan su propio indicador.
 
 **Por qué hace falta un servidor aparte**: `data/dashboard.html` es un
 fichero que abres con doble clic (`file://`) — si el botón llamara
@@ -328,9 +374,12 @@ al LLM.
 día quieres la calidad de Claude para esta tarea puntual en concreto, ya
 que es solo una llamada por idea que pidas, no una por vídeo).
 
-**Caché**: cada idea se guarda en `data/ideas/<mecanismo>__<canal>.json`.
-Si vuelves a pedir la misma combinación, el servidor devuelve la versión
-cacheada sin volver a llamar al LLM.
+**Caché**: cada idea se guarda en
+`data/ideas/<eje_a>=<valor_a>__<eje_b>=<valor_b>.json` (los ejes pueden
+ser cualquier pareja de mecanismo/canal/audiencia/categoría/inversión, no
+solo mecanismo×canal). Si vuelves a pedir la misma combinación, el
+servidor —o el propio dashboard, si ya está en `cached_ideas`— devuelve
+la versión cacheada sin volver a llamar al LLM.
 
 ### Paso 7 — `report`: informe agregado en Markdown
 
@@ -425,7 +474,7 @@ ollama pull qwen3-embedding:8b
 .venv/bin/python cli.py dashboard
 # -> abrir data/dashboard.html
 
-# 4 (opcional, para el botón "Generar idea" de la rejilla de huecos):
-# en otra terminal, la dejas corriendo
+# 4 (opcional, para el botón "Generar idea" de la rejilla de huecos y del
+# constructor de proyecto): en otra terminal, la dejas corriendo
 .venv/bin/python cli.py idea-server
 ```

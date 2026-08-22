@@ -36,24 +36,36 @@ extrae y analiza los métodos de generar ingresos explicados en sus vídeos:
    de huecos del dashboard: si la cobertura es baja, completa los
    `_pendientes` del config y vuelve a lanzar `normalize`.
 6. **dashboard** — genera un HTML autónomo (sin llamadas externas, ni a
-   Claude ni a nadie — tipografías incrustadas incluidas) con cuatro vistas:
-   **Expediente** (las respuestas de los 6 bloques por vídeo + potencial),
+   Claude ni a nadie — tipografías incrustadas incluidas) con seis vistas:
+   **Expediente** (las respuestas de los 6 bloques por vídeo + potencial, con
+   botones para exportar el estado actual del dashboard a Markdown o PDF),
    **Rejilla de huecos** (combinaciones normalizadas que ningún vídeo cubre —
    cada celda vacía lleva un `score_estimado` y su `n` de vídeos de apoyo,
    con aviso de baja evidencia; las combinaciones incompatibles declaradas en
-   el config se descartan; panel "Top 10 huecos"; botón "Generar idea" que
-   convierte una celda vacía en una propuesta de negocio concreta vía LLM
-   — ver paso `idea-server`), **Similitud** (temática por embeddings, o
-   ponderada por las facetas que tú elijas con sliders) y **Combinador**
+   el config, o descartadas por inviables por el propio generador de ideas,
+   se pintan como descartadas; panel "Top 50 huecos"; botón "Generar idea"
+   que convierte una celda vacía en una propuesta de negocio concreta vía
+   LLM — ver paso `idea-server`), **Similitud** (temática por embeddings, o
+   ponderada por las facetas que tú elijas con sliders), **Combinador**
    (combinador de primitivos + comparador manual, ambos con "potencial
-   operativo").
+   operativo"), **Constructor de proyecto** (fijas tú mismo, faceta a
+   faceta, la composición de un proyecto y ves en vivo qué respaldo tiene en
+   el canal, con autocompletado y el mismo generador de ideas) y
+   **Panorama** (cinco gráficos de solo diagnóstico — mapas de calor
+   mecanismo×canal y categoría×inversión, dispersión potencial/saturación
+   coloreada por evidencia, barras de potencial y cuota por primitivo, y
+   concentración por categoría — para leer el terreno antes de decidir).
 7. **idea-server** — servidor HTTP local (`localhost:8765`) que el botón
    "Generar idea" del dashboard llama por `fetch()`. Necesario porque un HTML
    abierto por `file://` no puede llamar a un LLM sin exponer credenciales en
    el propio código de la página (o, con Ollama, sin que el navegador hable
    directamente con tu servidor local). Usa el mismo `LLM_PROVIDER` que el
-   resto del pipeline. Cachea cada idea en `data/ideas/`, así que no
-   se vuelve a llamar a la API por la misma combinación.
+   resto del pipeline. El prompt (`prompts/generate_idea.md`) primero valida
+   si las dos facetas son económicamente compatibles antes de redactar nada
+   — si no lo son, devuelve un motivo y una alternativa en vez de una idea —
+   y marca `confianza: "baja"` si alguna faceta se apoya en un solo vídeo.
+   Cachea cada idea en `data/ideas/`, así que no se vuelve a llamar al LLM
+   por la misma combinación.
 8. **report** — agrega todos los `method.json`, genera distribuciones,
    contraste y propone combinaciones nuevas de primitivos (mecanismo de
    valor × canal de apalancamiento × audiencia) que no existan en el canal.
@@ -101,10 +113,12 @@ en `.env` y rellena `ANTHROPIC_API_KEY`.
 # revisa data/normalization_report.html (cobertura, pendientes, re-etiquetado),
 # completa configs/normalization.json y relanza 'normalize' cuantas veces quieras.
 
-# Dashboard local (Expediente, rejilla de huecos, similitud, combinador)
+# Dashboard local (Expediente, rejilla de huecos, similitud, combinador,
+# constructor de proyecto, panorama)
 .venv/bin/python cli.py dashboard
 # abre data/dashboard.html directamente en el navegador — funciona sin
-# conexión a internet salvo el botón "Generar idea" de la rejilla de huecos.
+# conexión a internet salvo el botón "Generar idea" (rejilla de huecos y
+# constructor de proyecto).
 
 # Para que ese botón funcione: en OTRA terminal, déjalo corriendo mientras
 # usas el dashboard. Usa el mismo LLM_PROVIDER que el resto del pipeline
@@ -160,7 +174,7 @@ data/
 ├── methods_norm.json
 ├── normalization_report.html
 ├── ideas/
-│   └── <mecanismo>__<canal>.json
+│   └── <eje_a>=<valor_a>__<eje_b>=<valor_b>.json
 ├── report.md
 └── dashboard.html
 ```
