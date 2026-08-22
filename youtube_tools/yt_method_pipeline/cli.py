@@ -5,7 +5,7 @@ import logging
 import sys
 
 import config
-from pipeline import aggregate, classify, dashboard, embeddings, extraction, report, search, transcripts
+from pipeline import aggregate, classify, dashboard, embeddings, extraction, normalize, report, search, transcripts
 from pipeline.utils import setup_logging
 
 logger = logging.getLogger(__name__)
@@ -30,6 +30,12 @@ def cmd_index(args):
 def cmd_search(args):
     results = search.run(args.query, top_k=args.top)
     search.print_results(results)
+
+
+def cmd_normalize(args):
+    methods_path, report_path = normalize.run()
+    print(f"methods_norm.json generado en: {methods_path}")
+    print(f"Informe de normalización generado en: {report_path}")
 
 
 def cmd_dashboard(args):
@@ -83,8 +89,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_search.add_argument("--top", type=int, default=5, help="Número de resultados")
     p_search.set_defaults(func=cmd_search)
 
+    p_normalize = sub.add_parser(
+        "normalize", help="Normaliza primitivos/categoría/herramientas y calcula 'potencial'"
+    )
+    p_normalize.set_defaults(func=cmd_normalize)
+
     p_dashboard = sub.add_parser(
-        "dashboard", help="Dashboard HTML: vista por vídeo, correlación y combinador de primitivos"
+        "dashboard",
+        help="Dashboard HTML: expediente, rejilla de huecos, similitud y combinador (requiere 'normalize')",
     )
     p_dashboard.set_defaults(func=cmd_dashboard)
 

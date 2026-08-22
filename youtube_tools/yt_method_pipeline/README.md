@@ -26,13 +26,23 @@ extrae y analiza los métodos de generar ingresos explicados en sus vídeos:
    normalizado construido determinísticamente a partir del `method.json` ya
    validado (no sobre la transcripción cruda), para poder buscar por método
    semánticamente en vez de por coincidencia léxica.
-5. **dashboard** — genera un HTML autónomo (sin llamadas externas, ni a
-   Claude ni a nadie — tipografías incrustadas incluidas) con una vista
-   legible por vídeo de las respuestas de los 6 bloques, una matriz de
-   correlación semántica entre métodos, un combinador interactivo de
-   primitivos y un comparador manual de dos vídeos, ambos con una puntuación
-   de "potencial operativo" (fórmula transparente, ver el propio dashboard).
-6. **report** — agrega todos los `method.json`, genera distribuciones,
+5. **normalize** — capa derivada y no destructiva sobre los `method.json`:
+   colapsa `canal_apalancamiento`, `mecanismo_valor`, `audiencia` y `categoria`
+   a un vocabulario canónico corto (editable en `configs/normalization.json`),
+   corrige nombres de herramientas, y calcula un escalar `potencial` con pesos
+   declarados (no hardcodeados) en ese mismo config. Escribe
+   `data/methods_norm.json` (añade campos `*_norm`, no borra los originales) y
+   `data/normalization_report.html` — revísalo antes de fiarte de la rejilla
+   de huecos del dashboard: si la cobertura es baja, completa los
+   `_pendientes` del config y vuelve a lanzar `normalize`.
+6. **dashboard** — genera un HTML autónomo (sin llamadas externas, ni a
+   Claude ni a nadie — tipografías incrustadas incluidas) con cuatro vistas:
+   **Expediente** (las respuestas de los 6 bloques por vídeo + potencial),
+   **Rejilla de huecos** (combinaciones normalizadas que ningún vídeo cubre
+   — motor de ideas), **Similitud** (temática por embeddings, o ponderada por
+   las facetas que tú elijas con sliders) y **Combinador** (combinador de
+   primitivos + comparador manual, ambos con "potencial operativo").
+7. **report** — agrega todos los `method.json`, genera distribuciones,
    contraste y propone combinaciones nuevas de primitivos (mecanismo de
    valor × canal de apalancamiento × audiencia) que no existan en el canal.
 
@@ -74,15 +84,21 @@ python cli.py index
 python cli.py search "dropshipping con poca inversión inicial"
 python cli.py search "métodos que dependen de vender un curso" --top 3
 
-# Dashboard local (vista por vídeo, correlación, combinador y comparador)
+# Paso 5: normalizar primitivos/categoría/herramientas y calcular 'potencial'
+python cli.py normalize
+# revisa data/normalization_report.html (cobertura, pendientes, re-etiquetado),
+# completa configs/normalization.json y relanza 'normalize' cuantas veces quieras.
+
+# Dashboard local (Expediente, rejilla de huecos, similitud, combinador)
 python cli.py dashboard
 # abre data/dashboard.html directamente en el navegador — no depende de Claude
 # ni de ningún otro servicio, funciona sin conexión a internet.
 
-# Paso 5: agregación + informe (requiere que 'extract' esté completo)
+# Paso 6: agregación + informe (requiere que 'extract' esté completo)
 python cli.py report
 
-# Toda la secuencia (fetch + classify + extract + index + report)
+# Toda la secuencia (fetch + classify + extract + index + report;
+# 'normalize' y 'dashboard' quedan fuera porque quieres revisarlos a mano)
 python cli.py run @NombreCanal
 ```
 
@@ -123,9 +139,14 @@ data/
 │   ├── pipeline.log
 │   └── no_transcript.log
 ├── methods.jsonl
+├── methods_norm.json
+├── normalization_report.html
 ├── report.md
 └── dashboard.html
 ```
+
+`configs/normalization.json` (fuera de `data/`, **sí** va en git) es el mapa de
+normalización editable a mano — ver el paso `normalize` arriba.
 
 El nombre del directorio de cada vídeo lleva el `video_id` como sufijo
 (no solo el título slugificado) para evitar colisiones entre vídeos con

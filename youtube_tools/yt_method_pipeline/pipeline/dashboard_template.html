@@ -323,6 +323,58 @@
 
   footer { margin-top: 64px; color: var(--ink-muted); font-size: 12px; }
 
+  /* --- Pestañas --- */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 28px 0 8px; border-bottom: 1px solid var(--border); }
+  .tab-btn {
+    font: inherit; font-size: 13.5px; padding: 10px 16px; border: none; background: none;
+    color: var(--ink-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab-btn:hover, .tab-btn:focus-visible { color: var(--ink); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* --- Aviso de cobertura --- */
+  .coverage-banner { display: flex; align-items: center; gap: 14px; border-radius: 10px; padding: 14px 18px; margin: 4px 0 24px; border: 1px solid; }
+  .coverage-banner.good { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+  .coverage-banner.warn { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+  .coverage-banner.bad { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+  .coverage-banner .pct { font-family: "IBM Plex Mono", monospace; font-size: 22px; font-weight: 700; }
+  .coverage-banner .txt { color: var(--ink); font-size: 13px; }
+
+  /* --- Rejilla de huecos --- */
+  .gap-controls { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 18px; }
+  .gap-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; }
+  table.gap { border-collapse: collapse; font-size: 12px; }
+  table.gap th { font-weight: 500; color: var(--ink-muted); padding: 6px 8px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  table.gap th.corner { text-align: right; }
+  table.gap td { padding: 2px; }
+  .gap-cell {
+    width: 92px; height: 48px; border-radius: 6px; border: 2px solid var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "IBM Plex Mono", monospace; font-size: 13px; cursor: default;
+  }
+  .gap-cell.empty {
+    background: var(--surface-2); border: 2px dashed var(--border); color: var(--ink-muted); cursor: pointer;
+  }
+  .gap-cell.empty:hover, .gap-cell.empty:focus-visible { border-color: var(--accent); color: var(--accent); }
+  .gap-cell.filled { cursor: pointer; }
+  .gap-idea-panel { margin-top: 18px; padding: 18px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
+  .gap-idea-panel .phrase { font-family: "Zilla Slab", serif; font-size: 17px; font-weight: 600; }
+  .gap-idea-panel .vids { margin-top: 10px; font-size: 13px; }
+  .gap-idea-panel .vids a { color: var(--accent); }
+
+  /* --- Similitud ponderada --- */
+  .sim-mode { display: flex; gap: 8px; margin-bottom: 18px; }
+  .sim-mode button {
+    font: inherit; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink-muted); cursor: pointer;
+  }
+  .sim-mode button.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; margin-bottom: 18px; }
+  .slider-field label { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-muted); margin-bottom: 6px; }
+  .slider-field input[type="range"] { width: 100%; accent-color: var(--accent); }
+
   @media (max-width: 560px) {
     .kv { grid-template-columns: 1fr; }
     .suggestion { grid-template-columns: 1fr; }
@@ -341,93 +393,136 @@
 
   <div class="kpis" id="kpis"></div>
 
-  <section id="section-cards">
-    <h2>Vídeos analizados</h2>
-    <p class="lede">Cada tarjeta resume las respuestas del vídeo por bloque — identificación, economía, requisitos, ejecución, credibilidad/riesgo y meta. Pulsa para desplegar el detalle completo.</p>
-    <div class="cards" id="cards"></div>
-  </section>
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="expediente" type="button">Expediente</button>
+    <button class="tab-btn" data-tab="huecos" type="button">Rejilla de huecos</button>
+    <button class="tab-btn" data-tab="similitud" type="button">Similitud</button>
+    <button class="tab-btn" data-tab="combinador" type="button">Combinador</button>
+  </nav>
 
-  <section id="section-heat">
-    <h2>Correlación entre métodos</h2>
-    <p class="lede">Similitud semántica (coseno sobre el embedding del resumen normalizado de cada método). Cuanto más oscura la celda, más se parecen los dos métodos entre sí.</p>
-    <div class="heat-wrap">
-      <table class="heat" id="heat"></table>
-      <div class="legend-heat">
-        <span>Menos parecidos</span>
-        <div class="swatches">
-          <div class="sw" style="background:var(--heat-0)"></div>
-          <div class="sw" style="background:var(--heat-1)"></div>
-          <div class="sw" style="background:var(--heat-2)"></div>
-          <div class="sw" style="background:var(--heat-3)"></div>
-          <div class="sw" style="background:var(--heat-4)"></div>
-        </div>
-        <span>Más parecidos</span>
-      </div>
-    </div>
-  </section>
+  <div class="tab-panel active" data-tab="expediente">
+    <section id="section-cards">
+      <h2>Vídeos analizados</h2>
+      <p class="lede">Cada tarjeta resume las respuestas del vídeo por bloque — identificación, economía, requisitos, ejecución, credibilidad/riesgo, meta y potencial. Pulsa para desplegar el detalle completo.</p>
+      <div class="cards" id="cards"></div>
+    </section>
+  </div>
 
-  <section id="section-combinator">
-    <h2>Combinador de primitivos</h2>
-    <p class="lede">Elige un mecanismo de valor, un canal de apalancamiento y una audiencia — cada uno tomado de un vídeo distinto si quieres — y comprueba si esa combinación ya existe en el canal o es una idea nueva.</p>
-    <div class="combinator">
-      <div class="combi-controls">
+  <div class="tab-panel" data-tab="huecos">
+    <section id="section-gaps">
+      <h2>Rejilla de huecos</h2>
+      <p class="lede">Combinaciones de facetas normalizadas que ningún vídeo cubre todavía — motor de ideas. Depende de <span class="mono">normalize</span>: si la cobertura es baja, los huecos pueden ser artefactos de datos sin mapear, no huecos reales.</p>
+      <div id="gap-coverage-banner"></div>
+      <div class="gap-controls">
         <div class="field">
-          <label for="sel-mecanismo">Mecanismo de valor</label>
-          <select id="sel-mecanismo"></select>
-        </div>
-        <div class="field">
-          <label for="sel-canal">Canal de apalancamiento</label>
-          <select id="sel-canal"></select>
-        </div>
-        <div class="field">
-          <label for="sel-audiencia">Audiencia</label>
-          <select id="sel-audiencia"></select>
+          <label for="sel-gap-axes">Ejes</label>
+          <select id="sel-gap-axes">
+            <option value="mecanismo_norm|canal_norm">Mecanismo × Canal</option>
+            <option value="canal_norm|audiencia_norm">Canal × Audiencia</option>
+            <option value="categoria_norm|bucket_inversion">Categoría × Inversión inicial</option>
+          </select>
         </div>
       </div>
-      <div class="combi-result" id="combi-result"></div>
+      <div class="gap-wrap">
+        <table class="gap" id="gap-table"></table>
+      </div>
+      <div id="gap-idea-panel"></div>
+    </section>
+  </div>
 
-      <div class="comparator">
-        <h3>Comparador manual de dos métodos</h3>
-        <p class="lede">Elige dos vídeos completos directamente (en vez de primitivo a primitivo) y compara su afinidad y su potencial operativo combinado.</p>
+  <div class="tab-panel" data-tab="similitud">
+    <section id="section-heat">
+      <h2>Similitud entre métodos</h2>
+      <p class="lede">Dos formas de medir el parecido: temática (embeddings sobre el resumen del método) o ponderada (tú eliges qué facetas normalizadas pesan y cuánto).</p>
+      <div class="sim-mode">
+        <button class="active" data-mode="tematica" type="button">Similitud temática (embeddings)</button>
+        <button data-mode="ponderada" type="button">Similitud ponderada (facetas)</button>
+      </div>
+      <div class="sliders" id="sliders" style="display:none"></div>
+      <div class="gap-controls" id="sim-actions" style="display:none">
+        <button class="btn" id="btn-reorder" type="button">Reordenar por similitud</button>
+      </div>
+      <div class="heat-wrap">
+        <table class="heat" id="heat"></table>
+        <div class="legend-heat">
+          <span>Menos parecidos</span>
+          <div class="swatches">
+            <div class="sw" style="background:var(--heat-0)"></div>
+            <div class="sw" style="background:var(--heat-1)"></div>
+            <div class="sw" style="background:var(--heat-2)"></div>
+            <div class="sw" style="background:var(--heat-3)"></div>
+            <div class="sw" style="background:var(--heat-4)"></div>
+          </div>
+          <span>Más parecidos</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="tab-panel" data-tab="combinador">
+    <section id="section-combinator">
+      <h2>Combinador de primitivos</h2>
+      <p class="lede">Elige un mecanismo de valor, un canal de apalancamiento y una audiencia — cada uno tomado de un vídeo distinto si quieres — y comprueba si esa combinación ya existe en el canal o es una idea nueva.</p>
+      <div class="combinator">
         <div class="combi-controls">
           <div class="field">
-            <label for="sel-video-a">Vídeo A</label>
-            <select id="sel-video-a"></select>
+            <label for="sel-mecanismo">Mecanismo de valor</label>
+            <select id="sel-mecanismo"></select>
           </div>
           <div class="field">
-            <label for="sel-video-b">Vídeo B</label>
-            <select id="sel-video-b"></select>
+            <label for="sel-canal">Canal de apalancamiento</label>
+            <select id="sel-canal"></select>
+          </div>
+          <div class="field">
+            <label for="sel-audiencia">Audiencia</label>
+            <select id="sel-audiencia"></select>
           </div>
         </div>
-        <div class="combi-result" id="compare-result"></div>
+        <div class="combi-result" id="combi-result"></div>
+
+        <div class="comparator">
+          <h3>Comparador manual de dos métodos</h3>
+          <p class="lede">Elige dos vídeos completos directamente (en vez de primitivo a primitivo) y compara su afinidad y su potencial operativo combinado.</p>
+          <div class="combi-controls">
+            <div class="field">
+              <label for="sel-video-a">Vídeo A</label>
+              <select id="sel-video-a"></select>
+            </div>
+            <div class="field">
+              <label for="sel-video-b">Vídeo B</label>
+              <select id="sel-video-b"></select>
+            </div>
+          </div>
+          <div class="combi-result" id="compare-result"></div>
+        </div>
+
+        <details class="formula">
+          <summary>¿Cómo se calcula el potencial operativo?</summary>
+          <dl class="kv">
+            <dt>Escalabilidad</dt><dd>30% — alta puntúa más que media o baja.</dd>
+            <dt>Accesibilidad</dt><dd>20% — menor inversión inicial requerida puntúa más.</dd>
+            <dt>Velocidad</dt><dd>15% — antes el primer ingreso, mejor.</dd>
+            <dt>Evidencia</dt><dd>15% — pruebas verificables puntúan más que solo afirmaciones.</dd>
+            <dt>Riesgo</dt><dd>20% — penaliza nº de riesgos declarados/omitidos, saturación alta, sesgo de supervivencia y que el vídeo venda algo propio.</dd>
+          </dl>
+          <p class="meter-note">Para una combinación de dos o tres vídeos, el potencial mostrado es la media del potencial individual de cada vídeo de origen distinto implicado. Es distinto del 'potencial (normalizado)' del Expediente, que usa los pesos declarados en <span class="mono">configs/normalization.json</span>.</p>
+        </details>
       </div>
+    </section>
 
-      <details class="formula">
-        <summary>¿Cómo se calcula el potencial operativo?</summary>
-        <dl class="kv">
-          <dt>Escalabilidad</dt><dd>30% — alta puntúa más que media o baja.</dd>
-          <dt>Accesibilidad</dt><dd>20% — menor inversión inicial requerida puntúa más.</dd>
-          <dt>Velocidad</dt><dd>15% — antes el primer ingreso, mejor.</dd>
-          <dt>Evidencia</dt><dd>15% — pruebas verificables puntúan más que solo afirmaciones.</dd>
-          <dt>Riesgo</dt><dd>20% — penaliza nº de riesgos declarados/omitidos, saturación alta, sesgo de supervivencia y que el vídeo venda algo propio.</dd>
-        </dl>
-        <p class="meter-note">Para una combinación de dos o tres vídeos, el potencial mostrado es la media del potencial individual de cada vídeo de origen distinto implicado.</p>
-      </details>
-    </div>
-  </section>
-
-  <section id="section-suggestions">
-    <div class="section-actions">
-      <div>
-        <h2>Sugerencias automáticas</h2>
-        <p class="lede" style="margin-bottom:0">Los pares de métodos menos parecidos entre sí — mayor margen para una combinación novedosa — con la idea resultante de cruzar sus primitivos.</p>
+    <section id="section-suggestions">
+      <div class="section-actions">
+        <div>
+          <h2>Sugerencias automáticas</h2>
+          <p class="lede" style="margin-bottom:0">Los pares de métodos menos parecidos entre sí — mayor margen para una combinación novedosa — con la idea resultante de cruzar sus primitivos.</p>
+        </div>
+        <button class="btn" id="btn-more-suggestions" type="button">🔀 Más sugerencias</button>
       </div>
-      <button class="btn" id="btn-more-suggestions" type="button">🔀 Más sugerencias</button>
-    </div>
-    <div class="suggestions" id="suggestions"></div>
-  </section>
+      <div class="suggestions" id="suggestions"></div>
+    </section>
+  </div>
 
-  <footer>Generado localmente a partir de <span class="mono">method.json</span> + <span class="mono">embedding.json</span> de cada vídeo. Sin llamadas externas.</footer>
+  <footer>Generado localmente a partir de <span class="mono">methods_norm.json</span> + <span class="mono">embedding.json</span> de cada vídeo. Sin llamadas externas.</footer>
 </div>
 
 <script>
@@ -507,6 +602,7 @@ function renderKpis() {
 
   const kpis = [
     [n, 'métodos analizados'],
+    [DATA.coverage_pct + '%', 'cobertura de normalización'],
     [fmtPct(soloAfirmacion / n), 'solo con afirmaciones (sin pruebas)'],
     [fmtPct(vendeAlgo / n), 'terminan vendiendo algo propio'],
     [fmtPct(sesgo / n), 'con sesgo de supervivencia'],
@@ -612,6 +708,18 @@ function renderCard(v) {
       el('h4', {}, 'Primitivos'),
       el('dl', { class: 'kv' }, [...kv('Mecanismo × canal × audiencia', `${prim.mecanismo_valor || '—'} × ${prim.canal_apalancamiento || '—'} × ${prim.audiencia || '—'}`)]),
     ]),
+    el('div', { class: 'block' }, [
+      el('h4', {}, 'Normalización y potencial'),
+      el('dl', { class: 'kv' }, [
+        ...kv('Categoría/canal/mecanismo/audiencia normalizados', [v.categoria_norm, v.canal_norm, v.mecanismo_norm, v.audiencia_norm].map(x => x || '—').join(' · ')),
+        ...kv('Potencial (normalizado, config)', v.potencial != null ? v.potencial : '—'),
+      ]),
+      v.potencial_breakdown ? (() => {
+        const b = v.potencial_breakdown;
+        return el('p', { class: 'card-phrase' },
+          `Desglose: evidencia ${b.evidencia.toFixed(2)}, escalabilidad ${b.escalabilidad.toFixed(2)}, saturación ${b.saturacion.toFixed(2)}, inversión ${b.inversion.toFixed(2)} (pesos en configs/normalization.json). Distinto del 'potencial operativo' de arriba, que usa otra fórmula fija.`);
+      })() : null,
+    ]),
     m.assessment ? el('div', { class: 'block' }, [el('h4', {}, 'Análisis propio'), el('p', { class: 'card-phrase' }, m.assessment)]) : null,
     el('a', { class: 'card-link', href: v.url, target: '_blank', rel: 'noopener' }, 'Ver vídeo en YouTube ↗'),
   ]);
@@ -637,25 +745,229 @@ function shortTitle(t, n = 28) {
   return t.length > n ? t.slice(0, n - 1) + '…' : t;
 }
 
+// --- Similitud: temática (embeddings) o ponderada (facetas normalizadas) ---
+let simMode = 'tematica';
+let simOrder = null;
+const SLIDER_FACETS = [
+  { key: 'mecanismo_norm', label: 'Monetización' },
+  { key: 'audiencia_norm', label: 'Audiencia' },
+  { key: 'herramientas_norm', label: 'Herramientas' },
+  { key: 'bucket_inversion', label: 'Inversión' },
+  { key: 'categoria_norm', label: 'Categoría' },
+];
+const sliderWeights = { mecanismo_norm: 60, audiencia_norm: 60, herramientas_norm: 40, bucket_inversion: 20, categoria_norm: 20 };
+
+function facetSimilarity(a, b, key) {
+  if (key === 'herramientas_norm') {
+    const sa = new Set(a.herramientas_norm || []);
+    const sb = new Set(b.herramientas_norm || []);
+    if (!sa.size && !sb.size) return 0;
+    let inter = 0;
+    sa.forEach(x => { if (sb.has(x)) inter++; });
+    const union = new Set([...sa, ...sb]).size;
+    return union ? inter / union : 0;
+  }
+  const va = a[key], vb = b[key];
+  if (va == null || vb == null) return 0;
+  return va === vb ? 1 : 0;
+}
+
+function weightedSimilarity(a, b) {
+  let wsum = 0, ssum = 0;
+  for (const { key } of SLIDER_FACETS) {
+    const w = sliderWeights[key] / 100;
+    if (w <= 0) continue;
+    ssum += w * facetSimilarity(a, b, key);
+    wsum += w;
+  }
+  return wsum ? ssum / wsum : 0;
+}
+
+function currentMatrix() {
+  const n = DATA.videos.length;
+  if (simMode === 'tematica') return DATA.similarity;
+  const m = [];
+  for (let i = 0; i < n; i++) {
+    m.push([]);
+    for (let j = 0; j < n; j++) m[i].push(i === j ? 1 : weightedSimilarity(DATA.videos[i], DATA.videos[j]));
+  }
+  return m;
+}
+
+function greedyOrder(matrix) {
+  const n = matrix.length;
+  const visited = new Array(n).fill(false);
+  const order = [0];
+  visited[0] = true;
+  for (let k = 1; k < n; k++) {
+    const last = order[order.length - 1];
+    let best = -1, bestVal = -Infinity;
+    for (let j = 0; j < n; j++) {
+      if (!visited[j] && matrix[last][j] > bestVal) { bestVal = matrix[last][j]; best = j; }
+    }
+    order.push(best);
+    visited[best] = true;
+  }
+  return order;
+}
+
 function renderHeat() {
   const table = document.getElementById('heat');
-  const n = DATA.videos.length;
-  const thead = el('tr', {}, [el('th', {}, '')].concat(DATA.videos.map((v, i) => el('th', { title: v.title }, String(i + 1)))));
+  table.innerHTML = '';
+  const matrix = currentMatrix();
+  const order = simOrder || DATA.videos.map((_, i) => i);
+  const n = order.length;
+  const thead = el('tr', {}, [el('th', {}, '')].concat(order.map((oi, i) => el('th', { title: DATA.videos[oi].title }, String(i + 1)))));
   table.appendChild(thead);
   for (let i = 0; i < n; i++) {
-    const row = el('tr', {}, [el('th', { class: 'rowhead', title: DATA.videos[i].title }, `${i + 1} · ${shortTitle(DATA.videos[i].title)}`)]);
+    const oi = order[i];
+    const row = el('tr', {}, [el('th', { class: 'rowhead', title: DATA.videos[oi].title }, `${i + 1} · ${shortTitle(DATA.videos[oi].title)}`)]);
     for (let j = 0; j < n; j++) {
-      const val = DATA.similarity[i][j];
-      const cls = i === j ? 'heat-4' : heatClass(val);
+      const oj = order[j];
+      const val = matrix[oi][oj];
+      const cls = oi === oj ? 'heat-4' : heatClass(val);
       const cell = el('td', {}, el('div', {
         class: 'cell ' + cls,
         style: `background:var(--${cls});color:var(--heat-text-${['heat-3', 'heat-4'].includes(cls) ? 'hi' : 'lo'})`,
-        title: `${DATA.videos[i].title} ↔ ${DATA.videos[j].title}: ${fmtPct(val)}`,
-      }, i === j ? '—' : fmtPct(val)));
+        title: `${DATA.videos[oi].title} ↔ ${DATA.videos[oj].title}: ${fmtPct(val)}`,
+      }, oi === oj ? '—' : fmtPct(val)));
       row.appendChild(cell);
     }
     table.appendChild(row);
   }
+}
+
+function renderSliders() {
+  const wrap = document.getElementById('sliders');
+  SLIDER_FACETS.forEach(({ key, label }) => {
+    const input = el('input', { type: 'range', min: '0', max: '100', value: String(sliderWeights[key]), id: 'slider-' + key });
+    const valSpan = el('span', { class: 'mono' }, String(sliderWeights[key]));
+    const field = el('div', { class: 'slider-field' }, [el('label', { for: 'slider-' + key }, [label, valSpan]), input]);
+    input.addEventListener('input', () => {
+      sliderWeights[key] = Number(input.value);
+      valSpan.textContent = input.value;
+      simOrder = null;
+      renderHeat();
+    });
+    wrap.appendChild(field);
+  });
+}
+
+function setupSimilarityControls() {
+  const modeButtons = document.querySelectorAll('.sim-mode button');
+  const slidersEl = document.getElementById('sliders');
+  const actionsEl = document.getElementById('sim-actions');
+  modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modeButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      simMode = btn.dataset.mode;
+      simOrder = null;
+      slidersEl.style.display = simMode === 'ponderada' ? 'grid' : 'none';
+      actionsEl.style.display = simMode === 'ponderada' ? 'flex' : 'none';
+      renderHeat();
+    });
+  });
+  document.getElementById('btn-reorder').addEventListener('click', () => {
+    simOrder = greedyOrder(currentMatrix());
+    renderHeat();
+  });
+  renderSliders();
+}
+
+// --- Rejilla de huecos ---
+const BUCKET_INVERSION_ORDER = ['0', '<100', '100-1000', '1000-10000', '>10000'];
+const AXIS_LABELS = {
+  mecanismo_norm: 'mecanismo', canal_norm: 'canal', audiencia_norm: 'audiencia',
+  categoria_norm: 'categoría', bucket_inversion: 'inversión inicial',
+};
+
+function axisValues(key) {
+  if (key === 'bucket_inversion') return BUCKET_INVERSION_ORDER;
+  const set = new Set();
+  DATA.videos.forEach(v => { if (v[key]) set.add(v[key]); });
+  return [...set].sort();
+}
+
+function renderCoverageBanner() {
+  const pct = DATA.coverage_pct;
+  const cls = pct >= 75 ? 'good' : pct >= 40 ? 'warn' : 'bad';
+  const txt = pct >= 75
+    ? 'Cobertura alta — los huecos que ves abajo son fiables.'
+    : pct >= 40
+      ? "Cobertura media — algunos huecos pueden deberse a datos sin normalizar. Revisa data/normalization_report.html."
+      : "Cobertura baja — muchos huecos de esta rejilla pueden ser artefactos de datos sin normalizar, no huecos reales de mercado. Completa configs/normalization.json y relanza 'normalize' antes de confiar en esto.";
+  const wrap = document.getElementById('gap-coverage-banner');
+  wrap.innerHTML = '';
+  wrap.appendChild(el('div', { class: 'coverage-banner ' + cls }, [el('div', { class: 'pct' }, pct + '%'), el('div', { class: 'txt' }, txt)]));
+}
+
+function renderGapGrid() {
+  const [axisA, axisB] = document.getElementById('sel-gap-axes').value.split('|');
+  const valsA = axisValues(axisA);
+  const valsB = axisValues(axisB);
+
+  const cells = {};
+  DATA.videos.forEach(v => {
+    const a = v[axisA], b = v[axisB];
+    if (a == null || b == null) return;
+    const key = a + '|' + b;
+    (cells[key] = cells[key] || []).push(v);
+  });
+
+  const table = document.getElementById('gap-table');
+  table.innerHTML = '';
+  table.appendChild(el('tr', {}, [el('th', { class: 'corner' }, '')].concat(valsB.map(b => el('th', {}, b)))));
+
+  valsA.forEach(a => {
+    const row = el('tr', {}, [el('th', {}, a)]);
+    valsB.forEach(b => {
+      const vids = cells[a + '|' + b] || [];
+      const filled = vids.length > 0;
+      const heatCls = filled ? heatClass(Math.min(1, vids.length / 4)) : '';
+      const div = el('div', {
+        class: 'gap-cell ' + (filled ? 'filled ' + heatCls : 'empty'),
+        style: filled ? `background:var(--${heatCls});color:var(--heat-text-${vids.length >= 3 ? 'hi' : 'lo'})` : '',
+        title: filled ? vids.map(v => v.title).join('\n') : 'Combinación sin vídeos — posible hueco',
+      }, filled ? String(vids.length) : '·');
+      div.addEventListener('click', () => showGapPanel(a, b, axisA, axisB, vids));
+      row.appendChild(el('td', {}, div));
+    });
+    table.appendChild(row);
+  });
+}
+
+function showGapPanel(a, b, axisA, axisB, vids) {
+  const panel = document.getElementById('gap-idea-panel');
+  panel.innerHTML = '';
+  const box = el('div', { class: 'gap-idea-panel' });
+  if (vids.length) {
+    box.appendChild(el('div', { class: 'phrase' }, `${AXIS_LABELS[axisA]}: ${a} × ${AXIS_LABELS[axisB]}: ${b}`));
+    box.appendChild(el('div', {}, `${vids.length} vídeo(s) ya cubren esta combinación:`));
+    const list = el('div', { class: 'vids' });
+    vids.forEach(v => list.appendChild(el('div', {}, el('a', { href: v.url, target: '_blank', rel: 'noopener' }, v.title))));
+    box.appendChild(list);
+  } else {
+    box.appendChild(el('div', { class: 'phrase' }, `Idea candidata: ${AXIS_LABELS[axisA]} "${a}" + ${AXIS_LABELS[axisB]} "${b}"`));
+    box.appendChild(el('div', { class: 'vids' },
+      'Ningún vídeo del canal cubre esta combinación todavía.' +
+      (DATA.coverage_pct < 40 ? ' Ojo: con la cobertura actual esto puede deberse a datos sin normalizar, no a un hueco real.' : '')));
+  }
+  panel.appendChild(box);
+}
+
+// --- Pestañas ---
+function setupTabs() {
+  const buttons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.tab-panel[data-tab="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
 }
 
 // --- Combinador ---
@@ -860,7 +1172,12 @@ function renderComparator() {
 
 renderHeader();
 renderKpis();
+setupTabs();
 renderCards();
+renderCoverageBanner();
+document.getElementById('sel-gap-axes').addEventListener('change', renderGapGrid);
+renderGapGrid();
+setupSimilarityControls();
 renderHeat();
 const combi = renderCombinator();
 renderSuggestions(combi);

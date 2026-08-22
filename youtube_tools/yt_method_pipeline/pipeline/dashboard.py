@@ -1,5 +1,6 @@
-"""Genera un dashboard HTML autónomo: vista legible por vídeo, matriz de
-correlación (similitud coseno de embeddings) y combinador de primitivos.
+"""Genera un dashboard HTML autónomo: vista legible por vídeo (Expediente),
+rejilla de huecos y similitud ponderada sobre facetas normalizadas, y
+combinador de primitivos. Lee data/methods_norm.json (paso 'normalize').
 """
 import json
 import logging
@@ -11,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 _TEMPLATE_PATH = config.BASE_DIR / "pipeline" / "dashboard_template.html"
 DASHBOARD_HTML = config.DATA_DIR / "dashboard.html"
+METHODS_NORM = config.DATA_DIR / "methods_norm.json"
 
 
 def _cosine(a: list[float], b: list[float]) -> float:
@@ -29,50 +31,39 @@ def _channel_label() -> str:
     return "canal"
 
 
-def _load_videos() -> list[dict]:
-    videos = []
-    for video_dir in sorted(p for p in config.TRANSCRIPTS_DIR.iterdir() if p.is_dir()):
-        method_path = video_dir / "method.json"
-        meta_path = video_dir / "meta.json"
-        embedding_path = video_dir / "embedding.json"
-        if not (method_path.exists() and embedding_path.exists()):
-            continue
-        method = json.loads(method_path.read_text(encoding="utf-8"))
-        meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
-        embedding = json.loads(embedding_path.read_text(encoding="utf-8"))
-        videos.append(
-            {
-                "id": video_dir.name,
-                "title": meta.get("title"),
-                "url": meta.get("url"),
-                "method": method,
-                "vector": embedding["vector"],
-            }
-        )
-    return videos
+def _load_embedding(video_id: str) -> list[float] | None:
+    embedding_path = config.TRANSCRIPTS_DIR / video_id / "embedding.json"
+    if not embedding_path.exists():
+        return None
+    return json.loads(embedding_path.read_text(encoding="utf-8"))["vector"]
 
 
 def run() -> Path:
-    videos = _load_videos()
-    if not videos:
+    if not METHODS_NORM.exists():
         raise RuntimeError(
-            "No hay vídeos indexados (falta method.json o embedding.json). "
-            "Ejecuta 'extract' e 'index' primero."
+            "No existe data/methods_norm.json. Ejecuta 'normalize' primero "
+            "(revisa después data/normalization_report.html antes de confiar en la rejilla de huecos)."
         )
 
+    videos = json.loads(METHODS_NORM.read_text(encoding="utf-8"))
+    videos = [v for v in videos if _load_embedding(v["id"]) is not None]
+    if not videos:
+        raise RuntimeError("Ningún vídeo normalizado tiene embedding.json. Ejecuta 'index' primero.")
+
+    vectors = [_load_embedding(v["id"]) for v in videos]
     n = len(videos)
     similarity = [
-        [round(_cosine(videos[i]["vector"], videos[j]["vector"]), 4) for j in range(n)]
+        [round(_cosine(vectors[i], vectors[j]), 4) for j in range(n)]
         for i in range(n)
     ]
 
+    coverage_pct = round(100 * sum(1 for v in videos if v.get("resuelto")) / n) if n else 0
+
     payload = {
         "channel": _channel_label(),
-        "videos": [
-            {"id": v["id"], "title": v["title"], "url": v["url"], "method": v["method"]}
-            for v in videos
-        ],
+        "videos": videos,
         "similarity": similarity,
+        "coverage_pct": coverage_pct,
     }
 
     template = _TEMPLATE_PATH.read_text(encoding="utf-8")
