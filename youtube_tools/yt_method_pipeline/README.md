@@ -38,11 +38,23 @@ extrae y analiza los métodos de generar ingresos explicados en sus vídeos:
 6. **dashboard** — genera un HTML autónomo (sin llamadas externas, ni a
    Claude ni a nadie — tipografías incrustadas incluidas) con cuatro vistas:
    **Expediente** (las respuestas de los 6 bloques por vídeo + potencial),
-   **Rejilla de huecos** (combinaciones normalizadas que ningún vídeo cubre
-   — motor de ideas), **Similitud** (temática por embeddings, o ponderada por
-   las facetas que tú elijas con sliders) y **Combinador** (combinador de
-   primitivos + comparador manual, ambos con "potencial operativo").
-7. **report** — agrega todos los `method.json`, genera distribuciones,
+   **Rejilla de huecos** (combinaciones normalizadas que ningún vídeo cubre —
+   cada celda vacía lleva un `score_estimado` y su `n` de vídeos de apoyo,
+   con aviso de baja evidencia; las combinaciones incompatibles declaradas en
+   el config se descartan; panel "Top 10 huecos"; botón "Generar idea" que
+   convierte una celda vacía en una propuesta de negocio concreta vía LLM
+   — ver paso `idea-server`), **Similitud** (temática por embeddings, o
+   ponderada por las facetas que tú elijas con sliders) y **Combinador**
+   (combinador de primitivos + comparador manual, ambos con "potencial
+   operativo").
+7. **idea-server** — servidor HTTP local (`localhost:8765`) que el botón
+   "Generar idea" del dashboard llama por `fetch()`. Necesario porque un HTML
+   abierto por `file://` no puede llamar a un LLM sin exponer credenciales en
+   el propio código de la página (o, con Ollama, sin que el navegador hable
+   directamente con tu servidor local). Usa el mismo `LLM_PROVIDER` que el
+   resto del pipeline. Cachea cada idea en `data/ideas/`, así que no
+   se vuelve a llamar a la API por la misma combinación.
+8. **report** — agrega todos los `method.json`, genera distribuciones,
    contraste y propone combinaciones nuevas de primitivos (mecanismo de
    valor × canal de apalancamiento × audiencia) que no existan en el canal.
 
@@ -68,38 +80,44 @@ en `.env` y rellena `ANTHROPIC_API_KEY`.
 
 ```bash
 # Paso 1: descargar transcripciones de un canal (idempotente)
-python cli.py fetch @NombreCanal
-python cli.py fetch @NombreCanal --limit 20
+.venv/bin/python cli.py fetch @NombreCanal
+.venv/bin/python cli.py fetch @NombreCanal --limit 20
 
 # Paso 2: filtrar vídeos que no sean métodos de negocio (entrevistas, etc.)
-python cli.py classify
+.venv/bin/python cli.py classify
 
 # Paso 3: extraer método estructurado de cada transcripción pendiente
-python cli.py extract
+.venv/bin/python cli.py extract
 
 # Paso 4: indexar (embedding) cada método ya extraído
-python cli.py index
+.venv/bin/python cli.py index
 
 # Búsqueda semántica sobre los métodos indexados
-python cli.py search "dropshipping con poca inversión inicial"
-python cli.py search "métodos que dependen de vender un curso" --top 3
+.venv/bin/python cli.py search "dropshipping con poca inversión inicial"
+.venv/bin/python cli.py search "métodos que dependen de vender un curso" --top 3
 
 # Paso 5: normalizar primitivos/categoría/herramientas y calcular 'potencial'
-python cli.py normalize
+.venv/bin/python cli.py normalize
 # revisa data/normalization_report.html (cobertura, pendientes, re-etiquetado),
 # completa configs/normalization.json y relanza 'normalize' cuantas veces quieras.
 
 # Dashboard local (Expediente, rejilla de huecos, similitud, combinador)
-python cli.py dashboard
-# abre data/dashboard.html directamente en el navegador — no depende de Claude
-# ni de ningún otro servicio, funciona sin conexión a internet.
+.venv/bin/python cli.py dashboard
+# abre data/dashboard.html directamente en el navegador — funciona sin
+# conexión a internet salvo el botón "Generar idea" de la rejilla de huecos.
+
+# Para que ese botón funcione: en OTRA terminal, déjalo corriendo mientras
+# usas el dashboard. Usa el mismo LLM_PROVIDER que el resto del pipeline
+# (Ollama por defecto, gratis y local; o Claude API si pones
+# LLM_PROVIDER=anthropic y ANTHROPIC_API_KEY en .env)
+.venv/bin/python cli.py idea-server
 
 # Paso 6: agregación + informe (requiere que 'extract' esté completo)
-python cli.py report
+.venv/bin/python cli.py report
 
 # Toda la secuencia (fetch + classify + extract + index + report;
 # 'normalize' y 'dashboard' quedan fuera porque quieres revisarlos a mano)
-python cli.py run @NombreCanal
+.venv/bin/python cli.py run @NombreCanal
 ```
 
 Variables de entorno:
@@ -141,6 +159,8 @@ data/
 ├── methods.jsonl
 ├── methods_norm.json
 ├── normalization_report.html
+├── ideas/
+│   └── <mecanismo>__<canal>.json
 ├── report.md
 └── dashboard.html
 ```

@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 _TEMPLATE_PATH = config.BASE_DIR / "pipeline" / "dashboard_template.html"
 DASHBOARD_HTML = config.DATA_DIR / "dashboard.html"
 METHODS_NORM = config.DATA_DIR / "methods_norm.json"
+NORM_CONFIG = config.BASE_DIR / "configs" / "normalization.json"
+IDEAS_DIR = config.DATA_DIR / "ideas"
 
 
 def _cosine(a: list[float], b: list[float]) -> float:
@@ -38,6 +40,28 @@ def _load_embedding(video_id: str) -> list[float] | None:
     return json.loads(embedding_path.read_text(encoding="utf-8"))["vector"]
 
 
+def _load_cached_ideas() -> dict:
+    """Lee todas las ideas ya generadas y cacheadas (data/ideas/*.json) y las
+    indexa por coordenada, en ambos órdenes de eje, para que el dashboard
+    pueda saber en el momento de pintar la rejilla si una celda ya tiene una
+    idea (viable, descartada o de baja confianza) sin llamar al servidor."""
+    cached: dict[str, dict] = {}
+    if not IDEAS_DIR.exists():
+        return cached
+    for path in IDEAS_DIR.glob("*.json"):
+        try:
+            idea = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        coord = idea.get("_coordenada")
+        if not coord or len(coord) != 2:
+            continue
+        (axis_a, val_a), (axis_b, val_b) = list(coord.items())
+        cached[f"{axis_a}={val_a}|{axis_b}={val_b}"] = idea
+        cached[f"{axis_b}={val_b}|{axis_a}={val_a}"] = idea
+    return cached
+
+
 def run() -> Path:
     if not METHODS_NORM.exists():
         raise RuntimeError(
@@ -59,11 +83,16 @@ def run() -> Path:
 
     coverage_pct = round(100 * sum(1 for v in videos if v.get("resuelto")) / n) if n else 0
 
+    norm_cfg = json.loads(NORM_CONFIG.read_text(encoding="utf-8")) if NORM_CONFIG.exists() else {}
+    incompatibilidades = (norm_cfg.get("incompatibilidades_mecanismo_canal") or {}).get("pares", [])
+
     payload = {
         "channel": _channel_label(),
         "videos": videos,
         "similarity": similarity,
         "coverage_pct": coverage_pct,
+        "incompatibilidades_mecanismo_canal": incompatibilidades,
+        "cached_ideas": _load_cached_ideas(),
     }
 
     template = _TEMPLATE_PATH.read_text(encoding="utf-8")

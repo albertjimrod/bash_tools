@@ -55,6 +55,20 @@ pasó, y por eso el código llama siempre a `python -m yt_dlp` usando
 explícitamente el intérprete del venv, nunca al `yt-dlp` que haya en el
 `PATH` del sistema.
 
+**Por qué todos los comandos de este manual usan `.venv/bin/python cli.py`
+en vez de solo `python cli.py`**: si usas conda además de `venv` (habitual
+si trabajas con varios proyectos de Python/ML), es fácil acabar con un
+entorno conda que se llama igual que la carpeta del proyecto
+(`yt_method_pipeline`) sin darte cuenta — algún IDE o herramienta lo crea
+automáticamente. Cuando ese entorno conda está activo, tu prompt muestra
+`(yt_method_pipeline)` igual que si fuera el `venv` del proyecto, pero es
+un intérprete de Python completamente distinto, sin las dependencias
+instaladas aquí (`pip install -r requirements.txt` las puso en `.venv/`,
+no en ese entorno conda) — nos pasó justo así. Usar la ruta explícita
+`.venv/bin/python` evita ese lío por completo, sea cual sea el entorno que
+tengas activo en el shell. Compruébalo con `conda env list` si quieres ver
+si tienes ese mismo problema.
+
 **Por qué `.env` en vez de meter las claves en el código**: `.env` está en
 `.gitignore`, así que tus claves (si usas Claude API) o configuración local
 nunca se suben al repositorio por accidente.
@@ -96,7 +110,7 @@ trabajo ya hecho.
 ### Paso 1 — `fetch`: descargar transcripciones
 
 ```bash
-python cli.py fetch @NombreCanal --limit 20
+.venv/bin/python cli.py fetch @NombreCanal --limit 20
 ```
 
 **Qué hace**: lista los vídeos del canal (vía `yt-dlp`) y descarga la
@@ -126,7 +140,7 @@ bajarlo de nuevo.
 ### Paso 2 — `classify`: filtrar solo métodos de negocio reales
 
 ```bash
-python cli.py classify
+.venv/bin/python cli.py classify
 ```
 
 **Qué hace**: para cada transcripción descargada, un LLM lee el título + el
@@ -156,7 +170,7 @@ tener que volver a descargar nada.
 ### Paso 3 — `extract`: la extracción estructurada (el paso lento)
 
 ```bash
-python cli.py extract
+.venv/bin/python cli.py extract
 ```
 
 **Qué hace**: por cada vídeo que pasó el filtro, le pide al LLM que rellene
@@ -181,8 +195,8 @@ recargas del modelo — así que, en general, los vídeos cortos van rápido
 ### Paso 4 — `index`: embeddings para búsqueda semántica
 
 ```bash
-python cli.py index
-python cli.py search "dropshipping con poca inversión inicial"
+.venv/bin/python cli.py index
+.venv/bin/python cli.py search "dropshipping con poca inversión inicial"
 ```
 
 **Qué hace**: construye, para cada vídeo, un resumen normalizado en texto
@@ -202,7 +216,7 @@ palabra exacta) y para la vista de Similitud del dashboard.
 ### Paso 5 — `normalize`: limpiar y homogeneizar (el único paso manual/iterativo)
 
 ```bash
-python cli.py normalize
+.venv/bin/python cli.py normalize
 ```
 
 **Qué hace**: el LLM, al extraer `mecanismo_valor`, `canal_apalancamiento` y
@@ -237,22 +251,43 @@ vídeos) — es el punto de partida esperado, no un fallo.
 tu revisión activa. Meterlo en la cadena automática animaría a confiar en
 huecos calculados sobre datos sin normalizar.
 
+**La categoría también se re-etiqueta, y no por su propio valor**: la
+`categoria` que pone el LLM en `extract` resultó poco fiable — en nuestros
+43 vídeos, 13 estaban etiquetados `inversion_trading` pero solo 5 eran
+negocios financieros de verdad (los otros 8 eran Skool, servicios con IA,
+ecommerce...). En vez de fiarnos de esa etiqueta, `categoria_norm` se
+reasigna a partir de `mecanismo_norm` (una señal más fiable: es un campo
+más concreto y con menos margen de ambigüedad para el LLM), usando el mapa
+`categoria_por_mecanismo` del config — editable igual que el resto.
+
 ### Paso 6 — `dashboard`: la vista interactiva
 
 ```bash
-python cli.py dashboard
+.venv/bin/python cli.py dashboard
 ```
 Ábrelo con `file:///.../data/dashboard.html` directamente en el navegador.
 
 **Qué hace**: genera un único HTML autónomo (tipografías y datos
-incrustados, cero peticiones de red) con cuatro vistas:
+incrustados, cero peticiones de red salvo el botón de generar idea) con
+cuatro vistas:
 - **Expediente** — las respuestas de los 6 bloques de cada vídeo, en
   formato legible, más su `potencial`.
 - **Rejilla de huecos** — combinaciones normalizadas (mecanismo × canal,
   canal × audiencia, categoría × inversión) que ningún vídeo del canal
-  cubre todavía — el motor de ideas. Depende directamente de `normalize`:
-  si la cobertura es baja, avisa de que los huecos pueden ser artefactos
-  de datos sin mapear, no huecos reales.
+  cubre todavía. Cada celda vacía muestra un **score estimado** (media del
+  `potencial` de los vídeos que sostienen cada faceta por separado, no de
+  vídeos que ya combinen ambas — por definición no existen) y su **n**
+  (cuántos vídeos apoyan ese score); con n bajo se marca ⚠ "baja
+  evidencia", porque un score alto sostenido por 1 solo vídeo es frágil.
+  Las combinaciones que declares incompatibles en el config (p.ej.
+  invertir en bolsa vía un marketplace no tiene sentido) se pintan como
+  descartadas y no entran en el ranking. El toggle "solo huecos
+  adyacentes" (activado por defecto) oculta huecos "de dos saltos" —
+  combinaciones que no comparten fila ni columna con nada que el canal ya
+  haga, y que por tanto son más especulativas. El panel "Top 10 huecos"
+  ordena los mejores candidatos. Depende directamente de `normalize`: si
+  la cobertura es baja, avisa de que los huecos pueden ser artefactos de
+  datos sin mapear, no huecos reales.
 - **Similitud** — parecido temático (embeddings) o ponderado (tú eliges
   con sliders qué facetas pesan).
 - **Combinador** — mezcla primitivos de vídeos distintos y comprueba si la
@@ -263,10 +298,44 @@ porque la rejilla de huecos y el combinador solo tienen sentido con
 vocabulario homogéneo — comparar "redes_sociales" con "instagram" como si
 fueran cosas distintas rompería el propósito de la herramienta.
 
+### Paso 6b — `idea-server`: el botón "Generar idea"
+
+```bash
+.venv/bin/python cli.py idea-server    # en una terminal aparte, la dejas corriendo
+```
+
+**Qué hace**: en la Rejilla de huecos, cada celda vacía (y cada entrada del
+Top 10) tiene un botón "Generar idea" que le pide al LLM configurado una
+propuesta de negocio concreta para esa combinación — nombre, cliente
+objetivo, propuesta de valor, primeros 3 pasos, herramientas sugeridas,
+por qué encaja (referenciando los vídeos reales que combina) y riesgos a
+vigilar.
+
+**Por qué hace falta un servidor aparte**: `data/dashboard.html` es un
+fichero que abres con doble clic (`file://`) — si el botón llamara
+directamente a un LLM desde el JavaScript de la página, o bien tu clave de
+API tendría que estar escrita en el propio HTML (visible para cualquiera
+que abra el archivo), o bien el navegador tendría que hablar directamente
+con Ollama en tu máquina desde una página sin ningún control. En vez de
+eso, el botón le hace una petición al servidor local (`http://localhost:8765`,
+permitido desde una página `file://`, a diferencia de leer otro fichero
+local), y es el servidor — un proceso Python en tu máquina — quien llama
+al LLM.
+
+**Qué proveedor usa**: el mismo `LLM_PROVIDER` que el resto del pipeline
+(Ollama por defecto, gratis y local; Claude API si pones
+`LLM_PROVIDER=anthropic` y `ANTHROPIC_API_KEY` en `.env` — útil si algún
+día quieres la calidad de Claude para esta tarea puntual en concreto, ya
+que es solo una llamada por idea que pidas, no una por vídeo).
+
+**Caché**: cada idea se guarda en `data/ideas/<mecanismo>__<canal>.json`.
+Si vuelves a pedir la misma combinación, el servidor devuelve la versión
+cacheada sin volver a llamar al LLM.
+
 ### Paso 7 — `report`: informe agregado en Markdown
 
 ```bash
-python cli.py report
+.venv/bin/python cli.py report
 ```
 
 **Qué hace**: agrega todos los `method.json`, genera tablas de
@@ -280,7 +349,7 @@ complementan, no se sustituyen.
 ## 4. El atajo `run`
 
 ```bash
-python cli.py run @NombreCanal --limit 100
+.venv/bin/python cli.py run @NombreCanal --limit 100
 ```
 
 Encadena `fetch → classify → extract → index → report`. **A propósito deja
@@ -288,19 +357,25 @@ fuera `normalize` y `dashboard`** — el primero porque necesita tu revisión,
 el segundo porque depende del primero. Después de `run`, el ciclo normal es:
 
 ```bash
-python cli.py normalize     # revisar data/normalization_report.html, iterar
-python cli.py dashboard
+.venv/bin/python cli.py normalize     # revisar data/normalization_report.html, iterar
+.venv/bin/python cli.py dashboard
 ```
 
 ## 5. Problemas conocidos (y por qué pasan)
 
-- **`RequestBlocked` / `IpBlocked` de `youtube_transcript_api`**: YouTube
-  limita peticiones por IP cuando detecta un patrón de scraping (tandas
-  grandes y rápidas). El pipeline lo detecta y no malgasta reintentos: pasa
-  directo al fallback de `yt-dlp` el resto de la ejecución. Si además
-  `yt-dlp` también falla con `429`/`"the page needs to be reloaded"`, es el
-  mismo tipo de limitación — espera un rato y reintenta (relanzar `fetch`
-  es idempotente y seguro).
+- **`RequestBlocked` / `IpBlocked` de `youtube_transcript_api`, o `429` en
+  `yt-dlp`**: YouTube limita peticiones por IP cuando detecta un patrón de
+  scraping (tandas grandes y rápidas — nos pasó relanzando `fetch` con
+  `--limit 150`: los 70 vídeos nuevos fallaron todos con `429`). El pipeline
+  detecta ambos casos por separado y no malgasta reintentos en ninguno de
+  los dos: en cuanto detecta el bloqueo de `youtube_transcript_api` pasa
+  directo al fallback de `yt-dlp` el resto de la ejecución, y si ese
+  fallback también empieza a devolver `429`/`"the page needs to be
+  reloaded"`, deja de intentarlo también — así los vídeos restantes fallan
+  al instante en vez de perder ~30s cada uno. No hay nada que hacer salvo
+  esperar un rato y reintentar (relanzar `fetch` es idempotente y seguro,
+  solo reintenta lo que falló). Para tandas grandes, considera subir
+  `FETCH_DELAY` en `.env` para reducir la probabilidad de que pase.
 - **Vídeos con restricción de edad**: `youtube_transcript_api` no soporta
   ahora mismo autenticación por cookies (rotura reciente de la propia
   librería); el fallback de `yt-dlp` con `--cookies-from-browser` puede
@@ -318,6 +393,20 @@ python cli.py dashboard
   pequeña que la usada aquí (RTX 3060, 12GB), puedes bajar
   `OLLAMA_NUM_CTX` en `.env`, a costa de arriesgarte a truncar
   transcripciones muy largas.
+- **`python cli.py ...` falla o usa las dependencias equivocadas**: casi
+  siempre es que el `python` de tu shell no es el del `.venv` del proyecto
+  — sobre todo si usas conda y tienes (o algo te creó) un entorno con el
+  mismo nombre que la carpeta del proyecto, que activa un intérprete
+  distinto mostrando el mismo `(yt_method_pipeline)` en el prompt. La
+  solución es usar siempre la ruta explícita: `.venv/bin/python cli.py ...`
+  (así están escritos todos los comandos de este manual). Compruébalo con
+  `conda env list`.
+- **`OSError: [Errno 98] Address already in use` al lanzar `idea-server`**:
+  ya tienes un `idea-server` corriendo en otra terminal (o quedó huérfano
+  de una sesión anterior). Compruébalo con `ss -ltnp | grep 8765` y mata el
+  proceso que aparezca (`kill <pid>`) antes de relanzar. Si acabas de
+  cambiar código de `idea_server.py`, también tienes que reiniciarlo — un
+  proceso Python ya arrancado no recoge cambios de fichero solo.
 
 ## 6. De cero a dashboard: resumen de comandos
 
@@ -330,9 +419,13 @@ ollama pull qwen3:14b
 ollama pull qwen3-embedding:8b
 
 # 3: el pipeline
-python cli.py run @NombreCanal --limit 100
-python cli.py normalize
+.venv/bin/python cli.py run @NombreCanal --limit 100
+.venv/bin/python cli.py normalize
 # -> abrir data/normalization_report.html, completar configs/normalization.json, repetir
-python cli.py dashboard
+.venv/bin/python cli.py dashboard
 # -> abrir data/dashboard.html
+
+# 4 (opcional, para el botón "Generar idea" de la rejilla de huecos):
+# en otra terminal, la dejas corriendo
+.venv/bin/python cli.py idea-server
 ```

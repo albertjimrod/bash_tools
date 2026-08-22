@@ -24,6 +24,14 @@ _YTDLP_CMD = [sys.executable, "-m", "yt_dlp"]
 # distinto).
 _transcript_api_blocked = False
 
+# Mismo razonamiento para yt-dlp: si YouTube empieza a devolver 429 (nos ha
+# pasado en tandas grandes, con o sin youtube_transcript_api ya bloqueado
+# aparte), seguir intentando la rejilla completa de idiomas/tipos/cookies por
+# cada vídeo siguiente son ~30s desperdiciados por vídeo sin ninguna
+# posibilidad de éxito.
+_ytdlp_blocked = False
+_RATE_LIMIT_SIGNATURES = ("429", "too many requests")
+
 
 def _video_dir(video_id: str, title: str) -> Path:
     """Directorio del vídeo: reutiliza uno ya existente para ese video_id aunque
@@ -76,6 +84,10 @@ def _fetch_via_ytdlp(video_id: str, url: str) -> Optional[tuple[str, str, str]]:
     se reintenta CON cookies, que hace falta para contenido con restricción de
     edad (a costa de arriesgarse a ese mismo error). Devuelve (texto, idioma, tipo).
     """
+    global _ytdlp_blocked
+    if _ytdlp_blocked:
+        return None
+
     cookie_passes = [False, True] if config.YT_COOKIES_FROM_BROWSER else [False]
     for use_cookies in cookie_passes:
         with tempfile.TemporaryDirectory() as tmp:
@@ -90,11 +102,20 @@ def _fetch_via_ytdlp(video_id: str, url: str) -> Optional[tuple[str, str, str]]:
                         cmd += ["--cookies-from-browser", config.YT_COOKIES_FROM_BROWSER]
                     cmd += ["-o", str(tmp_path / "%(id)s.%(ext)s"), url]
 
-                    subprocess.run(cmd, capture_output=True, text=True)
+                    result = subprocess.run(cmd, capture_output=True, text=True)
                     found = _find_sub_file(tmp_path, video_id)
                     if found:
                         text = clean_subtitle_text(found.read_text(encoding="utf-8", errors="ignore"))
                         return strip_sound_tags(text), lang, sub_type
+
+                    stderr_lower = (result.stderr or "").lower()
+                    if any(sig in stderr_lower for sig in _RATE_LIMIT_SIGNATURES):
+                        _ytdlp_blocked = True
+                        logger.warning(
+                            "YouTube ha empezado a devolver 429 también en yt-dlp; "
+                            "el resto de esta ejecución de 'fetch' se saltará el fallback de yt-dlp"
+                        )
+                        return None
 
                     for f in tmp_path.iterdir():
                         f.unlink(missing_ok=True)
@@ -165,8 +186,9 @@ def download_transcript(video: dict) -> str:
 
 
 def run(channel: str, limit: Optional[int] = None) -> None:
-    global _transcript_api_blocked
+    global _transcript_api_blocked, _ytdlp_blocked
     _transcript_api_blocked = False
+    _ytdlp_blocked = False
 
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)
     config.TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)

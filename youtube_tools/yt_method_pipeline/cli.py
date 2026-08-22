@@ -5,7 +5,10 @@ import logging
 import sys
 
 import config
-from pipeline import aggregate, classify, dashboard, embeddings, extraction, normalize, report, search, transcripts
+from pipeline import (
+    aggregate, classify, dashboard, embeddings, extraction, idea_server,
+    normalize, report, search, transcripts,
+)
 from pipeline.utils import setup_logging
 
 logger = logging.getLogger(__name__)
@@ -41,6 +44,10 @@ def cmd_normalize(args):
 def cmd_dashboard(args):
     path = dashboard.run()
     print(f"Dashboard generado en: {path}")
+
+
+def cmd_idea_server(args):
+    idea_server.run()
 
 
 def cmd_report(args):
@@ -99,6 +106,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Dashboard HTML: expediente, rejilla de huecos, similitud y combinador (requiere 'normalize')",
     )
     p_dashboard.set_defaults(func=cmd_dashboard)
+
+    p_idea_server = sub.add_parser(
+        "idea-server",
+        help="Servidor local (localhost:8765) para el botón 'Generar idea' del dashboard — usa Ollama por defecto (LLM_PROVIDER)",
+    )
+    p_idea_server.set_defaults(func=cmd_idea_server)
 
     p_report = sub.add_parser("report", help="Paso 4: agregación y generación del informe")
     p_report.set_defaults(func=cmd_report)

@@ -344,25 +344,55 @@
 
   /* --- Rejilla de huecos --- */
   .gap-controls { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 18px; }
-  .gap-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; }
+  .gap-controls label.check { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-muted); cursor: pointer; }
+  .gap-layout { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .gap-wrap { flex: 2 1 480px; min-width: 380px; overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; }
   table.gap { border-collapse: collapse; font-size: 12px; }
   table.gap th { font-weight: 500; color: var(--ink-muted); padding: 6px 8px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.03em; }
   table.gap th.corner { text-align: right; }
   table.gap td { padding: 2px; }
   .gap-cell {
-    width: 92px; height: 48px; border-radius: 6px; border: 2px solid var(--surface);
-    display: flex; align-items: center; justify-content: center;
-    font-family: "IBM Plex Mono", monospace; font-size: 13px; cursor: default;
+    width: 92px; height: 52px; border-radius: 6px; border: 2px solid var(--surface);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+    font-family: "IBM Plex Mono", monospace; font-size: 13px; cursor: default; position: relative;
   }
+  .gap-cell .n-sub { font-size: 9.5px; opacity: 0.75; }
   .gap-cell.empty {
     background: var(--surface-2); border: 2px dashed var(--border); color: var(--ink-muted); cursor: pointer;
   }
-  .gap-cell.empty:hover, .gap-cell.empty:focus-visible { border-color: var(--accent); color: var(--accent); }
+  .gap-cell.empty:hover, .gap-cell.empty:focus-visible { border-color: var(--accent); }
   .gap-cell.filled { cursor: pointer; }
+  .gap-cell.discarded { background: repeating-linear-gradient(45deg, var(--border), var(--border) 4px, var(--surface-2) 4px, var(--surface-2) 8px); color: var(--ink-muted); cursor: not-allowed; }
+  .gap-cell.low-evidence { opacity: 0.55; }
+  .gap-cell.low-confidence { border-style: dotted; border-color: var(--warn); }
+  .gap-cell .flag { position: absolute; top: 2px; right: 3px; font-size: 9px; }
+  .gap-cell .flag.confidence { top: 2px; right: auto; left: 3px; color: var(--warn); }
+
+  .top-huecos { flex: 1 1 280px; min-width: 260px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 16px; }
+  .top-huecos h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+  #top-huecos-list { max-height: 560px; overflow-y: auto; }
+  .top-hueco-item { padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; cursor: pointer; }
+  .top-hueco-item:last-child { border-bottom: none; }
+  .top-hueco-item:hover { color: var(--accent); }
+  .top-hueco-item .coord { font-weight: 600; }
+  .top-hueco-item .meta { color: var(--ink-muted); font-family: "IBM Plex Mono", monospace; font-size: 11px; margin-top: 2px; }
+  .top-hueco-item.low-evidence .meta::after { content: ' · baja evidencia'; }
+
   .gap-idea-panel { margin-top: 18px; padding: 18px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
   .gap-idea-panel .phrase { font-family: "Zilla Slab", serif; font-size: 17px; font-weight: 600; }
   .gap-idea-panel .vids { margin-top: 10px; font-size: 13px; }
   .gap-idea-panel .vids a { color: var(--accent); }
+  .gap-idea-panel .score-line { margin-top: 8px; font-size: 12.5px; color: var(--ink-muted); }
+
+  .idea-card { margin-top: 14px; padding: 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); }
+  .idea-card h4 { font-family: "Zilla Slab", serif; font-size: 16px; margin-bottom: 4px; }
+  .idea-card .head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .idea-card .head h4 { margin-bottom: 0; }
+  .idea-card .tagline { color: var(--ink-muted); font-size: 13px; margin: 6px 0 10px; }
+  .idea-card .kv { margin-bottom: 8px; }
+  .idea-card.non-viable { border-color: var(--bad); background: var(--bad-soft); }
+  .idea-loading { font-size: 13px; color: var(--ink-muted); margin-top: 12px; }
+  .idea-error { font-size: 13px; color: var(--bad); margin-top: 12px; background: var(--bad-soft); padding: 10px 12px; border-radius: 8px; }
 
   /* --- Similitud ponderada --- */
   .sim-mode { display: flex; gap: 8px; margin-bottom: 18px; }
@@ -422,9 +452,19 @@
             <option value="categoria_norm|bucket_inversion">Categoría × Inversión inicial</option>
           </select>
         </div>
+        <label class="check"><input type="checkbox" id="chk-adyacentes" checked> Solo huecos adyacentes (una celda llena en su fila o columna)</label>
       </div>
-      <div class="gap-wrap">
-        <table class="gap" id="gap-table"></table>
+      <p class="lede" style="margin-top:-8px">
+        Color de celda vacía = <strong>score estimado</strong> (media del potencial de los vídeos que sostienen cada faceta por separado). Celdas grises rayadas = descartadas por el filtro de plausibilidad. El icono ⚠ marca huecos apoyados en pocos vídeos (baja evidencia).
+      </p>
+      <div class="gap-layout">
+        <div class="gap-wrap">
+          <table class="gap" id="gap-table"></table>
+        </div>
+        <div class="top-huecos">
+          <h3>Top 50 huecos</h3>
+          <div id="top-huecos-list"></div>
+        </div>
       </div>
       <div id="gap-idea-panel"></div>
     </section>
@@ -881,12 +921,66 @@ const AXIS_LABELS = {
   mecanismo_norm: 'mecanismo', canal_norm: 'canal', audiencia_norm: 'audiencia',
   categoria_norm: 'categoría', bucket_inversion: 'inversión inicial',
 };
+const LOW_EVIDENCE_N = 3;
 
 function axisValues(key) {
   if (key === 'bucket_inversion') return BUCKET_INVERSION_ORDER;
   const set = new Set();
   DATA.videos.forEach(v => { if (v[key]) set.add(v[key]); });
   return [...set].sort();
+}
+
+function poolForFacet(axisKey, value) {
+  return DATA.videos.filter(v => v[axisKey] === value);
+}
+
+function meanPotencial(vids) {
+  if (!vids.length) return null;
+  return vids.reduce((s, v) => s + (v.potencial || 0), 0) / vids.length;
+}
+
+function isIncompatible(axisA, a, axisB, b) {
+  const pares = DATA.incompatibilidades_mecanismo_canal || [];
+  if (axisA === 'mecanismo_norm' && axisB === 'canal_norm') return pares.some(([m, c]) => m === a && c === b);
+  if (axisA === 'canal_norm' && axisB === 'mecanismo_norm') return pares.some(([m, c]) => m === b && c === a);
+  return false;
+}
+
+// --- Ideas ya generadas (data/ideas/*.json, embebidas por dashboard.py) ---
+// Mismo criterio de clave en ambos órdenes de eje que usa dashboard.py, para
+// no depender de qué eje se pintó como filas y cuál como columnas.
+function ideaKey(axisA, valA, axisB, valB) { return `${axisA}=${valA}|${axisB}=${valB}`; }
+function cachedIdeaFor(axisA, valA, axisB, valB) {
+  return (DATA.cached_ideas || {})[ideaKey(axisA, valA, axisB, valB)] || null;
+}
+// Las ideas cacheadas con el esquema anterior (antes de la validación de
+// compatibilidad) no tienen el campo 'viable' — se tratan como viables para
+// no romper cachés previas.
+function ideaIsViable(idea) { return idea.viable !== false; }
+function ideaIsLowConfidence(idea) { return ideaIsViable(idea) && idea.confianza === 'baja'; }
+function registerCachedIdea(axisA, valA, axisB, valB, idea) {
+  DATA.cached_ideas = DATA.cached_ideas || {};
+  DATA.cached_ideas[ideaKey(axisA, valA, axisB, valB)] = idea;
+  DATA.cached_ideas[ideaKey(axisB, valB, axisA, valA)] = idea;
+}
+
+// Interpola entre --warn y --good (mismo lenguaje visual que el 'potencial
+// operativo' del Expediente) leyendo los colores resueltos del tema actual,
+// para que el gradiente de la rejilla funcione igual en claro y oscuro.
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  const n = parseInt(hex, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function scoreCellStyle(pct) {
+  const t = Math.max(0, Math.min(1, pct / 100));
+  const [r1, g1, b1] = hexToRgb(cssVar('--warn'));
+  const [r2, g2, b2] = hexToRgb(cssVar('--good'));
+  const r = Math.round(r1 + (r2 - r1) * t), g = Math.round(g1 + (g2 - g1) * t), b = Math.round(b1 + (b2 - b1) * t);
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+  return `background:rgb(${r},${g},${b});color:${luminance > 140 ? 'var(--ink)' : '#fff'}`;
 }
 
 function renderCoverageBanner() {
@@ -904,16 +998,24 @@ function renderCoverageBanner() {
 
 function renderGapGrid() {
   const [axisA, axisB] = document.getElementById('sel-gap-axes').value.split('|');
+  const soloAdyacentes = document.getElementById('chk-adyacentes').checked;
   const valsA = axisValues(axisA);
   const valsB = axisValues(axisB);
 
-  const cells = {};
+  const exactCells = {};
   DATA.videos.forEach(v => {
     const a = v[axisA], b = v[axisB];
     if (a == null || b == null) return;
     const key = a + '|' + b;
-    (cells[key] = cells[key] || []).push(v);
+    (exactCells[key] = exactCells[key] || []).push(v);
   });
+
+  const filledRows = new Set(), filledCols = new Set();
+  valsA.forEach(a => valsB.forEach(b => {
+    if ((exactCells[a + '|' + b] || []).length) { filledRows.add(a); filledCols.add(b); }
+  }));
+
+  const candidates = [];
 
   const table = document.getElementById('gap-table');
   table.innerHTML = '';
@@ -922,38 +1024,183 @@ function renderGapGrid() {
   valsA.forEach(a => {
     const row = el('tr', {}, [el('th', {}, a)]);
     valsB.forEach(b => {
-      const vids = cells[a + '|' + b] || [];
-      const filled = vids.length > 0;
-      const heatCls = filled ? heatClass(Math.min(1, vids.length / 4)) : '';
-      const div = el('div', {
-        class: 'gap-cell ' + (filled ? 'filled ' + heatCls : 'empty'),
-        style: filled ? `background:var(--${heatCls});color:var(--heat-text-${vids.length >= 3 ? 'hi' : 'lo'})` : '',
-        title: filled ? vids.map(v => v.title).join('\n') : 'Combinación sin vídeos — posible hueco',
-      }, filled ? String(vids.length) : '·');
-      div.addEventListener('click', () => showGapPanel(a, b, axisA, axisB, vids));
+      const vids = exactCells[a + '|' + b] || [];
+      let div;
+      if (vids.length > 0) {
+        const heatCls = heatClass(Math.min(1, vids.length / 4));
+        div = el('div', {
+          class: 'gap-cell filled ' + heatCls,
+          style: `background:var(--${heatCls});color:var(--heat-text-${['heat-3', 'heat-4'].includes(heatCls) ? 'hi' : 'lo'})`,
+          title: vids.map(v => v.title).join('\n'),
+        }, String(vids.length));
+        div.addEventListener('click', () => showGapPanel(a, b, axisA, axisB, vids, null, null));
+      } else {
+        const cached = cachedIdeaFor(axisA, a, axisB, b);
+        const discardedByIdea = cached && !ideaIsViable(cached);
+        if (isIncompatible(axisA, a, axisB, b) || discardedByIdea) {
+          const title = discardedByIdea
+            ? `Descartada por el generador de ideas: ${cached.motivo || 'combinación económicamente incompatible'}`
+            : 'Descartada: combinación incompatible declarada en configs/normalization.json';
+          div = el('div', { class: 'gap-cell discarded', title }, '✕');
+        } else {
+          const adjacent = filledRows.has(a) || filledCols.has(b);
+          if (soloAdyacentes && !adjacent) {
+            div = el('div', {
+              class: 'gap-cell empty', style: 'opacity:.3',
+              title: 'Hueco no adyacente, oculto por el filtro. Desmarca "solo huecos adyacentes" para verlo.',
+            }, '·');
+          } else {
+            const pool = [...new Set([...poolForFacet(axisA, a), ...poolForFacet(axisB, b)])];
+            const n = pool.length;
+            const score = meanPotencial(pool);
+            const lowEvidence = n > 0 && n < LOW_EVIDENCE_N;
+            const lowConfidence = ideaIsLowConfidence(cached || {});
+            const title = `Hueco: ${AXIS_LABELS[axisA]} "${a}" × ${AXIS_LABELS[axisB]} "${b}" — score estimado ${score != null ? Math.round(score) : '—'} (n=${n})`
+              + (cached ? (lowConfidence ? ' — 💡 idea generada, confianza baja (se apoya en un solo vídeo)' : ' — 💡 idea ya generada') : '');
+            div = el('div', {
+              class: 'gap-cell empty' + (lowEvidence ? ' low-evidence' : '') + (lowConfidence ? ' low-confidence' : ''),
+              style: score != null ? scoreCellStyle(score) : '',
+              title,
+            }, [
+              score != null ? String(Math.round(score)) : '·',
+              lowEvidence ? el('span', { class: 'flag' }, '⚠') : null,
+              lowConfidence ? el('span', { class: 'flag confidence' }, '◐') : null,
+            ]);
+            div.addEventListener('click', () => showGapPanel(a, b, axisA, axisB, [], score, n));
+            candidates.push({ a, b, score: score || 0, n });
+          }
+        }
+      }
       row.appendChild(el('td', {}, div));
     });
     table.appendChild(row);
   });
+
+  renderTopHuecos(candidates, axisA, axisB);
 }
 
-function showGapPanel(a, b, axisA, axisB, vids) {
+function renderTopHuecos(candidates, axisA, axisB) {
+  const list = document.getElementById('top-huecos-list');
+  list.innerHTML = '';
+  const top = [...candidates].sort((x, y) => y.score - x.score).slice(0, 50);
+  if (!top.length) {
+    list.appendChild(el('p', { class: 'empty' }, 'No hay huecos que cumplan los filtros actuales.'));
+    return;
+  }
+  top.forEach(({ a, b, score, n }) => {
+    const item = el('div', { class: 'top-hueco-item' + (n < LOW_EVIDENCE_N ? ' low-evidence' : '') }, [
+      el('div', { class: 'coord' }, `${a} × ${b}`),
+      el('div', { class: 'meta' }, `score ${Math.round(score)} · n=${n}`),
+    ]);
+    item.addEventListener('click', () => {
+      showGapPanel(a, b, axisA, axisB, [], score, n);
+      document.getElementById('gap-idea-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+    list.appendChild(item);
+  });
+}
+
+function showGapPanel(a, b, axisA, axisB, vids, score, n) {
   const panel = document.getElementById('gap-idea-panel');
   panel.innerHTML = '';
   const box = el('div', { class: 'gap-idea-panel' });
+  box.appendChild(el('div', { class: 'phrase' }, `${AXIS_LABELS[axisA]}: ${a} × ${AXIS_LABELS[axisB]}: ${b}`));
   if (vids.length) {
-    box.appendChild(el('div', { class: 'phrase' }, `${AXIS_LABELS[axisA]}: ${a} × ${AXIS_LABELS[axisB]}: ${b}`));
     box.appendChild(el('div', {}, `${vids.length} vídeo(s) ya cubren esta combinación:`));
     const list = el('div', { class: 'vids' });
     vids.forEach(v => list.appendChild(el('div', {}, el('a', { href: v.url, target: '_blank', rel: 'noopener' }, v.title))));
     box.appendChild(list);
   } else {
-    box.appendChild(el('div', { class: 'phrase' }, `Idea candidata: ${AXIS_LABELS[axisA]} "${a}" + ${AXIS_LABELS[axisB]} "${b}"`));
     box.appendChild(el('div', { class: 'vids' },
       'Ningún vídeo del canal cubre esta combinación todavía.' +
       (DATA.coverage_pct < 40 ? ' Ojo: con la cobertura actual esto puede deberse a datos sin normalizar, no a un hueco real.' : '')));
+    if (score != null) {
+      box.appendChild(el('div', { class: 'score-line' },
+        `Score estimado: ${Math.round(score)} — media del potencial de los vídeos que sostienen ${AXIS_LABELS[axisA]} "${a}" o ${AXIS_LABELS[axisB]} "${b}" por separado (n=${n})` +
+        (n < LOW_EVIDENCE_N ? '. ⚠ Baja evidencia: tómalo con cautela.' : '.')));
+    }
+    const slot = el('div', { id: 'idea-slot' });
+    box.appendChild(slot);
+    const cached = cachedIdeaFor(axisA, a, axisB, b);
+    if (cached) {
+      slot.appendChild(renderIdeaCard(cached));
+    } else {
+      renderIdeaButton(slot, axisA, a, axisB, b);
+    }
   }
   panel.appendChild(box);
+}
+
+// --- Generar idea (llama al servidor local: python cli.py idea-server) ---
+const IDEA_SERVER = 'http://localhost:8765';
+
+function renderIdeaButton(container, axisA, valA, axisB, valB) {
+  container.innerHTML = '';
+  const btn = el('button', { class: 'btn ghost', type: 'button' }, '💡 Generar idea de negocio');
+  container.appendChild(btn);
+  btn.addEventListener('click', () => {
+    container.innerHTML = '';
+    container.appendChild(el('div', { class: 'idea-loading' }, 'Generando (puede tardar un minuto la primera vez; las siguientes se sirven de caché)…'));
+    const url = `${IDEA_SERVER}/generate?axisA=${encodeURIComponent(axisA)}&valA=${encodeURIComponent(valA)}`
+      + `&axisB=${encodeURIComponent(axisB)}&valB=${encodeURIComponent(valB)}`;
+    fetch(url)
+      .then(r => r.json().then(body => ({ ok: r.ok, body })))
+      .then(({ ok, body }) => {
+        if (!ok) throw new Error(body.error || 'error desconocido del servidor');
+        container.innerHTML = '';
+        container.appendChild(renderIdeaCard(body));
+        // La idea recién generada puede cambiar cómo se debe pintar esta
+        // celda (descartada, confianza baja) — se registra y se refresca la
+        // rejilla y el Top huecos sin tocar este panel, que ya muestra el
+        // resultado.
+        registerCachedIdea(axisA, valA, axisB, valB, body);
+        renderGapGrid();
+      })
+      .catch(err => {
+        const esRed = err instanceof TypeError; // fetch falla así si no hay servidor escuchando
+        container.innerHTML = '';
+        container.appendChild(el('div', { class: 'idea-error' }, esRed
+          ? "No se pudo conectar con el servidor local. Arráncalo en una terminal: python cli.py idea-server"
+          : `La API devolvió un error: ${err.message}`));
+      });
+  });
+}
+
+function renderIdeaCard(idea) {
+  if (!ideaIsViable(idea)) {
+    return el('div', { class: 'idea-card non-viable' }, [
+      el('div', { class: 'head' }, [el('h4', {}, 'Idea descartada'), badge('no viable', 'bad')]),
+      el('dl', { class: 'kv' }, [
+        ...kv('Motivo', idea.motivo || 'combinación económicamente incompatible'),
+        ...(idea.alternativa ? kv('Alternativa sugerida', idea.alternativa) : []),
+      ]),
+    ]);
+  }
+  const card = el('div', { class: 'idea-card' }, [
+    el('div', { class: 'head' }, [
+      el('h4', {}, idea.nombre_idea || 'Idea sin nombre'),
+      idea.confianza === 'baja' ? badge('confianza baja', 'warn') : null,
+    ]),
+    el('p', { class: 'tagline' }, idea.en_una_frase || ''),
+    el('dl', { class: 'kv' }, [
+      ...kv('Cliente objetivo', idea.cliente_objetivo),
+      ...kv('Propuesta de valor', idea.propuesta_valor),
+      ...kv('Por qué encaja', idea.por_que_encaja),
+    ]),
+  ]);
+  if (idea.primeros_3_pasos && idea.primeros_3_pasos.length) {
+    card.appendChild(el('p', { class: 'card-phrase' }, 'Primeros pasos:'));
+    card.appendChild(list(idea.primeros_3_pasos));
+  }
+  if (idea.herramientas_sugeridas && idea.herramientas_sugeridas.length) {
+    card.appendChild(el('p', { class: 'card-phrase' }, 'Herramientas sugeridas:'));
+    card.appendChild(chips(idea.herramientas_sugeridas));
+  }
+  if (idea.riesgos_a_vigilar && idea.riesgos_a_vigilar.length) {
+    card.appendChild(el('p', { class: 'card-phrase' }, 'Riesgos a vigilar:'));
+    card.appendChild(list(idea.riesgos_a_vigilar, 'risk'));
+  }
+  return card;
 }
 
 // --- Pestañas ---
@@ -1176,6 +1423,7 @@ setupTabs();
 renderCards();
 renderCoverageBanner();
 document.getElementById('sel-gap-axes').addEventListener('change', renderGapGrid);
+document.getElementById('chk-adyacentes').addEventListener('change', renderGapGrid);
 renderGapGrid();
 setupSimilarityControls();
 renderHeat();

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "idea_generation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "viable",
+    "confianza",
+    "motivo",
+    "alternativa",
+    "nombre_idea",
+    "en_una_frase",
+    "cliente_objetivo",
+    "propuesta_valor",
+    "primeros_3_pasos",
+    "herramientas_sugeridas",
+    "por_que_encaja",
+    "riesgos_a_vigilar"
+  ],
+  "properties": {
+    "viable": {
+      "type": "boolean",
+      "description": "Resultado de la fase de verificación de compatibilidad económica, ANTES de redactar nada más."
+    },
+    "confianza": {
+      "type": ["string", "null"],
+      "enum": ["alta", "baja", null],
+      "description": "Solo si viable=true: 'baja' si alguna de las facetas de la coordenada se apoya en un solo vídeo del canal (n=1), 'alta' si todas tienen n>=2. Null si viable=false."
+    },
+    "motivo": {
+      "type": ["string", "null"],
+      "description": "Solo si viable=false: por qué el mecanismo y el canal de la coordenada no son compatibles, en una frase. Null si viable=true."
+    },
+    "alternativa": {
+      "type": ["string", "null"],
+      "description": "Solo si viable=false: qué mecanismo compatible daría una idea real con ese mismo canal y audiencia, si lo hay. Null si viable=true."
+    },
+    "nombre_idea": { "type": ["string", "null"], "description": "Solo si viable=true." },
+    "en_una_frase": { "type": ["string", "null"], "description": "Solo si viable=true." },
+    "cliente_objetivo": { "type": ["string", "null"], "description": "Solo si viable=true." },
+    "propuesta_valor": { "type": ["string", "null"], "description": "Solo si viable=true." },
+    "primeros_3_pasos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Solo si viable=true (3 pasos concretos). Array vacío si viable=false."
+    },
+    "herramientas_sugeridas": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Solo si viable=true. Array vacío si viable=false."
+    },
+    "por_que_encaja": {
+      "type": ["string", "null"],
+      "description": "Solo si viable=true: referencia qué vídeos/métodos del contexto inspiran la combinación."
+    },
+    "riesgos_a_vigilar": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Solo si viable=true. Array vacío si viable=false."
+    }
+  }
+}

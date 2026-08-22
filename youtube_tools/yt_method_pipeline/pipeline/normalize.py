@@ -117,6 +117,17 @@ def _normalize_video(video: dict, norm_cfg: dict, pending: dict) -> dict:
     mecanismo_norm = _map_facet(prim.get("mecanismo_valor"), norm_cfg["mecanismo_valor"], pending["mecanismo_valor"])
     audiencia_norm = _map_facet(prim.get("audiencia"), norm_cfg["audiencia"], pending["audiencia"])
     categoria_norm = _map_facet(method.get("categoria"), norm_cfg["categoria"], pending["categoria"])
+
+    # categoria_por_mecanismo manda sobre el mapeo identidad de categoria: la
+    # categoría que pone el LLM en extract resultó poco fiable (ver _doc del
+    # config), mecanismo_norm es una señal mejor.
+    if mecanismo_norm is not None and mecanismo_norm != "otros":
+        reasignada = norm_cfg["categoria_por_mecanismo"]["map"].get(mecanismo_norm)
+        if reasignada is not None:
+            categoria_norm = reasignada
+        else:
+            pending["categoria_por_mecanismo"].add(mecanismo_norm)
+
     herramientas_norm = _normalize_herramientas(
         method.get("herramientas"), norm_cfg["brand_corrections"], pending["herramientas"]
     )
@@ -145,8 +156,9 @@ def _merge_pending(norm_cfg: dict, pending: dict) -> None:
     for facet in _FACETS:
         existing = set(norm_cfg[facet].get("_pendientes", []))
         norm_cfg[facet]["_pendientes"] = sorted(existing | pending[facet])
-    existing_tools = set(norm_cfg["herramientas"].get("_pendientes", []))
-    norm_cfg["herramientas"]["_pendientes"] = sorted(existing_tools | pending["herramientas"])
+    for extra in ("herramientas", "categoria_por_mecanismo"):
+        existing = set(norm_cfg[extra].get("_pendientes", []))
+        norm_cfg[extra]["_pendientes"] = sorted(existing | pending[extra])
 
 
 def _build_report_data(videos: list[dict], norm_cfg: dict, pending: dict) -> dict:
@@ -221,6 +233,7 @@ def run() -> tuple[Path, Path]:
 
     pending = {facet: set() for facet in _FACETS}
     pending["herramientas"] = set()
+    pending["categoria_por_mecanismo"] = set()
 
     normalized = [_normalize_video(v, norm_cfg, pending) for v in videos]
 
