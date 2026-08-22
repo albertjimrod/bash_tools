@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 
 
 def cmd_fetch(args):
-    transcripts.run(args.channel, limit=args.limit)
+    transcripts.run(args.entries, list_files=args.list, title_channel=args.title_channel, limit=args.limit)
+
+
+def cmd_reannotate(args):
+    transcripts.reannotate(channel_hint=args.channel_hint)
 
 
 def cmd_classify(args):
@@ -57,7 +61,7 @@ def cmd_report(args):
 
 
 def cmd_run(args):
-    transcripts.run(args.channel, limit=args.limit)
+    transcripts.run(args.entries, list_files=args.list, title_channel=args.title_channel, limit=args.limit)
     classify.run()
     extraction.run()
     embeddings.run()
@@ -73,10 +77,41 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_fetch = sub.add_parser("fetch", help="Paso 1: descarga transcripciones de un canal")
-    p_fetch.add_argument("channel", help="Handle (@canal) o URL del canal de YouTube")
-    p_fetch.add_argument("--limit", type=int, default=None, help="Límite de vídeos a procesar")
+    p_fetch = sub.add_parser(
+        "fetch",
+        help="Paso 1: descarga transcripciones a partir de una o varias entradas mezclables "
+        "(canal, playlist, vídeo suelto, fichero de lista, búsqueda por título)",
+    )
+    p_fetch.add_argument(
+        "entries", nargs="+",
+        help="Una o varias entradas: @canal / URL de canal, URL de playlist, URL o ID de vídeo, "
+        "o 'titulo:texto a buscar'",
+    )
+    p_fetch.add_argument(
+        "--list", action="append", default=[], metavar="FICHERO",
+        help="Fichero de texto con una URL/ID por línea (# comentario, líneas vacías se ignoran); repetible",
+    )
+    p_fetch.add_argument(
+        "--title-channel", default=None, metavar="@canal",
+        help="Acota las entradas 'titulo:...' a este canal, para reducir falsos positivos de la búsqueda",
+    )
+    p_fetch.add_argument(
+        "--limit", type=int, default=None,
+        help="Límite de vídeos a procesar (solo aplica a entradas de tipo canal)",
+    )
     p_fetch.set_defaults(func=cmd_fetch)
+
+    p_reannotate = sub.add_parser(
+        "reannotate",
+        help="Rellena canal_nombre/canal_id/fuente_origen en meta.json ya existentes a los que "
+        "les falte, sin volver a descargar transcripciones",
+    )
+    p_reannotate.add_argument(
+        "--channel-hint", default=None, metavar="@canal",
+        help="fuente_detalle a usar para vídeos antiguos sin procedencia (todos se asumen de un "
+        "único canal, ya que es el único modo que existía antes de este cambio)",
+    )
+    p_reannotate.set_defaults(func=cmd_reannotate)
 
     p_classify = sub.add_parser(
         "classify", help="Paso 1b: filtra vídeos que no expliquen un método de negocio replicable"
@@ -119,7 +154,19 @@ def build_parser() -> argparse.ArgumentParser:
     p_run = sub.add_parser(
         "run", help="Ejecuta fetch + classify + extract + index + report en secuencia"
     )
-    p_run.add_argument("channel", help="Handle (@canal) o URL del canal de YouTube")
+    p_run.add_argument(
+        "entries", nargs="+",
+        help="Una o varias entradas: @canal / URL de canal, URL de playlist, URL o ID de vídeo, "
+        "o 'titulo:texto a buscar'",
+    )
+    p_run.add_argument(
+        "--list", action="append", default=[], metavar="FICHERO",
+        help="Fichero de texto con una URL/ID por línea; repetible",
+    )
+    p_run.add_argument(
+        "--title-channel", default=None, metavar="@canal",
+        help="Acota las entradas 'titulo:...' a este canal",
+    )
     p_run.add_argument("--limit", type=int, default=None, help="Límite de vídeos a procesar")
     p_run.set_defaults(func=cmd_run)
 

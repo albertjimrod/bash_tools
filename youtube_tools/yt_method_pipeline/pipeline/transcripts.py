@@ -11,7 +11,7 @@ from typing import Optional
 from youtube_transcript_api import AgeRestricted, RequestBlocked, YouTubeTranscriptApi
 
 import config
-from .channel import list_channel_videos
+from .channel import enumerate_sources, list_single_video
 from .utils import clean_subtitle_text, retry_call, slugify, strip_sound_tags, append_line
 
 logger = logging.getLogger(__name__)
@@ -177,6 +177,11 @@ def download_transcript(video: dict) -> str:
         "source": source,
         "upload_date": video.get("upload_date"),
         "duration": video.get("duration"),
+        "canal_nombre": video.get("canal_nombre"),
+        "canal_id": video.get("canal_id"),
+        "fuente_origen": video.get("fuente_origen"),
+        "fuente_detalle": video.get("fuente_detalle"),
+        "resuelto_por_titulo": video.get("resuelto_por_titulo", False),
     }
     (out_dir / "meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -185,7 +190,12 @@ def download_transcript(video: dict) -> str:
     return "ok"
 
 
-def run(channel: str, limit: Optional[int] = None) -> None:
+def run(
+    entries: list[str],
+    list_files: Optional[list[str]] = None,
+    title_channel: Optional[str] = None,
+    limit: Optional[int] = None,
+) -> None:
     global _transcript_api_blocked, _ytdlp_blocked
     _transcript_api_blocked = False
     _ytdlp_blocked = False
@@ -194,12 +204,16 @@ def run(channel: str, limit: Optional[int] = None) -> None:
     config.TRANSCRIPTS_DIR.mkdir(parents=True, exist_ok=True)
     config.LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Registro informativo de qué se pidió en esta ejecución (reannotate() lo
+    # usa como pista de canal para vídeos antiguos sin procedencia propia).
+    # La procedencia real de cada vídeo vive en su meta.json, no aquí.
     config.CHANNEL_FILE.write_text(
-        json.dumps({"channel": channel}, ensure_ascii=False, indent=2), encoding="utf-8"
+        json.dumps({"entries": entries, "list_files": list_files or []}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
     )
 
-    videos = list_channel_videos(channel, limit=limit)
-    logger.info("canal: %d vídeos encontrados", len(videos))
+    videos = enumerate_sources(entries, list_files=list_files, title_channel=title_channel, limit=limit)
+    logger.info("%d vídeos resueltos de %d entrada(s)", len(videos), len(entries) + len(list_files or []))
 
     counts = {"ok": 0, "skip": 0, "fail": 0}
     for i, video in enumerate(videos, 1):
@@ -211,5 +225,48 @@ def run(channel: str, limit: Optional[int] = None) -> None:
 
     logger.info(
         "Paso 1 completado: %(ok)d nuevas, %(skip)d ya existían, %(fail)d sin transcripción",
+        counts,
+    )
+
+
+_SOURCE_META_KEYS = ("canal_nombre", "canal_id", "fuente_origen", "fuente_detalle", "resuelto_por_titulo")
+
+
+def reannotate(channel_hint: Optional[str] = None) -> None:
+    """Rellena los campos de procedencia en los meta.json de vídeos ya
+    descargados a los que les falten (procesados antes de que existiera este
+    campo). No vuelve a descargar ninguna transcripción: solo reescribe
+    meta.json. canal_nombre/canal_id se resuelven de verdad contra YouTube;
+    fuente_origen se deja en 'canal' (es la única procedencia que pudo tener
+    un vídeo descargado antes de este cambio) y fuente_detalle usa el
+    'channel_hint' que le pases (p.ej. '@AdrianSaenz') — data/channel.json
+    NO se usa como pista porque un 'fetch' posterior con otra fuente lo
+    sobrescribe, y adivinar de ahí puede etiquetar mal vídeos antiguos."""
+    counts = {"anotado": 0, "ya_tenia": 0, "fallo": 0}
+    for video_dir in sorted(p for p in config.TRANSCRIPTS_DIR.iterdir() if p.is_dir()):
+        meta_path = video_dir / "meta.json"
+        if not meta_path.exists():
+            continue
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        if all(key in meta for key in _SOURCE_META_KEYS):
+            counts["ya_tenia"] += 1
+            continue
+        try:
+            video = list_single_video(meta["video_id"])
+        except Exception as exc:
+            logger.warning("no se pudo re-anotar %s: %s", meta.get("video_id"), exc)
+            counts["fallo"] += 1
+            continue
+        meta.setdefault("canal_nombre", video.get("canal_nombre"))
+        meta.setdefault("canal_id", video.get("canal_id"))
+        meta.setdefault("fuente_origen", "canal")
+        meta.setdefault("fuente_detalle", channel_hint)
+        meta.setdefault("resuelto_por_titulo", False)
+        meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        logger.info("re-anotado: %s (%s)", meta.get("title"), meta.get("canal_nombre"))
+        counts["anotado"] += 1
+
+    logger.info(
+        "Re-anotado completado: %(anotado)d actualizados, %(ya_tenia)d ya tenían los campos, %(fallo)d fallos",
         counts,
     )
