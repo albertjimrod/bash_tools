@@ -5,3 +5,4 @@ httpx
 jsonschema
 python-dotenv
 secretstorage
+playwright
