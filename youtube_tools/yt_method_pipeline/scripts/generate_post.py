@@ -23,6 +23,8 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import httpx
+
 import config
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -532,6 +534,32 @@ def call_claude_text(prompt: str) -> str:
     return "".join(block.text for block in response.content if block.type == "text").strip()
 
 
+def call_ollama_text(prompt: str, model: str) -> str:
+    """Alternativa 100% local a call_claude_text(), mismo prompt y mismas
+    cifras — solo cambia quién redacta. Útil cuando la API de Anthropic no
+    está disponible (cuota, sin conexión...). Sin salida forzada por schema:
+    aquí el post es texto libre, no un JSON estructurado."""
+    try:
+        resp = httpx.post(
+            f"{config.OLLAMA_HOST}/api/chat",
+            json={
+                "model": model,
+                "messages": [{"role": "user", "content": prompt}],
+                "stream": False,
+                "think": False,
+                "options": {"temperature": 0.4, "num_ctx": 8192},
+            },
+            timeout=180,
+        )
+        resp.raise_for_status()
+    except httpx.HTTPError as exc:
+        raise SystemExit(
+            f"No se pudo hablar con Ollama en {config.OLLAMA_HOST} (modelo '{model}'): {exc}\n"
+            "Comprueba que 'ollama serve' está corriendo y que el modelo está descargado (ollama pull ...)."
+        )
+    return resp.json()["message"]["content"].strip()
+
+
 # --- Imágenes (Playwright) ---
 
 def _require_playwright():
@@ -636,6 +664,15 @@ def main():
     parser.add_argument("--idioma", default="es", choices=["es", "en"])
     parser.add_argument("--destacado", default=None, help="Idea concreta a resaltar (opcional)")
     parser.add_argument("--salida", default=None, help="Carpeta de salida (por defecto data/linkedin_posts/<fecha>-<pestana>/)")
+    parser.add_argument(
+        "--provider", default="claude", choices=["claude", "ollama"],
+        help="Quién redacta el texto: 'claude' (por defecto, vía API) u 'ollama' (100% local, "
+        "útil si la API de Anthropic no está disponible)",
+    )
+    parser.add_argument(
+        "--ollama-model", default=config.OLLAMA_MODEL,
+        help=f"Modelo de Ollama a usar con --provider ollama (por defecto: {config.OLLAMA_MODEL})",
+    )
     args = parser.parse_args()
 
     videos, pares = load_data()
@@ -646,8 +683,14 @@ def main():
     hallazgo_texto = format_hallazgo(args.pestana, videos, data, args.enfoque, args.destacado)
 
     prompt = build_prompt(args.pestana, args.enfoque, args.idioma, hallazgo_texto)
-    logger.info("llamando a Claude (%s) para redactar el post...", CLAUDE_MODEL)
-    post_texto = call_claude_text(prompt)
+    if args.provider == "ollama":
+        modelo_usado = args.ollama_model
+        logger.info("llamando a Ollama (%s) para redactar el post...", modelo_usado)
+        post_texto = call_ollama_text(prompt, modelo_usado)
+    else:
+        modelo_usado = CLAUDE_MODEL
+        logger.info("llamando a Claude (%s) para redactar el post...", modelo_usado)
+        post_texto = call_claude_text(prompt)
 
     fecha = datetime.date.today().isoformat()
     out_dir = Path(args.salida) if args.salida else config.DATA_DIR / "linkedin_posts" / f"{fecha}-{args.pestana}"
@@ -667,7 +710,7 @@ def main():
 
     meta = {
         "pestana": args.pestana, "enfoque": args.enfoque, "imagen": args.imagen, "idioma": args.idioma,
-        "destacado": args.destacado, "modelo": CLAUDE_MODEL,
+        "destacado": args.destacado, "provider": args.provider, "modelo": modelo_usado,
         "generado_en": datetime.datetime.now().isoformat(),
         "cifras_citadas": data, "imagenes": imagenes,
     }
