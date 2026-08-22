@@ -269,6 +269,45 @@
   .legend-heat .swatches { display: flex; gap: 2px; }
   .legend-heat .sw { width: 20px; height: 12px; border-radius: 2px; }
 
+  /* --- Panorama --- */
+  .panorama-title { font-size: 15.5px; font-weight: 600; margin: 30px 0 4px; text-wrap: balance; }
+  .panorama-legend {
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 16px; margin: 10px 0 6px; font-size: 12px; color: var(--ink-muted);
+  }
+  .panorama-legend .item { display: flex; align-items: center; gap: 6px; }
+  .panorama-legend .grad { width: 60px; height: 10px; border-radius: 4px; background: linear-gradient(90deg, var(--warn), var(--good)); }
+  .panorama-legend .sw { width: 14px; height: 14px; border-radius: 3px; flex: none; }
+  .panorama-legend .sw.gap { background: var(--surface-2); border: 1px solid var(--border); }
+  .panorama-legend .sw.fragile { background: transparent; border: 2px dashed var(--warn); }
+  .panorama-legend .sw.incompatible { background-image: repeating-linear-gradient(45deg, var(--ink-muted), var(--ink-muted) 3px, transparent 3px, transparent 6px); opacity: .6; }
+
+  #panorama-heat-mc .cell, #panorama-heat-ci .cell { position: relative; font-weight: 600; }
+  table.heat .cell.panorama-gap { background: var(--surface-2) !important; color: var(--ink-muted) !important; }
+  table.heat .cell.panorama-fragile { outline: 2px dashed var(--warn); outline-offset: -2px; }
+  .panorama-stripe {
+    position: absolute; inset: 0; border-radius: 4px; pointer-events: none;
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,.22), rgba(0,0,0,.22) 4px, transparent 4px, transparent 8px);
+  }
+
+  .panorama-scatter-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; overflow-x: auto; }
+  .panorama-scatter-wrap svg { display: block; }
+  .panorama-scatter-legend { display: flex; gap: 18px; margin-top: 10px; font-size: 12px; color: var(--ink-muted); flex-wrap: wrap; }
+  .panorama-scatter-legend .item { display: flex; align-items: center; gap: 6px; }
+  .panorama-scatter-legend .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+  .panorama-bars-block { margin-bottom: 22px; }
+  .panorama-bars-block h4 { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+  .panorama-bars-block .meter { margin-bottom: 8px; }
+  .panorama-bars-block .meter.fragile { opacity: .55; }
+
+  .panorama-concentration-strip {
+    display: flex; height: 28px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 14px;
+  }
+  .panorama-concentration-strip .seg { border-right: 1px solid var(--surface); }
+  .panorama-concentration-strip .seg:last-child { border-right: none; }
+
   /* --- Combinador --- */
   .combinator {
     background: var(--surface);
@@ -464,6 +503,7 @@
     <button class="tab-btn" data-tab="similitud" type="button">Similitud</button>
     <button class="tab-btn" data-tab="combinador" type="button">Combinador</button>
     <button class="tab-btn" data-tab="constructor" type="button">Constructor de proyecto</button>
+    <button class="tab-btn" data-tab="panorama" type="button">Panorama</button>
   </nav>
 
   <div class="tab-panel active" data-tab="expediente">
@@ -611,6 +651,34 @@
       <div class="combi-result" id="constructor-summary"></div>
       <div id="constructor-videos"></div>
       <div id="constructor-idea"></div>
+    </section>
+  </div>
+
+  <div class="tab-panel" data-tab="panorama">
+    <section id="section-panorama">
+      <h2>Panorama</h2>
+      <p class="lede">Vista de diagnóstico para leer el terreno antes de decidir: dónde está la fuerza real del corpus, dónde hay huecos con respaldo y qué está saturado y flojo. No genera ideas — para eso está el Constructor.</p>
+      <div id="panorama-legend"></div>
+
+      <h3 class="panorama-title">Dónde se concentra la fuerza y qué combinaciones el canal nunca toca</h3>
+      <p class="lede">Mapa de calor mecanismo × canal. Color = potencial medio (comprimido, para ordenar). Número = nº de vídeos (n).</p>
+      <div id="panorama-heat-mc"></div>
+
+      <h3 class="panorama-title">Qué modelos son accesibles con poca inversión y cuáles piden capital</h3>
+      <p class="lede">Mapa de calor categoría × inversión inicial, de menor a mayor dinero (con "s/d" para lo no declarado).</p>
+      <div id="panorama-heat-ci"></div>
+
+      <h3 class="panorama-title">Separa lo prometedor con pruebas de lo prometedor solo de palabra</h3>
+      <p class="lede">Un punto por vídeo: potencial frente a saturación de competencia, coloreado por evidencia. Se sombrea la zona deseable (potencial alto, saturación baja/media). Los vídeos sin saturación declarada no aparecen aquí — revísalos en Expediente.</p>
+      <div id="panorama-scatter"></div>
+
+      <h3 class="panorama-title">Qué primitivos rinden y cuáles están sobreexplotados</h3>
+      <p class="lede">Potencial medio por valor de cada primitivo, con su cuota (% de vídeos del corpus que lo usan). Alto potencial + baja cuota = hueco bueno.</p>
+      <div id="panorama-bars"></div>
+
+      <h3 class="panorama-title">El canal repite pocos modelos: aquí se ve la concentración</h3>
+      <p class="lede">Reparto de los vídeos por categoría normalizada.</p>
+      <div id="panorama-concentration"></div>
     </section>
   </div>
 
@@ -2046,6 +2114,260 @@ document.getElementById('btn-ctor-reset').addEventListener('click', () => {
 });
 
 renderConstructor();
+
+// --- Panorama ---
+// Pestaña de diagnóstico, de solo lectura: no toca ninguna otra pestaña ni
+// función existente. Reutiliza axisValues/poolForFacet/meanPotencial/
+// isIncompatible/scoreCellStyle/cssVar/hexToRgb/meterEl/badge/evidenciaBadge/
+// fmtPct tal cual están. Todo se precalcula una vez en getPanoramaData() y se
+// cachea en memoria (panoramaCache) para que no haya recálculo al redibujar.
+let panoramaCache = null;
+const SAT_ORDER = ['baja', 'media', 'alta'];
+
+function panoramaBuildMatrix(rows, cols, rowKeyFn, colKeyFn) {
+  const cellVids = {};
+  DATA.videos.forEach(v => {
+    const r = rowKeyFn(v), c = colKeyFn(v);
+    if (r == null || c == null) return;
+    const key = r + '' + c;
+    (cellVids[key] = cellVids[key] || []).push(v);
+  });
+  return {
+    rows, cols,
+    get(r, c) {
+      const vids = cellVids[r + '' + c] || [];
+      return { n: vids.length, score: vids.length ? meanPotencial(vids) : null, vids };
+    },
+  };
+}
+
+function panoramaQuantile(arr, q) {
+  const sorted = [...arr].sort((a, b) => a - b);
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos), rest = pos - base;
+  return sorted[base + 1] !== undefined ? sorted[base] + rest * (sorted[base + 1] - sorted[base]) : sorted[base];
+}
+
+// jitter determinista (mismo vídeo -> mismo punto siempre, no baila al redibujar)
+function panoramaJitter(id) {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+  return ((h % 1000) + 1000) % 1000 / 1000 * 0.6 - 0.3;
+}
+
+function getPanoramaData() {
+  if (panoramaCache) return panoramaCache;
+
+  const matrixMecCanal = panoramaBuildMatrix(
+    axisValues('mecanismo_norm'), axisValues('canal_norm'),
+    v => v.mecanismo_norm, v => v.canal_norm,
+  );
+
+  const bucketColsWithNA = [...BUCKET_INVERSION_ORDER, 's/d'];
+  const matrixCatInv = panoramaBuildMatrix(
+    axisValues('categoria_norm'), bucketColsWithNA,
+    v => v.categoria_norm, v => (v.bucket_inversion == null ? 's/d' : v.bucket_inversion),
+  );
+
+  const scatterPoints = DATA.videos
+    .filter(v => v.method.saturacion_competencia && SAT_ORDER.includes(v.method.saturacion_competencia))
+    .map(v => ({
+      id: v.id, title: v.title,
+      satIdx: SAT_ORDER.indexOf(v.method.saturacion_competencia),
+      saturacion: v.method.saturacion_competencia,
+      potencial: v.potencial,
+      evidencia: v.method.evidencia,
+      categoria: v.categoria_norm,
+    }));
+
+  const barsData = {};
+  ['mecanismo_norm', 'canal_norm', 'audiencia_norm'].forEach(facet => {
+    barsData[facet] = axisValues(facet).map(val => {
+      const pool = poolForFacet(facet, val);
+      return { value: val, n: pool.length, score: meanPotencial(pool), cuota: pool.length / DATA.videos.length };
+    }).sort((a, b) => b.score - a.score);
+  });
+
+  const catCounts = {};
+  DATA.videos.forEach(v => { if (v.categoria_norm) catCounts[v.categoria_norm] = (catCounts[v.categoria_norm] || 0) + 1; });
+  const concentration = Object.entries(catCounts)
+    .map(([value, n]) => ({ value, n, pct: n / DATA.videos.length }))
+    .sort((a, b) => b.n - a.n);
+
+  panoramaCache = { matrixMecCanal, matrixCatInv, scatterPoints, barsData, concentration };
+  return panoramaCache;
+}
+
+function renderPanoramaLegend() {
+  const wrap = document.getElementById('panorama-legend');
+  wrap.innerHTML = '';
+  wrap.appendChild(el('div', { class: 'item' }, [el('span', {}, 'Potencial:'), el('div', { class: 'grad' }), el('span', {}, 'bajo → alto (comprimido, sirve para ordenar — no es nota objetiva sobre 100)')]));
+  wrap.appendChild(el('div', { class: 'item' }, [el('span', { class: 'sw gap' }), el('span', {}, 'gris = hueco (sin vídeos, no cero)')]));
+  wrap.appendChild(el('div', { class: 'item' }, [el('span', { class: 'sw fragile' }), el('span', {}, 'borde discontinuo = n=1 (evidencia frágil)')]));
+  wrap.appendChild(el('div', { class: 'item' }, [el('span', { class: 'sw incompatible' }), el('span', {}, 'rayado = mecanismo × canal marcado incompatible')]));
+}
+
+function renderPanoramaHeatmap(containerId, matrix, opts) {
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = '';
+  const outer = el('div', { class: 'heat-wrap' });
+  const table = el('table', { class: 'heat' });
+  table.appendChild(el('tr', {}, [el('th', {}, '')].concat(matrix.cols.map(c => el('th', {}, c)))));
+
+  matrix.rows.forEach(r => {
+    const row = el('tr', {}, [el('th', { class: 'rowhead' }, r)]);
+    matrix.cols.forEach(c => {
+      const agg = matrix.get(r, c);
+      const incompatible = opts.incompatibleFn ? opts.incompatibleFn(r, c) : false;
+      const fragile = agg.n === 1;
+      const titles = agg.vids.length > 8
+        ? agg.vids.slice(0, 8).map(v => v.title).join('\n') + `\n… y ${agg.vids.length - 8} más`
+        : agg.vids.map(v => v.title).join('\n');
+      const head = `${opts.rowAxisLabel}: ${r} × ${opts.colAxisLabel}: ${c}`;
+      const reminder = 'El potencial es un ordenador comprimido (0-100), no una nota objetiva.';
+      let cellDiv;
+      if (agg.n === 0) {
+        const title = [head, 'Sin vídeos en el corpus (hueco, no cero).', incompatible ? '⚠ además, esta pareja está marcada como económicamente incompatible.' : null].filter(Boolean).join('\n');
+        cellDiv = el('div', { class: 'cell panorama-gap', title }, incompatible ? '✕' : '·');
+      } else {
+        const title = [head, `n=${agg.n} · potencial medio ${Math.round(agg.score)}`, titles, reminder, incompatible ? '⚠ combinación marcada como económicamente incompatible en configs/normalization.json.' : null].filter(Boolean).join('\n');
+        cellDiv = el('div', { class: 'cell' + (fragile ? ' panorama-fragile' : ''), style: scoreCellStyle(agg.score), title }, String(agg.n));
+      }
+      if (incompatible) cellDiv.appendChild(el('div', { class: 'panorama-stripe' }));
+      row.appendChild(el('td', {}, cellDiv));
+    });
+    table.appendChild(row);
+  });
+
+  outer.appendChild(table);
+  wrap.appendChild(outer);
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs = {}, children = []) {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  [].concat(children).forEach(c => { if (c) e.appendChild(c); });
+  return e;
+}
+
+function renderPanoramaScatter(points) {
+  const wrap = document.getElementById('panorama-scatter');
+  wrap.innerHTML = '';
+  const outer = el('div', { class: 'panorama-scatter-wrap' });
+  if (!points.length) {
+    outer.appendChild(el('p', { class: 'card-phrase' }, 'Ningún vídeo tiene saturación de competencia declarada.'));
+    wrap.appendChild(outer);
+    return;
+  }
+
+  const W = 680, H = 380, ML = 46, MR = 20, MT = 16, MB = 44;
+  const plotW = W - ML - MR, plotH = H - MT - MB;
+  const bandW = plotW / 3;
+  const xPix = (satIdx, jitter) => ML + (satIdx + 0.5 + jitter) * bandW;
+  const yPix = pot => MT + (1 - pot / 100) * plotH;
+
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', height: String(H) });
+
+  [0, 25, 50, 75, 100].forEach(p => {
+    const y = yPix(p);
+    svg.appendChild(svgEl('line', { x1: ML, x2: W - MR, y1: y, y2: y, stroke: cssVar('--border'), 'stroke-width': '1' }));
+    const t = svgEl('text', { x: ML - 8, y: y + 4, 'text-anchor': 'end', 'font-size': '10', fill: cssVar('--ink-muted') });
+    t.textContent = String(p);
+    svg.appendChild(t);
+  });
+  SAT_ORDER.forEach((s, i) => {
+    const x = ML + (i + 0.5) * bandW;
+    const t = svgEl('text', { x: String(x), y: String(H - MB + 20), 'text-anchor': 'middle', 'font-size': '11', fill: cssVar('--ink-muted') });
+    t.textContent = s;
+    svg.appendChild(t);
+  });
+  const xLabel = svgEl('text', { x: String(ML + plotW / 2), y: String(H - 4), 'text-anchor': 'middle', 'font-size': '10', fill: cssVar('--ink-muted') });
+  xLabel.textContent = 'Saturación de competencia (con jitter para separar puntos)';
+  svg.appendChild(xLabel);
+  const yLabel = svgEl('text', { x: '12', y: String(MT + plotH / 2), 'text-anchor': 'middle', 'font-size': '10', fill: cssVar('--ink-muted'), transform: `rotate(-90 12 ${MT + plotH / 2})` });
+  yLabel.textContent = 'Potencial (ordenador, no nota objetiva)';
+  svg.appendChild(yLabel);
+
+  const threshold = panoramaQuantile(points.map(p => p.potencial), 0.66);
+  svg.appendChild(svgEl('rect', {
+    x: String(ML), y: String(yPix(100)), width: String(bandW * 2), height: String(yPix(threshold) - yPix(100)),
+    fill: cssVar('--good-soft'), opacity: '0.6',
+  }));
+  const quadLabel = svgEl('text', { x: String(ML + 8), y: String(yPix(100) + 14), 'font-size': '10', fill: cssVar('--good') });
+  quadLabel.textContent = 'zona deseable: potencial alto + saturación baja/media';
+  svg.appendChild(quadLabel);
+
+  const colorFor = { pruebas_verificables: cssVar('--good'), capturas_o_documentos: cssVar('--warn'), solo_afirmacion: cssVar('--bad') };
+  points.forEach(p => {
+    const cx = xPix(p.satIdx, panoramaJitter(p.id)), cy = yPix(p.potencial);
+    const circle = svgEl('circle', { cx: String(cx), cy: String(cy), r: '5', fill: colorFor[p.evidencia] || cssVar('--ink-muted'), 'fill-opacity': '0.85', stroke: cssVar('--surface'), 'stroke-width': '1' });
+    const titleEl = svgEl('title');
+    titleEl.textContent = `${p.title}\npotencial ${p.potencial} (ordenador, no nota objetiva) · saturación ${p.saturacion} · evidencia ${p.evidencia} · categoría ${p.categoria || '—'}`;
+    circle.appendChild(titleEl);
+    svg.appendChild(circle);
+  });
+
+  outer.appendChild(svg);
+  const legend = el('div', { class: 'panorama-scatter-legend' });
+  [['pruebas_verificables', 'Pruebas verificables'], ['capturas_o_documentos', 'Capturas/documentos'], ['solo_afirmacion', 'Solo afirmación']].forEach(([key, label]) => {
+    legend.appendChild(el('div', { class: 'item' }, [el('span', { class: 'dot', style: `background:${colorFor[key]}` }), el('span', {}, label)]));
+  });
+  outer.appendChild(legend);
+  wrap.appendChild(outer);
+}
+
+function renderPanoramaBars(barsData) {
+  const wrap = document.getElementById('panorama-bars');
+  wrap.innerHTML = '';
+  const labels = { mecanismo_norm: 'Mecanismo de valor', canal_norm: 'Canal de apalancamiento', audiencia_norm: 'Audiencia' };
+  ['mecanismo_norm', 'canal_norm', 'audiencia_norm'].forEach(facet => {
+    const block = el('div', { class: 'panorama-bars-block' }, [el('h4', {}, labels[facet])]);
+    barsData[facet].forEach(({ value, n, score, cuota }) => {
+      const fragile = n === 1;
+      const label = `${value} — n=${n}, cuota ${fmtPct(cuota)}${fragile ? ' · ⚠ frágil' : ''}`;
+      const meter = meterEl(label, Math.round(score), { potential: true });
+      meter.title = 'Potencial medio comprimido (ordenador, no nota objetiva sobre 100).';
+      if (fragile) meter.classList.add('fragile');
+      block.appendChild(meter);
+    });
+    wrap.appendChild(block);
+  });
+}
+
+function renderPanoramaConcentration(concentration) {
+  const wrap = document.getElementById('panorama-concentration');
+  wrap.innerHTML = '';
+  const total = concentration.reduce((s, c) => s + c.n, 0) || 1;
+  const strip = el('div', { class: 'panorama-concentration-strip' });
+  concentration.forEach((c, i) => {
+    const opacity = Math.max(0.25, 1 - i * (0.7 / Math.max(1, concentration.length - 1)));
+    strip.appendChild(el('div', {
+      class: 'seg',
+      style: `width:${(c.n / total * 100).toFixed(2)}%;background:var(--accent);opacity:${opacity.toFixed(2)}`,
+      title: `${c.value}: ${c.n} vídeos (${fmtPct(c.pct)})`,
+    }));
+  });
+  wrap.appendChild(strip);
+  concentration.forEach(c => wrap.appendChild(meterEl(`${c.value} — n=${c.n} (${fmtPct(c.pct)})`, Math.round(c.pct * 100))));
+}
+
+function renderPanorama() {
+  const data = getPanoramaData();
+  renderPanoramaLegend();
+  renderPanoramaHeatmap('panorama-heat-mc', data.matrixMecCanal, {
+    rowAxisLabel: AXIS_LABELS.mecanismo_norm, colAxisLabel: AXIS_LABELS.canal_norm,
+    incompatibleFn: (r, c) => isIncompatible('mecanismo_norm', r, 'canal_norm', c),
+  });
+  renderPanoramaHeatmap('panorama-heat-ci', data.matrixCatInv, {
+    rowAxisLabel: AXIS_LABELS.categoria_norm, colAxisLabel: AXIS_LABELS.bucket_inversion,
+  });
+  renderPanoramaScatter(data.scatterPoints);
+  renderPanoramaBars(data.barsData);
+  renderPanoramaConcentration(data.concentration);
+}
+
+renderPanorama();
 </script>
 </body>
 </html>
