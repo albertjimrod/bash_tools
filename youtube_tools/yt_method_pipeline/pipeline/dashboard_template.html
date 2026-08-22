@@ -318,6 +318,16 @@
   .btn.ghost { background: transparent; color: var(--accent); }
   .btn.ghost:hover, .btn.ghost:focus-visible { background: var(--accent-soft); }
 
+  .constructor-actions { display: flex; gap: 10px; margin: 16px 0; }
+  .constructor-field .fragile { display: block; margin-top: 5px; font-size: 11px; color: var(--warn); }
+  .constructor-video-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px; flex-wrap: wrap;
+  }
+  .constructor-video-row:last-child { border-bottom: none; }
+  .constructor-video-row a { color: var(--accent); flex: 1 1 260px; }
+  .constructor-video-row .mono { font-size: 12px; color: var(--ink-muted); }
+
   .suggestions { display: grid; gap: 10px; margin-top: 4px; }
   .suggestion {
     display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
@@ -453,6 +463,7 @@
     <button class="tab-btn" data-tab="huecos" type="button">Rejilla de huecos</button>
     <button class="tab-btn" data-tab="similitud" type="button">Similitud</button>
     <button class="tab-btn" data-tab="combinador" type="button">Combinador</button>
+    <button class="tab-btn" data-tab="constructor" type="button">Constructor de proyecto</button>
   </nav>
 
   <div class="tab-panel active" data-tab="expediente">
@@ -584,6 +595,22 @@
         <button class="btn" id="btn-more-suggestions" type="button">🔀 Más sugerencias</button>
       </div>
       <div class="suggestions" id="suggestions"></div>
+    </section>
+  </div>
+
+  <div class="tab-panel" data-tab="constructor">
+    <section id="section-constructor">
+      <h2>Constructor de proyecto</h2>
+      <p class="lede">Fija los atributos de un proyecto uno a uno y ve en vivo qué respaldo tiene en el canal. El potencial que se muestra es el normalizado (config), comprimido a 0-100 para poder comparar y ordenar — no es una nota objetiva.</p>
+      <div id="constructor-banner"></div>
+      <div class="combi-controls" id="constructor-fields"></div>
+      <div class="constructor-actions">
+        <button class="btn" id="btn-ctor-autocomplete" type="button">🎯 Completar composición</button>
+        <button class="btn ghost" id="btn-ctor-reset" type="button">↺ Reiniciar</button>
+      </div>
+      <div class="combi-result" id="constructor-summary"></div>
+      <div id="constructor-videos"></div>
+      <div id="constructor-idea"></div>
     </section>
   </div>
 
@@ -1782,6 +1809,243 @@ document.getElementById('btn-export-pdf').addEventListener('click', () => {
   container.appendChild(markdownToPrintable(buildFullReportMarkdown()));
   window.print();
 });
+
+// --- Constructor de proyecto ---
+// Pestaña nueva, autocontenida: no toca ninguna otra pestaña ni función ya
+// existente, solo reutiliza helpers (fmtPct, evidenciaBadge, meanPotencial,
+// isIncompatible, cachedIdeaFor, ideaIsViable, renderIdeaButton, renderIdeaCard...)
+// exactamente como están.
+const CONSTRUCTOR_FACETS = ['mecanismo_norm', 'canal_norm', 'audiencia_norm', 'categoria_norm', 'bucket_inversion', 'evidencia'];
+const CONSTRUCTOR_LABELS = { ...AXIS_LABELS, evidencia: 'Evidencia' };
+const EVIDENCIA_ORDER = ['pruebas_verificables', 'capturas_o_documentos', 'solo_afirmacion'];
+// Ejes que reconoce el generador de ideas actual (pipeline/idea_server.py:AXIS_LABELS) — 'evidencia' no es uno de ellos.
+const IDEA_AXES = new Set(['mecanismo_norm', 'canal_norm', 'audiencia_norm', 'categoria_norm', 'bucket_inversion']);
+
+const constructorState = {};
+CONSTRUCTOR_FACETS.forEach(f => { constructorState[f] = null; });
+let constructorAutocompleteNote = null;
+
+function facetValue(v, facet) { return facet === 'evidencia' ? (v.method || {}).evidencia : v[facet]; }
+
+function constructorAxisValues(facet) {
+  if (facet === 'bucket_inversion') return BUCKET_INVERSION_ORDER;
+  const set = new Set();
+  DATA.videos.forEach(v => { const val = facetValue(v, facet); if (val) set.add(val); });
+  if (facet === 'evidencia') {
+    const known = EVIDENCIA_ORDER.filter(v => set.has(v));
+    const rest = [...set].filter(v => !EVIDENCIA_ORDER.includes(v)).sort();
+    return [...known, ...rest];
+  }
+  return [...set].sort();
+}
+
+// vídeos que cumplen todas las facetas fijadas EXCEPTO 'excludeFacet' (si se pasa)
+function constructorPool(state, excludeFacet) {
+  return DATA.videos.filter(v => CONSTRUCTOR_FACETS.every(f => {
+    if (f === excludeFacet) return true;
+    const fixed = state[f];
+    return fixed == null || facetValue(v, f) === fixed;
+  }));
+}
+
+function facetSupportCount(facet, val) {
+  return DATA.videos.filter(v => facetValue(v, facet) === val).length;
+}
+
+// para una faceta aún libre (o no), qué valores quedan viables dado el resto de la selección
+function constructorFacetOptions(state, facet) {
+  const base = constructorPool(state, facet);
+  return constructorAxisValues(facet).map(val => {
+    const vids = base.filter(v => facetValue(v, facet) === val);
+    let incompatible = false;
+    if (facet === 'canal_norm' && state.mecanismo_norm) {
+      incompatible = isIncompatible('mecanismo_norm', state.mecanismo_norm, 'canal_norm', val);
+    } else if (facet === 'mecanismo_norm' && state.canal_norm) {
+      incompatible = isIncompatible('mecanismo_norm', val, 'canal_norm', state.canal_norm);
+    }
+    return { value: val, n: vids.length, score: vids.length ? meanPotencial(vids) : null, incompatible };
+  });
+}
+
+function constructorAutocomplete(baseState) {
+  const state = { ...baseState };
+  const log = [];
+  let unresolved = CONSTRUCTOR_FACETS.filter(f => state[f] == null);
+  let guard = 0;
+  while (unresolved.length && guard++ < CONSTRUCTOR_FACETS.length) {
+    let best = null;
+    unresolved.forEach(facet => {
+      constructorFacetOptions(state, facet).forEach(opt => {
+        if (opt.incompatible || opt.n === 0) return;
+        const gain = opt.score * opt.n;
+        if (!best || gain > best.gain) best = { facet, value: opt.value, n: opt.n, score: opt.score, gain };
+      });
+    });
+    if (!best) break;
+    state[best.facet] = best.value;
+    log.push(best);
+    unresolved = unresolved.filter(f => f !== best.facet);
+  }
+  return { state, log, incompletas: unresolved };
+}
+
+function constructorIdeaEligibility(state) {
+  const fixed = CONSTRUCTOR_FACETS.filter(f => state[f] != null);
+  if (fixed.length !== 2) {
+    return { ok: false, reason: `El generador de ideas actual trabaja con combinaciones de exactamente 2 facetas (ahora mismo tienes ${fixed.length} fijada${fixed.length === 1 ? '' : 's'}).` };
+  }
+  if (fixed.some(f => !IDEA_AXES.has(f))) {
+    return { ok: false, reason: '"Evidencia" no es un eje que reconozca el generador de ideas. Fija dos facetas de entre mecanismo, canal, audiencia, categoría o inversión inicial.' };
+  }
+  return { ok: true, axisA: fixed[0], axisB: fixed[1] };
+}
+
+function renderConstructorFields() {
+  const wrap = document.getElementById('constructor-fields');
+  wrap.innerHTML = '';
+  CONSTRUCTOR_FACETS.forEach(facet => {
+    const options = constructorFacetOptions(constructorState, facet);
+    const select = el('select', { id: 'ctor-' + facet });
+    select.appendChild(el('option', { value: '' }, '(cualquiera)'));
+    options.forEach(opt => {
+      const disabled = opt.n === 0 || opt.incompatible;
+      const bits = [`n=${opt.n}`];
+      if (opt.score != null) bits.push(`potencial ${Math.round(opt.score)}`);
+      if (opt.incompatible) bits.push('incompatible');
+      const attrs = { value: opt.value };
+      if (disabled) attrs.disabled = 'disabled';
+      select.appendChild(el('option', attrs, `${opt.value} — ${bits.join(', ')}`));
+    });
+    select.value = constructorState[facet] || '';
+    select.addEventListener('change', () => {
+      constructorState[facet] = select.value || null;
+      constructorAutocompleteNote = null;
+      renderConstructor();
+    });
+
+    const fragile = constructorState[facet] != null && facetSupportCount(facet, constructorState[facet]) === 1;
+    const field = el('div', { class: 'field constructor-field' }, [
+      el('label', { for: 'ctor-' + facet }, CONSTRUCTOR_LABELS[facet]),
+      select,
+      fragile ? el('span', { class: 'fragile' }, '⚠ evidencia frágil — n=1 en todo el canal') : null,
+    ]);
+    wrap.appendChild(field);
+  });
+}
+
+function renderConstructorSummary() {
+  const state = constructorState;
+  const pool = constructorPool(state, null);
+  const score = pool.length ? meanPotencial(pool) : null;
+  const bannerWrap = document.getElementById('constructor-banner');
+  bannerWrap.innerHTML = '';
+
+  const mecCanIncompatible = state.mecanismo_norm && state.canal_norm
+    && isIncompatible('mecanismo_norm', state.mecanismo_norm, 'canal_norm', state.canal_norm);
+  if (mecCanIncompatible) {
+    bannerWrap.appendChild(el('div', { class: 'coverage-banner bad' }, [
+      el('div', { class: 'txt' }, `Combinación incompatible: "${state.mecanismo_norm}" (mecanismo) no es plausible con "${state.canal_norm}" (canal) según configs/normalization.json. Cambia una de las dos facetas para poder generar una idea.`),
+    ]));
+  }
+  if (constructorAutocompleteNote) {
+    bannerWrap.appendChild(el('div', { class: 'coverage-banner warn' }, [el('div', { class: 'txt' }, constructorAutocompleteNote)]));
+  }
+
+  const summaryWrap = document.getElementById('constructor-summary');
+  summaryWrap.innerHTML = '';
+  const fixedCount = CONSTRUCTOR_FACETS.filter(f => state[f] != null).length;
+  const phrase = el('div', { class: 'combi-phrase' },
+    fixedCount ? CONSTRUCTOR_FACETS.filter(f => state[f] != null).map(f => `${CONSTRUCTOR_LABELS[f]}: ${state[f]}`).join(' × ')
+      : 'Ninguna faceta fijada todavía — elige alguna abajo.');
+  const row = el('div', { class: 'combi-row' }, [
+    el('div', {}, [
+      el('div', { class: 'label', style: 'font-size:12px;color:var(--ink-muted);margin-bottom:4px' }, 'Vídeos que sostienen esta selección'),
+      el('div', { class: 'mono', style: 'font-size:20px;font-weight:700' }, String(pool.length)),
+    ]),
+    score != null ? el('div', {
+      title: 'Media del potencial normalizado (configs/normalization.json) de los vídeos que sostienen esta combinación. Es una puntuación comprimida y relativa entre métodos del canal, útil para ordenar — no una nota objetiva sobre 100.',
+    }, [
+      el('div', { class: 'label', style: 'font-size:12px;color:var(--ink-muted);margin-bottom:4px' }, 'Potencial medio (comprimido, para ordenar)'),
+      el('div', { class: 'mono', style: 'font-size:20px;font-weight:700' }, String(Math.round(score))),
+    ]) : null,
+  ]);
+  summaryWrap.appendChild(phrase);
+  summaryWrap.appendChild(row);
+
+  renderConstructorVideos(pool);
+  renderConstructorIdea(state, mecCanIncompatible);
+}
+
+function renderConstructorVideos(pool) {
+  const wrap = document.getElementById('constructor-videos');
+  wrap.innerHTML = '';
+  wrap.appendChild(el('h3', { style: 'font-size:14px;margin:20px 0 8px' }, `Vídeos que sostienen la selección (${pool.length})`));
+  if (!pool.length) {
+    wrap.appendChild(el('p', { class: 'card-phrase' }, 'Ningún vídeo del canal cumple esta combinación todavía.'));
+    return;
+  }
+  pool.forEach(v => {
+    wrap.appendChild(el('div', { class: 'constructor-video-row' }, [
+      el('a', { href: v.url, target: '_blank', rel: 'noopener' }, v.title),
+      el('span', { class: 'mono' }, `potencial ${v.potencial != null ? v.potencial : '—'}`),
+      badge(v.method.evidencia || '—', evidenciaBadge[v.method.evidencia]),
+    ]));
+  });
+}
+
+function renderConstructorIdea(state, mecCanIncompatible) {
+  const wrap = document.getElementById('constructor-idea');
+  wrap.innerHTML = '';
+  wrap.appendChild(el('h3', { style: 'font-size:14px;margin:20px 0 8px' }, 'Generar idea con esta composición'));
+
+  if (mecCanIncompatible) {
+    wrap.appendChild(el('p', { class: 'card-phrase' }, 'Resuelve la incompatibilidad de arriba antes de poder generar una idea.'));
+    return;
+  }
+  const eligible = constructorIdeaEligibility(state);
+  if (!eligible.ok) {
+    wrap.appendChild(el('p', { class: 'card-phrase' }, eligible.reason));
+    return;
+  }
+  const { axisA, axisB } = eligible;
+  const valA = state[axisA], valB = state[axisB];
+  const cached = cachedIdeaFor(axisA, valA, axisB, valB);
+  if (cached) {
+    wrap.appendChild(renderIdeaCard(cached));
+    return;
+  }
+  const slot = el('div', {});
+  wrap.appendChild(slot);
+  renderIdeaButton(slot, axisA, valA, axisB, valB);
+}
+
+function renderConstructor() {
+  renderConstructorFields();
+  renderConstructorSummary();
+}
+
+document.getElementById('btn-ctor-autocomplete').addEventListener('click', () => {
+  const fixedCount = CONSTRUCTOR_FACETS.filter(f => constructorState[f] != null).length;
+  if (fixedCount === CONSTRUCTOR_FACETS.length) {
+    constructorAutocompleteNote = 'Todas las facetas ya están fijadas — no hay nada que completar.';
+    renderConstructor();
+    return;
+  }
+  const { state, incompletas } = constructorAutocomplete(constructorState);
+  Object.assign(constructorState, state);
+  constructorAutocompleteNote = incompletas.length
+    ? `No se pudo proponer un valor plausible (con vídeos de respaldo y sin incompatibilidad) para: ${incompletas.map(f => CONSTRUCTOR_LABELS[f]).join(', ')}. Quedan en "(cualquiera)".`
+    : null;
+  renderConstructor();
+});
+
+document.getElementById('btn-ctor-reset').addEventListener('click', () => {
+  CONSTRUCTOR_FACETS.forEach(f => { constructorState[f] = null; });
+  constructorAutocompleteNote = null;
+  renderConstructor();
+});
+
+renderConstructor();
 </script>
 </body>
 </html>
