@@ -102,17 +102,16 @@
       "servicios en la nube": "otros",
       "turismo_y_emprendimiento": "otros",
       "venta_de_servicios_y_productos_digitales": "tienda_propia",
-      "venta_de_skills": "tienda_propia"
+      "venta_de_skills": "tienda_propia",
+      "aplicaciones, marketplaces": "otros",
+      "e_commerce": "tienda_propia",
+      "fortnite": "otros",
+      "inmobiliario": "otros",
+      "telegram": "redes_sociales_organico",
+      "tiktok_shop": "marketplace",
+      "youtube_shorts": "redes_sociales_organico"
     },
-    "_pendientes": [
-      "aplicaciones, marketplaces",
-      "e_commerce",
-      "fortnite",
-      "inmobiliario",
-      "telegram",
-      "tiktok_shop",
-      "youtube_shorts"
-    ]
+    "_pendientes": []
   },
   "mecanismo_valor": {
     "_doc": "Cómo se genera el valor económico. Vocabulario canónico corto.",
@@ -160,18 +159,17 @@
       "trading_con_apalancamiento": "inversion_financiera",
       "venta de servicios": "servicios_profesionales",
       "venta de servicios, suscripciones, modelos de socio": "servicios_profesionales",
-      "venta_de_paginas_web_profesionales": "venta_productos"
+      "venta_de_paginas_web_profesionales": "venta_productos",
+      "bonos, referidos, canje de monedas, venta de servicios": "otros",
+      "comisiones_sobre_ventas": "afiliacion",
+      "creacion de contenido con ia": "contenido_y_marca",
+      "formacion_y_educacion": "servicios_profesionales",
+      "monetizacion_mapas": "contenido_y_marca",
+      "renta": "inversion_financiera",
+      "venta_de_servicios": "servicios_profesionales",
+      "ventas": "venta_productos"
     },
-    "_pendientes": [
-      "bonos, referidos, canje de monedas, venta de servicios",
-      "comisiones_sobre_ventas",
-      "creacion de contenido con ia",
-      "formacion_y_educacion",
-      "monetizacion_mapas",
-      "renta",
-      "venta_de_servicios",
-      "ventas"
-    ]
+    "_pendientes": []
   },
   "audiencia": {
     "_doc": "A quién se dirige el método. Vocabulario canónico corto.",
@@ -220,22 +218,21 @@
       "usuarios sin conocimientos tecnicos": "consumidores_generales",
       "usuarios_de_etsi": "nicho_especifico",
       "usuarios_de_ia": "consumidores_generales",
-      "usuarios_de_pinterest": "nicho_especifico"
+      "usuarios_de_pinterest": "nicho_especifico",
+      "consumidores_de_contenido_viral": "consumidores_generales",
+      "consumidores_de_navidad": "consumidores_generales",
+      "consumidores_de_productos_personalizados": "consumidores_generales",
+      "emprendedores y usuarios de contenido ambiental": "emprendedores_freelancers",
+      "empresas, marcas, y emprendedores": "empresas_pymes",
+      "interesados_en_automatizacion_con_ia_y_emprendedores": "emprendedores_freelancers",
+      "inversores": "inversores",
+      "jugadores_de_fortnite": "nicho_especifico",
+      "usuarios de apps, vendedores de servicios": "nicho_especifico",
+      "usuarios de telegram": "consumidores_generales",
+      "usuarios_de_tiktok": "consumidores_generales",
+      "vendedores en línea, emprendedores, estudiantes": "emprendedores_freelancers"
     },
-    "_pendientes": [
-      "consumidores_de_contenido_viral",
-      "consumidores_de_navidad",
-      "consumidores_de_productos_personalizados",
-      "emprendedores y usuarios de contenido ambiental",
-      "empresas, marcas, y emprendedores",
-      "interesados_en_automatizacion_con_ia_y_emprendedores",
-      "inversores",
-      "jugadores_de_fortnite",
-      "usuarios de apps, vendedores de servicios",
-      "usuarios de telegram",
-      "usuarios_de_tiktok",
-      "vendedores en línea, emprendedores, estudiantes"
-    ]
+    "_pendientes": []
   },
   "herramientas": {
     "_doc": "No tiene vocabulario canónico (son nombres propios) — solo se listan aquí los valores que no aparecen como clave en 'brand_corrections', por si quieres añadir una corrección.",
