@@ -464,6 +464,57 @@ solo mecanismo×canal). Si vuelves a pedir la misma combinación, el
 servidor —o el propio dashboard, si ya está en `cached_ideas`— devuelve
 la versión cacheada sin volver a llamar al LLM.
 
+### Paso 6c — `scripts/generate_post.py`: borradores de post para LinkedIn
+
+```bash
+# la primera vez, instala Playwright y descarga su navegador:
+.venv/bin/pip install playwright
+.venv/bin/playwright install chromium
+
+.venv/bin/python scripts/generate_post.py --pestana huecos
+```
+
+**Qué hace**: coge una pestaña del dashboard, calcula en Python (sobre
+`methods_norm.json` y los `embedding.json`, nunca inventadas) el hallazgo
+más relevante de esa vista, le pide a un LLM que redacte un post de
+LinkedIn con esas cifras exactas, y genera con Playwright/Chromium una
+captura de página completa de esa pestaña (cabecera, KPIs, barra de
+pestañas y todo el contenido) más una tarjeta social 1200×627 con el
+hallazgo resumido. Deja todo en
+`data/linkedin_posts/<fecha>-<pestana>/post.txt` + imágenes + `meta.json`
+(con las cifras exactas citadas, para trazabilidad).
+
+**No publica nada.** No hay integración con la API de LinkedIn ni scraping
+— el flujo termina en el borrador; tú lo revisas y lo subes a mano cuando
+quieras.
+
+**Cómo elige el hallazgo**: cada pestaña tiene su propia regla (huecos:
+una celda vacía cuyos dos primitivos, por separado, tienen n≥2 y potencial
+medio alto, nunca destacando un n=1 sin avisarlo; combinador: una terna
+que no exista ya en el corpus, buscada entre las mejores candidatas por
+potencial; similitud: el par más parecido y cuántos otros pares superan un
+umbral alto; panorama: el primitivo con mejor combinación de potencial
+alto y cuota baja, o la concentración por categoría). Puedes fijar tú la
+idea con `--destacado "texto libre"` en vez de dejar que el script elija.
+
+**Anonimizado por defecto**: `--enfoque metodologia` (por defecto) quita
+el nombre del canal tanto del texto como de la captura (se reemplaza el
+subtítulo del dashboard y cualquier etiqueta de canal, vía JavaScript
+inyectado en la página ya cargada — no toca `pipeline/dashboard_template.html`
+para nada); `--enfoque nombres_reales` permite citarlo.
+
+**Proveedor del LLM**: por defecto llama a la API de Anthropic (necesita
+`ANTHROPIC_API_KEY` en `.env`, igual que el resto del proyecto cuando usas
+Claude). Si la API no está disponible (cuota, sin conexión...), usa
+`--provider ollama` para redactar el mismo prompt 100% en local con
+`qwen3:14b` (o el modelo que pases con `--ollama-model`) — `meta.json`
+registra siempre qué proveedor y modelo escribió cada borrador.
+
+**El prompt de redacción** vive en `prompts/linkedin_post.md`, editable a
+mano — ahí están el tono, las reglas de longitud/hashtags, y la instrucción
+de que el texto haga referencia explícita a lo que se ve en la captura
+adjunta.
+
 ### Paso 7 — `report`: informe agregado en Markdown
 
 ```bash

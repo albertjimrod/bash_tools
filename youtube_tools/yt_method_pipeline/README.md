@@ -173,6 +173,31 @@ Variables de entorno:
 - `PIPELINE_MAX_RETRIES` / `PIPELINE_BACKOFF_BASE` — reintentos y backoff
   exponencial para llamadas a yt-dlp, transcript-api y al LLM.
 
+## Generar borradores de post de LinkedIn
+
+```bash
+# Requiere dashboard.html + methods_norm.json ya generados.
+# La primera vez: .venv/bin/pip install playwright && .venv/bin/playwright install chromium
+
+.venv/bin/python scripts/generate_post.py --pestana huecos
+```
+
+`scripts/generate_post.py` calcula en Python (sobre `methods_norm.json` +
+embeddings, nunca inventadas) el hallazgo más relevante de una pestaña del
+dashboard, redacta el post vía la API de Anthropic (o `--provider ollama` si
+la API no está disponible), y genera con Playwright una captura de página
+completa de esa pestaña más una tarjeta social 1200×627. **No publica nada**
+— deja `post.txt`, las imágenes y un `meta.json` trazable en
+`data/linkedin_posts/<fecha>-<pestana>/` para que revises y subas a mano.
+
+Flags: `--pestana` (obligatoria: `expediente`/`huecos`/`similitud`/
+`combinador`/`constructor`/`panorama`), `--enfoque metodologia` (por
+defecto, anonimiza canal y creadores) o `nombres_reales`, `--imagen
+captura|tarjeta|ambas`, `--idioma es|en`, `--destacado "texto libre"` para
+fijar tú la idea a resaltar, `--provider claude|ollama` (+
+`--ollama-model`), `--salida` para la carpeta de destino. El prompt de
+redacción es editable en `prompts/linkedin_post.md`.
+
 ## Estructura generada en `data/` (ignorada por git)
 
 ```
@@ -193,6 +218,12 @@ data/
 ├── normalization_report.html
 ├── ideas/
 │   └── <eje_a>=<valor_a>__<eje_b>=<valor_b>.json
+├── linkedin_posts/
+│   └── <fecha>-<pestana>/
+│       ├── post.txt
+│       ├── captura.png
+│       ├── tarjeta.png
+│       └── meta.json
 ├── report.md
 └── dashboard.html
 ```
