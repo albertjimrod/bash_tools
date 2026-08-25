@@ -198,6 +198,23 @@ fijar tú la idea a resaltar, `--provider claude|ollama` (+
 `--ollama-model`), `--salida` para la carpeta de destino. El prompt de
 redacción es editable en `prompts/linkedin_post.md`.
 
+## Capturas explicadas de cada pestaña
+
+```bash
+.venv/bin/python scripts/annotate_screenshots.py                  # las 6 pestañas
+.venv/bin/python scripts/annotate_screenshots.py --pestana huecos  # solo una
+```
+
+`scripts/annotate_screenshots.py` genera, para cada pestaña del dashboard,
+una captura de página completa con una franja explicativa incrustada arriba
+(qué es esa vista y qué hace), con el mismo estilo visual del dashboard. El
+texto de cada franja es fijo y descriptivo (no lo escribe ningún LLM, no
+hay llamada a ninguna API) — solo explica el mecanismo de la pestaña, no
+cita cifras del corpus. Útil para documentación o para acompañar
+explicaciones del proyecto sin depender de un hallazgo concreto. Salida en
+`data/capturas_explicadas/<pestana>.png`. Acepta `--enfoque
+metodologia|nombres_reales` y `--salida`, igual que `generate_post.py`.
+
 ## Estructura generada en `data/` (ignorada por git)
 
 ```
@@ -224,6 +241,8 @@ data/
 │       ├── captura.png
 │       ├── tarjeta.png
 │       └── meta.json
+├── capturas_explicadas/
+│   └── <pestana>.png
 ├── report.md
 └── dashboard.html
 ```

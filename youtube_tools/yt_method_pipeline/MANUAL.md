@@ -515,6 +515,34 @@ mano — ahí están el tono, las reglas de longitud/hashtags, y la instrucción
 de que el texto haga referencia explícita a lo que se ve en la captura
 adjunta.
 
+### Paso 6d — `scripts/annotate_screenshots.py`: capturas explicadas de cada pestaña
+
+```bash
+.venv/bin/python scripts/annotate_screenshots.py                  # las 6 pestañas
+.venv/bin/python scripts/annotate_screenshots.py --pestana huecos  # solo una
+```
+
+**Qué hace**: para cada pestaña del dashboard, abre `data/dashboard.html`
+con Playwright, activa esa vista, e inyecta —vía JavaScript, en el DOM ya
+cargado, sin tocar `pipeline/dashboard_template.html`— una franja arriba
+del todo con el título de la pestaña y una explicación de qué hace, en el
+mismo estilo visual del dashboard (misma paleta, misma tipografía). Luego
+hace una captura de página completa, igual que `generate_post.py`.
+
+**Diferencia con `generate_post.py`**: este script no llama a ningún LLM ni
+calcula ningún hallazgo — el texto de cada franja es fijo y descriptivo
+(qué hace la pestaña, no qué dice de tus datos concretos), pensado para
+documentación o para acompañar una explicación del proyecto sin depender
+de una cifra que pueda quedar desactualizada. Si lo que quieres es un post
+con un hallazgo real y sus cifras, usa `generate_post.py`; si quieres una
+imagen que simplemente explique "esto es lo que hace esta pestaña", usa
+`annotate_screenshots.py`.
+
+**Salida**: `data/capturas_explicadas/<pestana>.png` — una imagen por
+pestaña, sin `post.txt` ni `meta.json` (no hay cifras que trazar). Acepta
+`--enfoque metodologia|nombres_reales` (anonimizado igual que en
+`generate_post.py`) y `--salida` para cambiar la carpeta de destino.
+
 ### Paso 7 — `report`: informe agregado en Markdown
 
 ```bash
