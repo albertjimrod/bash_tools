@@ -13,14 +13,23 @@ máquina.
 - **Accesos remotos** (destacado): SSH, Tailscale, TeamViewer, GNOME Remote
   Desktop, OpenVPN — con botón para activar/desactivar cada uno.
 - **Servicios y herramientas**: Docker, Ollama, Netdata, libvirt (VMs), CUPS,
-  Avahi — con botón.
+  Avahi — con botón. Los que tienen interfaz web propia (Ollama, Netdata,
+  CUPS) muestran un enlace directo para abrirla; los que no, indican
+  "sin interfaz web" en vez de dejar el hueco vacío.
 - **Solo información**: firewall (UFW), actualizaciones automáticas, snapd —
   se muestran pero no tienen botón, para no arriesgar a dejarte sin red o sin
   sesión gráfica por un clic.
-- **Contenedores Docker**: todos los que tengas, agrupados por prefijo de
-  nombre (ej. `intellisynth_*`, `bioplace-*`), con botón arrancar/parar.
+- **Contenedores Docker**: todos los que tengas, activos o parados, agrupados
+  por prefijo de nombre, con botón arrancar/parar. Cada uno con puerto
+  publicado muestra su enlace `http://localhost:<puerto>` — se calcula a
+  partir de la configuración del contenedor, así que se ve aunque esté
+  parado, no solo cuando está arrancado.
 - **Estado del sistema**: carga/uptime, RAM, disco, GPU, actualizaciones
   pendientes de `apt`, estado del firewall.
+
+> Qué puertos y servicios tienes expuestos en concreto solo lo ves tú, en tu
+> propio navegador — deliberadamente no se documenta aquí para no dar pistas
+> a quien mire este repo desde fuera.
 
 ## Instalación
 
