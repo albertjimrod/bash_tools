@@ -1,0 +1,12 @@
+[Unit]
+Description=Panel de control local (systemd + Docker)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/dev/github/bash_tools/system_tools/panel_control/panel_server.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

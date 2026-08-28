@@ -1,0 +1,49 @@
+# Permite al usuario 'ion' arrancar/parar/reiniciar, SIN pedir contraseña,
+# ÚNICAMENTE los servicios systemd listados aquí — nada más. Ni sudo general,
+# ni comodines: cada línea es una ruta y unidad exactas.
+#
+# Instalación (una sola vez, requiere tu contraseña de sudo):
+#   sudo cp sudoers-panel-control /etc/sudoers.d/panel-control
+#   sudo chmod 440 /etc/sudoers.d/panel-control
+#   sudo visudo -c
+#
+# Si en el futuro añades un servicio nuevo al panel (TOGGLEABLE en
+# panel_server.py), añade aquí sus 3 líneas (start/stop/restart) y repite
+# la instalación.
+
+Cmnd_Alias PANEL_CONTROL_UNITS = \
+    /usr/bin/systemctl start ssh.socket, \
+    /usr/bin/systemctl stop ssh.socket, \
+    /usr/bin/systemctl restart ssh.socket, \
+    /usr/bin/systemctl start tailscaled.service, \
+    /usr/bin/systemctl stop tailscaled.service, \
+    /usr/bin/systemctl restart tailscaled.service, \
+    /usr/bin/systemctl start teamviewerd.service, \
+    /usr/bin/systemctl stop teamviewerd.service, \
+    /usr/bin/systemctl restart teamviewerd.service, \
+    /usr/bin/systemctl start gnome-remote-desktop.service, \
+    /usr/bin/systemctl stop gnome-remote-desktop.service, \
+    /usr/bin/systemctl restart gnome-remote-desktop.service, \
+    /usr/bin/systemctl start openvpn.service, \
+    /usr/bin/systemctl stop openvpn.service, \
+    /usr/bin/systemctl restart openvpn.service, \
+    /usr/bin/systemctl start docker.service, \
+    /usr/bin/systemctl stop docker.service, \
+    /usr/bin/systemctl restart docker.service, \
+    /usr/bin/systemctl start ollama.service, \
+    /usr/bin/systemctl stop ollama.service, \
+    /usr/bin/systemctl restart ollama.service, \
+    /usr/bin/systemctl start netdata.service, \
+    /usr/bin/systemctl stop netdata.service, \
+    /usr/bin/systemctl restart netdata.service, \
+    /usr/bin/systemctl start libvirtd.service, \
+    /usr/bin/systemctl stop libvirtd.service, \
+    /usr/bin/systemctl restart libvirtd.service, \
+    /usr/bin/systemctl start cups.service, \
+    /usr/bin/systemctl stop cups.service, \
+    /usr/bin/systemctl restart cups.service, \
+    /usr/bin/systemctl start avahi-daemon.service, \
+    /usr/bin/systemctl stop avahi-daemon.service, \
+    /usr/bin/systemctl restart avahi-daemon.service
+
+ion ALL=(root) NOPASSWD: PANEL_CONTROL_UNITS
