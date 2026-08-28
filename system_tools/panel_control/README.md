@@ -13,9 +13,12 @@ máquina.
 - **Accesos remotos** (destacado): SSH, Tailscale, TeamViewer, GNOME Remote
   Desktop, OpenVPN — con botón para activar/desactivar cada uno.
 - **Servicios y herramientas**: Docker, Ollama, Netdata, libvirt (VMs), CUPS,
-  Avahi — con botón. Los que tienen interfaz web propia (Ollama, Netdata,
-  CUPS) muestran un enlace directo para abrirla; los que no, indican
-  "sin interfaz web" en vez de dejar el hueco vacío.
+  Avahi, Herdr — con botón. Los que tienen interfaz web propia (Ollama,
+  Netdata, CUPS) muestran un enlace directo para abrirla; los que no, indican
+  "sin interfaz web" en vez de dejar el hueco vacío. La mayoría son unidades
+  de **sistema** (necesitan sudo, ver instalación); Herdr es una unidad de
+  **usuario** (`systemctl --user`, sin sudo) y arranca "static" a propósito
+  — nunca se activa sola al iniciar sesión, solo cuando le das al botón.
 - **Solo información**: firewall (UFW), actualizaciones automáticas, snapd —
   se muestran pero no tienen botón, para no arriesgar a dejarte sin red o sin
   sesión gráfica por un clic.
@@ -53,7 +56,21 @@ Si añades algún servicio nuevo a la lista blanca en `panel_server.py`
 `sudoers-panel-control`.
 
 Los contenedores Docker no necesitan este paso: ya perteneces al grupo
-`docker`.
+`docker`. Los servicios de **usuario** (Herdr) tampoco: se instalan aparte
+(paso 1b) y no requieren sudo.
+
+### 1b. Servicios de usuario (Herdr)
+
+Herdr no es un servicio de sistema, así que no va en el sudoers. Se instala
+como unidad de systemd **de usuario**, sin activarla automáticamente (la
+enciendes/apagas tú desde el panel):
+
+```bash
+cp herdr.service ~/.config/systemd/user/
+systemctl --user daemon-reload
+```
+
+Con eso ya aparece en el panel, apagada, lista para el botón "Activar".
 
 ### 2. Arranque automático (opcional pero recomendado)
 
@@ -83,5 +100,8 @@ Y abre `http://127.0.0.1:8990` en el navegador.
 ## Añadir un servicio nuevo a la lista
 
 1. Añádelo a `REMOTE_ACCESS`, `SERVICES` o `INFO_ONLY` en `panel_server.py`.
-2. Si quieres que tenga botón, añade sus 3 líneas (start/stop/restart) a
-   `sudoers-panel-control` y reinstálalo (paso 1).
+2. Si es un servicio de **sistema** y quieres que tenga botón, añade sus 3
+   líneas (start/stop/restart) a `sudoers-panel-control` y reinstálalo
+   (paso 1).
+3. Si es un servicio de **usuario** (`"scope": "user"`, como Herdr), no toca
+   sudoers — solo necesita su unidad en `~/.config/systemd/user/` (paso 1b).

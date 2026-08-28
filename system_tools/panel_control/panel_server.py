@@ -9,10 +9,12 @@ al estado general (carga, RAM, disco, GPU, actualizaciones pendientes).
 Solo usa la librería estándar de Python: no requiere ningún entorno virtual
 ni paquete instalado, para poder arrancarlo siempre con /usr/bin/python3.
 
-El arranque/parada de servicios systemd usa `sudo -n systemctl ...`, que
+El arranque/parada de servicios de SISTEMA usa `sudo -n systemctl ...`, que
 requiere que `/etc/sudoers.d/panel-control` esté instalado (ver README.md);
 si no lo está, el botón simplemente fallará con un error explicativo en
-vez de quedarse colgado pidiendo contraseña.
+vez de quedarse colgado pidiendo contraseña. Los servicios marcados como
+`"scope": "user"` (p.ej. Herdr) usan `systemctl --user`, que no necesita
+sudo ni sudoers: son unidades propias de la sesión de systemd del usuario.
 """
 import json
 import subprocess
@@ -38,12 +40,15 @@ REMOTE_ACCESS = [
 ]
 
 SERVICES = [
-    {"unit": "docker.service", "label": "Docker (motor)", "url": None},
-    {"unit": "ollama.service", "label": "Ollama", "url": "http://localhost:11434"},
-    {"unit": "netdata.service", "label": "Netdata", "url": "http://localhost:19999"},
-    {"unit": "libvirtd.service", "label": "libvirt (máquinas virtuales)", "url": None},
-    {"unit": "cups.service", "label": "CUPS (impresión)", "url": "http://localhost:631"},
-    {"unit": "avahi-daemon.service", "label": "Avahi (mDNS)", "url": None},
+    {"unit": "docker.service", "label": "Docker (motor)", "url": None, "scope": "system"},
+    {"unit": "ollama.service", "label": "Ollama", "url": "http://localhost:11434", "scope": "system"},
+    {"unit": "netdata.service", "label": "Netdata", "url": "http://localhost:19999", "scope": "system"},
+    {"unit": "libvirtd.service", "label": "libvirt (máquinas virtuales)", "url": None, "scope": "system"},
+    {"unit": "cups.service", "label": "CUPS (impresión)", "url": "http://localhost:631", "scope": "system"},
+    {"unit": "avahi-daemon.service", "label": "Avahi (mDNS)", "url": None, "scope": "system"},
+    # Unidad de USUARIO (no de sistema): no necesita sudo, systemctl --user
+    # habla directamente con la sesión de systemd de 'ion'.
+    {"unit": "herdr.service", "label": "Herdr (agentes en terminal)", "url": None, "scope": "user"},
 ]
 
 INFO_ONLY = [
@@ -52,7 +57,7 @@ INFO_ONLY = [
     {"unit": "snapd.service", "label": "Snapd"},
 ]
 
-TOGGLEABLE_UNITS = {s["unit"] for s in REMOTE_ACCESS + SERVICES}
+TOGGLEABLE_UNITS = {s["unit"]: s for s in REMOTE_ACCESS + SERVICES}
 
 
 def _run(cmd: list[str]) -> tuple[int, str]:
@@ -63,24 +68,43 @@ def _run(cmd: list[str]) -> tuple[int, str]:
         return 1, str(e)
 
 
-def unit_status(unit: str) -> str:
-    _, out = _run([SYSTEMCTL, "is-active", unit])
+def _systemctl(scope: str) -> list[str]:
+    return [SYSTEMCTL, "--user"] if scope == "user" else [SYSTEMCTL]
+
+
+def unit_status(unit: str, scope: str = "system") -> str:
+    _, out = _run(_systemctl(scope) + ["is-active", unit])
     return out or "inactive"
 
 
-def unit_enabled(unit: str) -> bool:
-    code, _ = _run([SYSTEMCTL, "is-enabled", "--quiet", unit])
-    return code == 0
+def unit_enabled(unit: str, scope: str = "system") -> bool:
+    # 'static' (sin sección [Install]) también sale con código 0, pero no
+    # arranca solo — solo cuenta como habilitado el 'enabled' real.
+    _, out = _run(_systemctl(scope) + ["is-enabled", unit])
+    return out.strip() == "enabled"
 
 
 def toggle_unit(unit: str, action: str) -> tuple[bool, str]:
-    if unit not in TOGGLEABLE_UNITS:
+    entry = TOGGLEABLE_UNITS.get(unit)
+    if entry is None:
         return False, "servicio no permitido"
     if action not in ("start", "stop", "restart"):
         return False, "acción no permitida"
-    code, out = _run([SUDO, "-n", SYSTEMCTL, action, unit])
+
+    scope = entry.get("scope", "system")
+    if scope == "user":
+        cmd = _systemctl(scope) + [action, unit]
+    else:
+        cmd = [SUDO, "-n"] + _systemctl(scope) + [action, unit]
+
+    code, out = _run(cmd)
     if code != 0:
-        return False, out or "sudo sin permiso: revisa /etc/sudoers.d/panel-control"
+        default_err = (
+            "fallo al ejecutar systemctl --user"
+            if scope == "user"
+            else "sudo sin permiso: revisa /etc/sudoers.d/panel-control"
+        )
+        return False, out or default_err
     return True, "ok"
 
 
@@ -241,8 +265,8 @@ class Handler(BaseHTTPRequestHandler):
                 return [
                     {
                         **s,
-                        "active": unit_status(s["unit"]) == "active",
-                        "enabled": unit_enabled(s["unit"]),
+                        "active": unit_status(s["unit"], s.get("scope", "system")) == "active",
+                        "enabled": unit_enabled(s["unit"], s.get("scope", "system")),
                     }
                     for s in items
                 ]

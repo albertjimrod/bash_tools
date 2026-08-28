@@ -1,0 +1,14 @@
+[Unit]
+Description=Herdr (gestor de sesiones de terminal para agentes de código)
+After=default.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/herdr server
+ExecStop=%h/.local/bin/herdr server stop
+Restart=on-failure
+RestartSec=3
+
+# Deliberadamente sin [Install]/WantedBy: no arranca solo al iniciar sesión,
+# se activa/desactiva a mano desde el panel de control (o con
+# 'systemctl --user start herdr.service').
