@@ -13,12 +13,14 @@ máquina.
 - **Accesos remotos** (destacado): SSH, Tailscale, TeamViewer, GNOME Remote
   Desktop, OpenVPN — con botón para activar/desactivar cada uno.
 - **Servicios y herramientas**: Docker, Ollama, Netdata, libvirt (VMs), CUPS,
-  Avahi, Herdr — con botón. Los que tienen interfaz web propia (Ollama,
-  Netdata, CUPS) muestran un enlace directo para abrirla; los que no, indican
-  "sin interfaz web" en vez de dejar el hueco vacío. La mayoría son unidades
-  de **sistema** (necesitan sudo, ver instalación); Herdr es una unidad de
-  **usuario** (`systemctl --user`, sin sudo) y arranca "static" a propósito
-  — nunca se activa sola al iniciar sesión, solo cuando le das al botón.
+  Avahi, Herdr, Syncthing, un túnel SSH, Fabric — con botón. Los que tienen
+  interfaz web propia muestran un enlace directo para abrirla; los que no,
+  indican "sin interfaz web" en vez de dejar el hueco vacío. La mayoría son
+  unidades de **sistema** (necesitan sudo, ver instalación); Herdr, Syncthing,
+  el túnel y Fabric son unidades de **usuario** (`systemctl --user`, sin
+  sudo). Herdr y Fabric arrancan "static" a propósito — nunca se activan
+  solas al iniciar sesión, solo cuando le das al botón; Syncthing y el túnel
+  ya venían activas de antes (se muestran, no se fuerza su estado).
 - **Solo información**: firewall (UFW), actualizaciones automáticas, snapd —
   se muestran pero no tienen botón, para no arriesgar a dejarte sin red o sin
   sesión gráfica por un clic.
@@ -27,6 +29,22 @@ máquina.
   publicado muestra su enlace `http://localhost:<puerto>` — se calcula a
   partir de la configuración del contenedor, así que se ve aunque esté
   parado, no solo cuando está arrancado.
+- **Proyectos Docker Compose**: a diferencia de "Contenedores Docker" (que
+  solo puede mostrar lo que `docker ps` ya conoce), esta sección lista stacks
+  completos definidos por un `docker-compose.yml` **aunque nunca se hayan
+  levantado** — para eso exactamente sirve: que no se te olvide que tienes
+  algo instalado. El botón hace `docker compose up -d` / `down` sobre el
+  proyecto entero. El primer arranque de un stack que compila su propia
+  imagen puede tardar varios minutos.
+- **Skills de agente (Claude Code)**: solo aparece si tienes instalado
+  `agent-reach` (pipx). No es un servicio ni un contenedor: es una *skill*
+  que le da a Claude Code acceso de lectura a LinkedIn, Reddit, YouTube, X,
+  etc. Está "activa" cuando existe `~/.claude/skills/agent-reach/SKILL.md`;
+  el botón hace `agent-reach skill --install` / `--uninstall` (mismo usuario,
+  sin sudo). La badge muestra cuántos canales están listos según
+  `agent-reach doctor` (cacheado 10 min). Tras activar/desactivar hay que
+  reiniciar Claude Code para que note el cambio; los logins de cada
+  plataforma se hacen aparte con `agent-reach setup`.
 - **Estado del sistema**: carga/uptime, RAM, disco, GPU, actualizaciones
   pendientes de `apt`, estado del firewall.
 
@@ -59,18 +77,20 @@ Los contenedores Docker no necesitan este paso: ya perteneces al grupo
 `docker`. Los servicios de **usuario** (Herdr) tampoco: se instalan aparte
 (paso 1b) y no requieren sudo.
 
-### 1b. Servicios de usuario (Herdr)
+### 1b. Servicios de usuario (Herdr, Fabric)
 
-Herdr no es un servicio de sistema, así que no va en el sudoers. Se instala
-como unidad de systemd **de usuario**, sin activarla automáticamente (la
-enciendes/apagas tú desde el panel):
+No van en el sudoers. Se instalan como unidades de systemd **de usuario**,
+sin activarlas automáticamente (las enciendes/apagas tú desde el panel):
 
 ```bash
-cp herdr.service ~/.config/systemd/user/
+cp herdr.service fabric.service ~/.config/systemd/user/
 systemctl --user daemon-reload
 ```
 
-Con eso ya aparece en el panel, apagada, lista para el botón "Activar".
+Con eso ya aparecen en el panel, apagadas, listas para el botón "Activar".
+Syncthing y el túnel SSH a v15 no necesitan este paso: ya existían como
+unidades de usuario antes de tener el panel, solo hubo que añadirlas a la
+lista blanca en `panel_server.py`.
 
 ### 2. Arranque automático (opcional pero recomendado)
 
@@ -105,3 +125,9 @@ Y abre `http://127.0.0.1:8990` en el navegador.
    (paso 1).
 3. Si es un servicio de **usuario** (`"scope": "user"`, como Herdr), no toca
    sudoers — solo necesita su unidad en `~/.config/systemd/user/` (paso 1b).
+   Antes de fijarle un puerto en `--address`/similar, comprueba que no choca
+   con otro servicio que ya tengas corriendo.
+4. Para un stack de Docker Compose que quieras poder arrancar/parar aunque
+   no esté levantado, añádelo a `COMPOSE_PROJECTS` en `panel_server.py` con
+   un `"id"` propio (úsalo siempre con `-p`, para que no se mezcle con otro
+   proyecto que viva en la misma carpeta).

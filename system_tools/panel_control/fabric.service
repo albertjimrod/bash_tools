@@ -1,0 +1,16 @@
+[Unit]
+Description=Fabric REST API (herramienta de IA)
+After=default.target
+
+[Service]
+Type=simple
+# --address fijado a 127.0.0.1:8099 por dos motivos: (1) por defecto Fabric
+# escucha en ':8080', que es TODAS las interfaces de red, y la API no lleva
+# autenticación salvo que se le pase --api-key; (2) el puerto 8080 por
+# defecto choca con openwebui (--network host), así que usamos 8099.
+ExecStart=%h/.local/bin/fabric --serve --address=127.0.0.1:8099
+Restart=on-failure
+RestartSec=3
+
+# Deliberadamente sin [Install]/WantedBy: no arranca solo al iniciar sesión,
+# se activa/desactiva a mano desde el panel de control.

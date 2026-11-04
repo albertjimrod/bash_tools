@@ -216,6 +216,11 @@
     <div id="services" class="card-grid"></div>
   </section>
 
+  <section id="skills-section" hidden>
+    <h2>Skills de agente (Claude Code) <span id="skills-badge" class="badge"></span></h2>
+    <div id="skills" class="card-grid"></div>
+  </section>
+
   <section>
     <h2>Solo información</h2>
     <div id="info-only" class="info-list"></div>
@@ -224,6 +229,12 @@
   <section>
     <h2>Contenedores Docker</h2>
     <div id="containers"></div>
+  </section>
+
+  <section>
+    <h2>Proyectos Docker Compose</h2>
+    <p class="empty" style="margin:-4px 0 10px">Stacks completos que no siempre tienes arrancados como contenedores.</p>
+    <div id="compose" class="card-grid"></div>
   </section>
 
   <section>
@@ -246,16 +257,21 @@ function showToast(msg) {
   showToast._t = setTimeout(() => t.style.display = 'none', 4000);
 }
 
-async function toggle(kind, key, action, btn) {
+const TOGGLE_ENDPOINT = {
+  unit: '/api/service/toggle',
+  docker: '/api/docker/toggle',
+  compose: '/api/compose/toggle',
+  skill: '/api/skill/toggle',
+};
+const TOGGLE_KEY_FIELD = { unit: 'unit', docker: 'name', compose: 'id', skill: 'name' };
+
+async function toggle(kind, key, action) {
   if (inFlight.has(key)) return;
   inFlight.add(key);
-  btn.disabled = true;
-  const original = btn.textContent;
-  btn.textContent = '...';
+  render();
   try {
-    const url = kind === 'unit' ? '/api/service/toggle' : '/api/docker/toggle';
-    const body = kind === 'unit' ? { unit: key, action } : { name: key, action };
-    const res = await fetch(url, { method: 'POST', body: JSON.stringify(body) });
+    const body = { [TOGGLE_KEY_FIELD[kind]]: key, action };
+    const res = await fetch(TOGGLE_ENDPOINT[kind], { method: 'POST', body: JSON.stringify(body) });
     const data = await res.json();
     if (!data.ok) showToast(`Error: ${data.error}`);
   } catch (e) {
@@ -270,11 +286,20 @@ function urlLink(url) {
   return `<a class="url-link" href="${url}" target="_blank" rel="noopener">${url.replace('http://', '')} ↗</a>`;
 }
 
+function toggleButton(kind, key, running, labelOn, labelOff) {
+  const busy = inFlight.has(key);
+  const action = running ? 'stop' : 'start';
+  const btn = document.createElement('button');
+  btn.className = `toggle ${busy ? '' : action}`;
+  btn.textContent = busy ? '...' : (running ? labelOn : labelOff);
+  btn.disabled = busy;
+  btn.addEventListener('click', () => toggle(kind, key, action));
+  return btn;
+}
+
 function unitCard(s, remote) {
   const div = document.createElement('div');
   div.className = 'card' + (remote ? ' remote' : '');
-  const action = s.active ? 'stop' : 'start';
-  const label = s.active ? 'Desactivar' : 'Activar';
   div.innerHTML = `
     <div class="card-info">
       <div class="name"><span class="status-dot ${s.active ? 'on' : 'off'}"></span>${s.label}</div>
@@ -282,17 +307,14 @@ function unitCard(s, remote) {
       <div class="status-row">${s.active ? 'Activo' : 'Inactivo'} · arranque automático: ${s.enabled ? 'sí' : 'no'}</div>
       ${s.url ? urlLink(s.url) : '<div class="status-row" style="opacity:.6">sin interfaz web</div>'}
     </div>
-    <button class="toggle ${action}">${label}</button>
   `;
-  div.querySelector('button').addEventListener('click', (e) => toggle('unit', s.unit, action, e.target));
+  div.appendChild(toggleButton('unit', s.unit, s.active, 'Desactivar', 'Activar'));
   return div;
 }
 
 function containerCard(c) {
   const div = document.createElement('div');
   div.className = 'card';
-  const action = c.running ? 'stop' : 'start';
-  const label = c.running ? 'Parar' : 'Arrancar';
   const urls = (c.urls && c.urls.length)
     ? `<div class="url-list">${c.urls.map(urlLink).join('')}</div>`
     : '';
@@ -303,9 +325,42 @@ function containerCard(c) {
       <div class="status-row">${c.status}</div>
       ${urls}
     </div>
-    <button class="toggle ${action}">${label}</button>
   `;
-  div.querySelector('button').addEventListener('click', (e) => toggle('docker', c.name, action, e.target));
+  div.appendChild(toggleButton('docker', c.name, c.running, 'Parar', 'Arrancar'));
+  return div;
+}
+
+function composeCard(p) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.innerHTML = `
+    <div class="card-info">
+      <div class="name"><span class="status-dot ${p.running ? 'on' : 'off'}"></span>${p.label}</div>
+      <div class="status-row">${p.running ? 'Arrancado' : 'Parado'}</div>
+      ${urlLink(p.url)}
+      ${p.note ? `<div class="status-row" style="opacity:.7">${p.note}</div>` : ''}
+    </div>
+  `;
+  div.appendChild(toggleButton('compose', p.id, p.running, 'Parar', 'Arrancar'));
+  return div;
+}
+
+function agentReachCard(ar) {
+  const div = document.createElement('div');
+  div.className = 'card';
+  const ch = ar.channels;
+  const chLine = (ar.skill_active && ch)
+    ? `<div class="status-row">${ch.ready}/${ch.total} canales listos${ch.ready_names.length ? ': ' + ch.ready_names.join(', ') : ''}</div>`
+    : '';
+  div.innerHTML = `
+    <div class="card-info">
+      <div class="name"><span class="status-dot ${ar.skill_active ? 'on' : 'off'}"></span>Agent Reach</div>
+      <div class="unit">skill Claude Code${ar.version ? ' · ' + ar.version : ''}</div>
+      <div class="status-row">${ar.skill_active ? 'Instalada — Claude puede usarla (reinicia Claude Code tras cambiarla)' : 'No instalada'}</div>
+      ${chLine}
+    </div>
+  `;
+  div.appendChild(toggleButton('skill', 'agent-reach', ar.skill_active, 'Desactivar', 'Activar'));
   return div;
 }
 
@@ -314,15 +369,11 @@ function groupKey(name) {
   return m ? m[1] : name;
 }
 
-async function refresh() {
-  let data;
-  try {
-    const res = await fetch('/api/status');
-    data = await res.json();
-  } catch (e) {
-    document.getElementById('refresh-status').textContent = 'sin conexión con el panel';
-    return;
-  }
+let lastData = null;
+
+function render() {
+  const data = lastData;
+  if (!data) return;
 
   const remoteEl = document.getElementById('remote-access');
   remoteEl.innerHTML = '';
@@ -335,6 +386,25 @@ async function refresh() {
   const servicesEl = document.getElementById('services');
   servicesEl.innerHTML = '';
   data.services.forEach(s => servicesEl.appendChild(unitCard(s, false)));
+
+  const ar = data.agent_reach;
+  const skillsSection = document.getElementById('skills-section');
+  const skillsEl = document.getElementById('skills');
+  const skillsBadge = document.getElementById('skills-badge');
+  skillsEl.innerHTML = '';
+  if (!ar) {
+    skillsSection.hidden = true;
+  } else {
+    skillsSection.hidden = false;
+    skillsEl.appendChild(agentReachCard(ar));
+    if (ar.skill_active && ar.channels) {
+      skillsBadge.textContent = `${ar.channels.ready} de ${ar.channels.total} canales`;
+      skillsBadge.className = 'badge ' + (ar.channels.ready > 0 ? 'good' : 'bad');
+    } else {
+      skillsBadge.textContent = ar.skill_active ? 'activa' : 'desactivada';
+      skillsBadge.className = 'badge ' + (ar.skill_active ? 'good' : 'bad');
+    }
+  }
 
   const infoEl = document.getElementById('info-only');
   infoEl.innerHTML = '';
@@ -366,6 +436,10 @@ async function refresh() {
       containersEl.appendChild(grid);
     });
   }
+
+  const composeEl = document.getElementById('compose');
+  composeEl.innerHTML = '';
+  (data.compose_projects || []).forEach(p => composeEl.appendChild(composeCard(p)));
 
   const sys = data.system;
   const sysEl = document.getElementById('system');
@@ -405,6 +479,17 @@ async function refresh() {
 
   document.getElementById('refresh-status').textContent =
     'actualizado ' + new Date().toLocaleTimeString('es-ES');
+}
+
+async function refresh() {
+  try {
+    const res = await fetch('/api/status');
+    lastData = await res.json();
+  } catch (e) {
+    document.getElementById('refresh-status').textContent = 'sin conexión con el panel';
+    return;
+  }
+  render();
 }
 
 refresh();

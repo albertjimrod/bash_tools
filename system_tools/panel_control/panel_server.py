@@ -18,6 +18,7 @@ sudo ni sudoers: son unidades propias de la sesión de systemd del usuario.
 """
 import json
 import subprocess
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -28,6 +29,11 @@ STATIC_DIR = Path(__file__).parent / "static"
 SYSTEMCTL = "/usr/bin/systemctl"
 SUDO = "/usr/bin/sudo"
 DOCKER = "/usr/bin/docker"
+
+# Agent Reach (pipx): CLI que le da a Claude Code acceso de lectura a LinkedIn,
+# Reddit, YouTube, etc. No es un servicio: se "activa" instalando su SKILL.md.
+AGENT_REACH = str(Path.home() / ".local/bin/agent-reach")
+AGENT_REACH_SKILL = Path.home() / ".claude/skills/agent-reach/SKILL.md"
 
 # --- Listas blancas: el panel solo puede tocar lo que está aquí ---
 
@@ -46,9 +52,12 @@ SERVICES = [
     {"unit": "libvirtd.service", "label": "libvirt (máquinas virtuales)", "url": None, "scope": "system"},
     {"unit": "cups.service", "label": "CUPS (impresión)", "url": "http://localhost:631", "scope": "system"},
     {"unit": "avahi-daemon.service", "label": "Avahi (mDNS)", "url": None, "scope": "system"},
-    # Unidad de USUARIO (no de sistema): no necesita sudo, systemctl --user
+    # Unidades de USUARIO (no de sistema): no necesitan sudo, systemctl --user
     # habla directamente con la sesión de systemd de 'ion'.
     {"unit": "herdr.service", "label": "Herdr (agentes en terminal)", "url": None, "scope": "user"},
+    {"unit": "syncthing.service", "label": "Syncthing", "url": "http://localhost:8384", "scope": "user"},
+    {"unit": "syncthing-tunnel-v15.service", "label": "Túnel SSH a v15 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user"},
+    {"unit": "fabric.service", "label": "Fabric (API IA)", "url": "http://localhost:8099", "scope": "user"},
 ]
 
 INFO_ONLY = [
@@ -60,9 +69,9 @@ INFO_ONLY = [
 TOGGLEABLE_UNITS = {s["unit"]: s for s in REMOTE_ACCESS + SERVICES}
 
 
-def _run(cmd: list[str]) -> tuple[int, str]:
+def _run(cmd: list[str], timeout: int = 15) -> tuple[int, str]:
     try:
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         return p.returncode, (p.stdout or p.stderr).strip()
     except Exception as e:
         return 1, str(e)
@@ -172,6 +181,69 @@ def docker_containers() -> list[dict]:
     return containers
 
 
+# --- Proyectos Docker Compose que NO están arrancados como contenedores:
+# 'docker ps' nunca los muestra porque, hasta que se levantan una vez, no
+# existe ningún contenedor que listar. Se controlan por nombre de proyecto
+# (-p), no por fichero, para no depender de en qué carpeta corre el panel y
+# para evitar que un proyecto sin 'name:' propio se mezcle por accidente con
+# otro que comparte carpeta (es el caso de 'umami', que vive en el mismo
+# directorio que el stack principal de intellisynthprice).
+
+COMPOSE_PROJECTS = [
+    {
+        "id": "mi-wordpress",
+        "label": "mi-wordpress (WordPress)",
+        "compose_file": "/home/ion/Documentos/albertjimrod/mi-wordpress/docker-compose.yml",
+        "url": "http://localhost:3000",
+        "note": "puerto 3000 — compite con Sim Studio y Umami, solo uno a la vez",
+    },
+    {
+        "id": "sim",
+        "label": "Sim Studio (local)",
+        "compose_file": "/home/ion/sim/docker-compose.local.yml",
+        "url": "http://localhost:3000",
+        "note": "puerto 3000 — compite con mi-wordpress y Umami. Primer arranque puede tardar (compila la imagen)",
+    },
+    {
+        "id": "umami",
+        "label": "Umami (analítica IntelliSynthPrice)",
+        "compose_file": "/home/ion/dev/github/intellisynthprice/docker-compose.umami.yml",
+        "url": "http://localhost:3000",
+        "note": "puerto 3000 — compite con mi-wordpress y Sim Studio",
+    },
+]
+
+COMPOSE_BY_ID = {p["id"]: p for p in COMPOSE_PROJECTS}
+
+
+def compose_projects_status() -> list[dict]:
+    result = []
+    for p in COMPOSE_PROJECTS:
+        code, out = _run([DOCKER, "compose", "-p", p["id"], "ps", "-q"])
+        running = code == 0 and bool(out.strip())
+        result.append({**p, "running": running})
+    return result
+
+
+def toggle_compose(project_id: str, action: str) -> tuple[bool, str]:
+    project = COMPOSE_BY_ID.get(project_id)
+    if project is None:
+        return False, "proyecto no permitido"
+    base = [DOCKER, "compose", "-p", project_id, "-f", project["compose_file"]]
+    if action == "start":
+        cmd = base + ["up", "-d"]
+    elif action == "stop":
+        cmd = base + ["down"]
+    else:
+        return False, "acción no permitida"
+    # 'up' puede tener que compilar una imagen (p.ej. Sim Studio) — más
+    # margen que las acciones de systemd/contenedores sueltos.
+    code, out = _run(cmd, timeout=600)
+    if code != 0:
+        return False, out or "fallo al ejecutar docker compose"
+    return True, "ok"
+
+
 def toggle_container(name: str, action: str) -> tuple[bool, str]:
     names = {c["name"] for c in docker_containers()}
     if name not in names:
@@ -233,6 +305,72 @@ def system_info() -> dict:
     return info
 
 
+# --- Agent Reach: no es un servicio systemd ni un contenedor, es una "skill"
+# de Claude Code. Está ACTIVA cuando existe su SKILL.md en ~/.claude/skills/;
+# el botón hace `agent-reach skill --install/--uninstall` (mismo usuario que
+# el panel, sin sudo). El desglose de canales (`agent-reach doctor`) hace
+# sondeos de red y tarda, así que se cachea 10 min en vez de lanzarlo en cada
+# refresco del panel (cada 5 s).
+
+_doctor_cache = {"at": 0.0, "data": None}
+
+
+def _agent_reach_channels() -> dict:
+    now = time.time()
+    cached = _doctor_cache["data"]
+    if cached is not None and now - _doctor_cache["at"] < 600:
+        return cached
+
+    ready, total, names = 0, 0, []
+    code, out = _run([AGENT_REACH, "doctor", "--json"], timeout=45)
+    if code == 0 and out:
+        try:
+            for key, val in json.loads(out).items():
+                total += 1
+                if val.get("status") == "ok":
+                    ready += 1
+                    names.append(key)
+        except Exception:
+            pass
+    data = {"ready": ready, "total": total, "ready_names": names}
+    _doctor_cache.update(at=now, data=data)
+    return data
+
+
+def agent_reach_status() -> dict | None:
+    if not Path(AGENT_REACH).exists():
+        return None
+    active = AGENT_REACH_SKILL.exists()
+    version = ""
+    code, out = _run([AGENT_REACH, "version"])
+    if code == 0:
+        version = out.replace("Agent Reach", "").strip()
+    return {
+        "skill_active": active,
+        "version": version,
+        "channels": _agent_reach_channels() if active else None,
+    }
+
+
+def toggle_agent_reach(action: str) -> tuple[bool, str]:
+    if not Path(AGENT_REACH).exists():
+        return False, "agent-reach no está instalado"
+    flag = {"start": "--install", "stop": "--uninstall"}.get(action)
+    if flag is None:
+        return False, "acción no permitida"
+    # `agent-reach skill --install` solo copia la skill en las carpetas que YA
+    # existen; si ~/.claude/skills/ no existe, la instala en ~/.agents/skills/
+    # y Claude Code no la ve. Creamos la carpeta para forzar que aterrice donde
+    # el panel la busca.
+    if action == "start":
+        AGENT_REACH_SKILL.parent.parent.mkdir(parents=True, exist_ok=True)
+    code, out = _run([AGENT_REACH, "skill", flag], timeout=30)
+    if code != 0:
+        return False, out or "fallo al ejecutar agent-reach skill"
+    _doctor_cache.update(at=0.0, data=None)  # fuerza refresco del doctor
+    return True, "ok"
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         pass
@@ -276,6 +414,8 @@ class Handler(BaseHTTPRequestHandler):
                 "services": block(SERVICES),
                 "info_only": block(INFO_ONLY),
                 "containers": docker_containers(),
+                "compose_projects": compose_projects_status(),
+                "agent_reach": agent_reach_status(),
                 "system": system_info(),
             })
         else:
@@ -294,6 +434,10 @@ class Handler(BaseHTTPRequestHandler):
             ok, msg = toggle_unit(data.get("unit", ""), data.get("action", ""))
         elif self.path == "/api/docker/toggle":
             ok, msg = toggle_container(data.get("name", ""), data.get("action", ""))
+        elif self.path == "/api/compose/toggle":
+            ok, msg = toggle_compose(data.get("id", ""), data.get("action", ""))
+        elif self.path == "/api/skill/toggle":
+            ok, msg = toggle_agent_reach(data.get("action", ""))
         else:
             self.send_error(404)
             return
