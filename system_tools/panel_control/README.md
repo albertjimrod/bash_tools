@@ -144,4 +144,9 @@ Y abre `http://127.0.0.1:8990` en el navegador.
 4. Para un stack de Docker Compose que quieras poder arrancar/parar aunque
    no esté levantado, añádelo a `COMPOSE_PROJECTS` en `panel_server.py` con
    un `"id"` propio (úsalo siempre con `-p`, para que no se mezcle con otro
-   proyecto que viva en la misma carpeta).
+   proyecto que viva en la misma carpeta). Si su puerto choca con otro y el
+   `docker-compose.yml` no es tuyo (repo de terceros, el mismo que usa
+   producción...), no lo edites: crea al lado un override local que solo
+   cambie `ports: !override` y apúntalo en `"override_file"`; el panel lo
+   pasa como segundo `-f`. Mira la sección "Puertos en uso" antes de elegir
+   el puerto.

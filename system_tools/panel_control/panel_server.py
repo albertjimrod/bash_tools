@@ -193,28 +193,33 @@ def docker_containers() -> list[dict]:
 # para evitar que un proyecto sin 'name:' propio se mezcle por accidente con
 # otro que comparte carpeta (es el caso de 'umami', que vive en el mismo
 # directorio que el stack principal de intellisynthprice).
+# El puerto 3000 es de Open WebUI: cada proyecto tiene uno propio para que
+# puedan convivir; donde el compose original no es nuestro (repo de Sim,
+# producción de Umami), el cambio va en un 'override_file' local.
 
 COMPOSE_PROJECTS = [
     {
         "id": "mi-wordpress",
         "label": "mi-wordpress (WordPress)",
         "compose_file": "/home/ion/Documentos/albertjimrod/mi-wordpress/docker-compose.yml",
-        "url": "http://localhost:3000",
-        "note": "puerto 3000 — compite con Sim Studio y Umami, solo uno a la vez",
+        "url": "http://localhost:3001",
+        "note": None,
     },
     {
         "id": "sim",
         "label": "Sim Studio (local)",
         "compose_file": "/home/ion/sim/docker-compose.local.yml",
-        "url": "http://localhost:3000",
-        "note": "puerto 3000 — compite con mi-wordpress y Umami. Primer arranque puede tardar (compila la imagen)",
+        "override_file": "/home/ion/sim/docker-compose.panel.yml",
+        "url": "http://localhost:3003",
+        "note": "Primer arranque puede tardar (compila la imagen)",
     },
     {
         "id": "umami",
         "label": "Umami (analítica IntelliSynthPrice)",
         "compose_file": "/home/ion/dev/github/intellisynthprice/docker-compose.umami.yml",
-        "url": "http://localhost:3000",
-        "note": "puerto 3000 — compite con mi-wordpress y Sim Studio",
+        "override_file": "/home/ion/dev/github/intellisynthprice/docker-compose.umami.local.yml",
+        "url": "http://localhost:3004",
+        "note": None,
     },
 ]
 
@@ -235,6 +240,10 @@ def toggle_compose(project_id: str, action: str) -> tuple[bool, str]:
     if project is None:
         return False, "proyecto no permitido"
     base = [DOCKER, "compose", "-p", project_id, "-f", project["compose_file"]]
+    # Override local (fuera del repo del proyecto) que cambia solo el puerto
+    # publicado: el original se queda intacto para upstream / producción.
+    if project.get("override_file"):
+        base += ["-f", project["override_file"]]
     if action == "start":
         cmd = base + ["up", "-d"]
     elif action == "stop":
