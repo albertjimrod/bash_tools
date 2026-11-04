@@ -16,7 +16,11 @@ vez de quedarse colgado pidiendo contraseña. Los servicios marcados como
 `"scope": "user"` (p.ej. Herdr) usan `systemctl --user`, que no necesita
 sudo ni sudoers: son unidades propias de la sesión de systemd del usuario.
 """
+import ipaddress
 import json
+import os
+import pwd
+import re
 import subprocess
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -172,6 +176,7 @@ def docker_containers() -> list[dict]:
     containers = []
     for cid, name, image, status in rows:
         containers.append({
+            "id": inspected_by_id.get(cid, {}).get("Id", cid),
             "name": name,
             "image": image,
             "status": status,
@@ -371,6 +376,212 @@ def toggle_agent_reach(action: str) -> tuple[bool, str]:
     return True, "ok"
 
 
+# --- Puertos en uso: se calcula en cada refresco con `ss`, sin ninguna lista
+# fija de puertos en el código (no se documentan puertos concretos en el repo).
+# Sin sudo, `ss -p` solo ve el proceso de los sockets propios; los de root se
+# identifican por su cgroup (`ss -e`), que sí es visible para cualquiera y da
+# la unidad systemd exacta (netdata.service, ssh.socket...) o el contenedor
+# Docker (docker-<id>.scope). docker.service a secas es docker-proxy, y se
+# resuelve cruzando el puerto con los puertos publicados de cada contenedor.
+
+SS = "/usr/bin/ss"
+PANEL_UNIT = "panel-control.service"
+
+
+def _ephemeral_low() -> int:
+    try:
+        return int(Path("/proc/sys/net/ipv4/ip_local_port_range").read_text().split()[0])
+    except Exception:
+        return 32768
+
+
+def _url_port(url: str | None) -> int | None:
+    if not url:
+        return None
+    tail = url.rsplit(":", 1)[-1].split("/")[0]
+    return int(tail) if tail.isdigit() else None
+
+
+def _listen_scope(host: str) -> str:
+    """Desde dónde se llega al puerto: 'localhost', 'red' (todas las
+    interfaces), 'tailscale', 'multicast' o la dirección concreta."""
+    iface = ""
+    if "%" in host:
+        host, iface = host.split("%", 1)
+    if iface == "lo":
+        return "localhost"
+    if iface.startswith("tailscale"):
+        return "tailscale"
+    if iface:
+        return f"solo {iface}"
+    if host == "*":
+        return "red"
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return host
+    if ip.is_loopback:
+        return "localhost"
+    if ip.is_unspecified:
+        return "red"
+    if ip.is_multicast:
+        return "multicast"
+    if ip in ipaddress.ip_network("100.64.0.0/10") or ip in ipaddress.ip_network("fd7a:115c:a1e0::/48"):
+        return "tailscale"
+    return f"solo {host}"
+
+
+# Si un mismo servicio escucha en varias direcciones, manda la más expuesta.
+_SCOPE_RANK = {"red": 0, "tailscale": 2, "multicast": 3, "localhost": 4}
+
+
+def _parse_ss() -> list[dict]:
+    code, out = _run([SS, "-tulnHpe"])
+    if code != 0:
+        return []
+    sockets = []
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) < 5:
+            continue
+        host, _, port = parts[4].rpartition(":")
+        if not port.isdigit():
+            continue
+        proc = re.search(r'users:\(\("([^"]+)"', line)
+        uid = re.search(r"\buid:(\d+)", line)
+        cgroup = re.search(r"\bcgroup:(\S+)", line)
+        sockets.append({
+            "proto": parts[0],
+            "port": int(port),
+            "scope": _listen_scope(host.strip("[]").replace("]%", "%")),
+            "process": proc.group(1) if proc else None,
+            "uid": int(uid.group(1)) if uid else 0,
+            "cgroup": cgroup.group(1) if cgroup else "",
+        })
+    return sockets
+
+
+def _identify(sock: dict, containers: list[dict], units: dict) -> dict:
+    """Devuelve label/origen/url de un socket y si es algo que el panel ya
+    conoce (contenedor, o servicio de la lista blanca en su puerto web)."""
+    leaf = sock["cgroup"].rsplit("/", 1)[-1]
+    port = sock["port"]
+
+    m = re.match(r"docker-([0-9a-f]{12,})\.scope$", leaf)
+    if m:
+        c = next((c for c in containers if c["id"].startswith(m.group(1))), None)
+        if c:
+            return {"label": c["name"], "source": "Docker",
+                    "url": f"http://localhost:{port}" if sock["proto"] == "tcp" else None,
+                    "known": True}
+    if leaf == "docker.service":
+        for c in containers:
+            if port in (_url_port(u) for u in c["urls"]):
+                return {"label": c["name"], "source": "Docker",
+                        "url": f"http://localhost:{port}", "known": True}
+        return {"label": "docker-proxy", "source": "Docker", "url": None, "known": False}
+
+    if leaf == PANEL_UNIT:
+        return {"label": "Panel de control (esta página)", "source": "systemd usuario",
+                "url": None, "known": True}
+
+    if leaf.endswith((".service", ".socket")):
+        source = "systemd usuario" if "/user@" in sock["cgroup"] else "systemd"
+        entry = units.get(leaf)
+        if entry:
+            web = _url_port(entry.get("url")) == port
+            return {"label": entry["label"], "source": source,
+                    "url": entry["url"] if web else None, "known": web}
+        return {"label": leaf.rsplit(".", 1)[0], "source": source, "url": None, "known": False}
+
+    # Aplicación de escritorio: el nombre del snap y, si no, el del proceso
+    # (solo visible si es nuestro) son más claros que el del scope (Joplin
+    # sale como 'Chromium', Freeplane como 'java').
+    snap = re.match(r"snap\.([^.]+)\.", leaf)
+    if snap:
+        label = f"{snap.group(1)} (snap)"
+    elif sock["process"]:
+        label = sock["process"]
+    else:
+        app = re.match(r"app-(?:[a-z]+\.)*([^-.]+)", leaf)
+        if app:
+            label = app.group(1)
+        else:
+            try:
+                label = pwd.getpwuid(sock["uid"]).pw_name
+            except KeyError:
+                label = f"uid {sock['uid']}"
+    return {"label": label, "source": "aplicación" if leaf.endswith(".scope") else "?",
+            "url": None, "known": False}
+
+
+def listening_ports(containers: list[dict], compose: list[dict]) -> dict:
+    units = {s["unit"]: s for s in REMOTE_ACCESS + SERVICES + INFO_ONLY}
+    eph_low = _ephemeral_low()
+    my_uid = os.getuid()
+
+    rows = {}
+    for sock in _parse_ss():
+        ident = _identify(sock, containers, units)
+        key = (sock["proto"], sock["port"], ident["label"])
+        row = rows.get(key)
+        if row is None:
+            rows[key] = row = {
+                "proto": sock["proto"], "port": sock["port"], "scope": sock["scope"],
+                "uid": sock["uid"], **ident,
+            }
+        elif _SCOPE_RANK.get(sock["scope"], 1) < _SCOPE_RANK.get(row["scope"], 1):
+            row["scope"] = sock["scope"]
+
+    listening_tcp = {r["port"] for r in rows.values() if r["proto"] == "tcp"}
+
+    # Proyectos Compose parados que reclaman un puerto que ya usa otro.
+    for p in compose:
+        port = _url_port(p.get("url"))
+        if p["running"] or port not in listening_tcp:
+            continue
+        for r in rows.values():
+            if r["proto"] == "tcp" and r["port"] == port:
+                r.setdefault("contenders", []).append(p["label"])
+
+    main, system = [], []
+    for r in sorted(rows.values(), key=lambda r: (r["port"], r["proto"])):
+        is_main = r["proto"] == "tcp" and r["scope"] != "tailscale" and (
+            r["known"]
+            or r["scope"] == "red"
+            or (r["uid"] == my_uid and r["port"] < eph_low)
+        )
+        (main if is_main else system).append(r)
+
+    # Configurado con puerto pero sin nadie escuchando en él ahora mismo.
+    idle = []
+    for s in SERVICES:
+        port = _url_port(s.get("url"))
+        if port and port not in listening_tcp:
+            idle.append({"label": s["label"], "port": port, "kind": "servicio"})
+    for c in containers:
+        if c["running"]:
+            continue
+        for u in c["urls"]:
+            port = _url_port(u)
+            if port and port not in listening_tcp:
+                idle.append({"label": c["name"], "port": port, "kind": "contenedor"})
+    for p in compose:
+        port = _url_port(p.get("url"))
+        if port and not p["running"] and port not in listening_tcp:
+            idle.append({"label": p["label"], "port": port, "kind": "compose"})
+
+    return {"main": main, "system": system, "idle": idle}
+
+
+def panel_location() -> dict:
+    return {
+        "dir": str(Path(__file__).resolve().parent),
+        "unit": PANEL_UNIT,
+        "address": f"{HOST}:{PORT}",
+    }
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         pass
@@ -409,14 +620,18 @@ class Handler(BaseHTTPRequestHandler):
                     for s in items
                 ]
 
+            containers = docker_containers()
+            compose = compose_projects_status()
             self._json({
                 "remote_access": block(REMOTE_ACCESS),
                 "services": block(SERVICES),
                 "info_only": block(INFO_ONLY),
-                "containers": docker_containers(),
-                "compose_projects": compose_projects_status(),
+                "containers": containers,
+                "compose_projects": compose,
                 "agent_reach": agent_reach_status(),
                 "system": system_info(),
+                "ports": listening_ports(containers, compose),
+                "panel": panel_location(),
             })
         else:
             self.send_error(404)

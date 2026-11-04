@@ -197,6 +197,49 @@
     max-width: 90vw;
   }
   .empty { color: var(--text-muted); font-size: 0.85rem; }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+  table.ports { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  table.ports th {
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.ports td { padding: 7px 12px; border-top: 1px solid var(--border); white-space: nowrap; }
+  table.ports tr:first-child td { border-top: none; }
+  table.ports td.port { font-family: ui-monospace, monospace; font-weight: 600; }
+  table.ports td.muted { color: var(--text-muted); }
+  table.ports tr.exposed td:first-child { box-shadow: inset 3px 0 0 var(--warn); }
+  table.ports .note { display: block; font-size: 0.72rem; color: var(--warn); white-space: normal; }
+  .scope { font-size: 0.72rem; padding: 1px 7px; border-radius: 100px; background: var(--surface-2); color: var(--text-muted); }
+  .scope.red { background: var(--warn-bg); color: var(--warn); font-weight: 600; }
+  details.ports-more { margin-top: 12px; }
+  details.ports-more summary {
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  footer {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 20px 28px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+  }
+  footer code { font-family: ui-monospace, monospace; color: var(--text); }
 </style>
 </head>
 <body>
@@ -238,10 +281,22 @@
   </section>
 
   <section>
+    <h2>Puertos en uso <span id="ports-badge" class="badge"></span></h2>
+    <div id="ports-main"></div>
+    <div id="ports-idle" class="info-list" style="margin-top:10px"></div>
+    <details id="ports-more" class="ports-more">
+      <summary>Sistema y otros</summary>
+      <div id="ports-system"></div>
+    </details>
+  </section>
+
+  <section>
     <h2>Estado del sistema</h2>
     <div id="system" class="stat-grid"></div>
   </section>
 </main>
+
+<footer id="panel-location"></footer>
 
 <div id="toast"></div>
 
@@ -364,6 +419,62 @@ function agentReachCard(ar) {
   return div;
 }
 
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+}
+
+const SCOPE_LABEL = { red: 'toda la red', localhost: 'localhost', tailscale: 'Tailscale', multicast: 'multicast' };
+
+function portsTable(rows) {
+  if (!rows.length) return '<div class="empty">Nada.</div>';
+  const body = rows.map(r => {
+    const note = r.contenders
+      ? `<span class="note">⚠ también configurado aquí (parado): ${r.contenders.map(esc).join(', ')}</span>`
+      : '';
+    return `
+      <tr class="${r.scope === 'red' ? 'exposed' : ''}">
+        <td class="port">${r.port}</td>
+        <td class="muted">${r.proto.toUpperCase()}</td>
+        <td><span class="scope ${r.scope === 'red' ? 'red' : ''}">${esc(SCOPE_LABEL[r.scope] || r.scope)}</span></td>
+        <td>${esc(r.label)}${note}</td>
+        <td class="muted">${esc(r.source)}</td>
+        <td>${r.url ? urlLink(r.url) : ''}</td>
+      </tr>`;
+  }).join('');
+  return `
+    <div class="table-wrap">
+      <table class="ports">
+        <thead><tr><th>Puerto</th><th>Proto</th><th>Escucha en</th><th>Servicio</th><th>Origen</th><th></th></tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderPorts(ports) {
+  const badge = document.getElementById('ports-badge');
+  if (!ports) {
+    document.getElementById('ports-main').innerHTML = '<div class="empty">No se pudo leer la lista de puertos.</div>';
+    badge.textContent = '';
+    return;
+  }
+  document.getElementById('ports-main').innerHTML = portsTable(ports.main);
+
+  const exposed = ports.main.filter(r => r.scope === 'red').length;
+  badge.textContent = `${exposed} expuestos a la red`;
+  badge.className = 'badge ' + (exposed > 0 ? 'warn' : 'good');
+
+  // Solo se reemplaza el contenido de <details>, no el elemento: así sigue
+  // abierto o cerrado como lo dejaste entre refrescos.
+  document.getElementById('ports-system').innerHTML = portsTable(ports.system);
+  document.querySelector('#ports-more summary').textContent = `Sistema y otros (${ports.system.length})`;
+
+  const idleEl = document.getElementById('ports-idle');
+  idleEl.innerHTML = ports.idle.length
+    ? '<span class="empty" style="align-self:center">Configurados, sin escuchar ahora:</span>' +
+      ports.idle.map(i => `<div class="info-pill"><span class="status-dot off"></span>${esc(i.label)} <b>:${i.port}</b> <span style="opacity:.7">${esc(i.kind)}</span></div>`).join('')
+    : '';
+}
+
 function groupKey(name) {
   const m = name.match(/^([a-zA-Z0-9]+)[-_]/);
   return m ? m[1] : name;
@@ -440,6 +551,13 @@ function render() {
   const composeEl = document.getElementById('compose');
   composeEl.innerHTML = '';
   (data.compose_projects || []).forEach(p => composeEl.appendChild(composeCard(p)));
+
+  renderPorts(data.ports);
+
+  const loc = data.panel;
+  document.getElementById('panel-location').innerHTML = loc
+    ? `Este panel: <code>${esc(loc.dir)}</code> · servido por <code>${esc(loc.unit)}</code> (systemd usuario) en <code>${esc(loc.address)}</code>`
+    : '';
 
   const sys = data.system;
   const sysEl = document.getElementById('system');

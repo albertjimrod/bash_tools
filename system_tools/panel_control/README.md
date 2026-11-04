@@ -45,8 +45,22 @@ máquina.
   `agent-reach doctor` (cacheado 10 min). Tras activar/desactivar hay que
   reiniciar Claude Code para que note el cambio; los logins de cada
   plataforma se hacen aparte con `agent-reach setup`.
+- **Puertos en uso**: todo lo que está escuchando ahora mismo, calculado en
+  cada refresco con `ss` (no hay ninguna lista de puertos en el código). Sin
+  sudo: cada socket se identifica por su cgroup, que da la unidad systemd
+  exacta o el contenedor Docker aunque el proceso sea de root; los de
+  docker-proxy se cruzan con los puertos publicados de cada contenedor, y las
+  apps de escritorio usan el nombre del snap o del proceso. La tabla principal
+  muestra los servicios con interfaz web que el panel ya conoce, las apps
+  propias en puertos fijos y todo lo que escucha en **toda la red**
+  (resaltado, con badge de cuántos hay). El resto (UDP, DNS, Tailscale,
+  puertos internos, puertos aleatorios) va en un bloque plegable "Sistema y
+  otros". Debajo se listan los servicios, contenedores y proyectos Compose
+  con puerto configurado que no están escuchando, y si un proyecto Compose
+  parado reclama un puerto que ya usa otro, la fila lo avisa.
 - **Estado del sistema**: carga/uptime, RAM, disco, GPU, actualizaciones
   pendientes de `apt`, estado del firewall.
+- **Pie de página**: dónde está el código del panel y qué unidad lo sirve.
 
 > Qué puertos y servicios tienes expuestos en concreto solo lo ves tú, en tu
 > propio navegador — deliberadamente no se documenta aquí para no dar pistas
