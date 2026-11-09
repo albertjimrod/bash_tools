@@ -111,7 +111,9 @@
       "tiktok_shop": "marketplace",
       "youtube_shorts": "redes_sociales_organico"
     },
-    "_pendientes": []
+    "_pendientes": [
+      "cloud"
+    ]
   },
   "mecanismo_valor": {
     "_doc": "Cómo se genera el valor económico. Vocabulario canónico corto.",
@@ -169,7 +171,9 @@
       "venta_de_servicios": "servicios_profesionales",
       "ventas": "venta_productos"
     },
-    "_pendientes": []
+    "_pendientes": [
+      "automatizacion_tareas"
+    ]
   },
   "audiencia": {
     "_doc": "A quién se dirige el método. Vocabulario canónico corto.",
@@ -232,7 +236,9 @@
       "usuarios_de_tiktok": "consumidores_generales",
       "vendedores en línea, emprendedores, estudiantes": "emprendedores_freelancers"
     },
-    "_pendientes": []
+    "_pendientes": [
+      "usuarios_de_cloud"
+    ]
   },
   "herramientas": {
     "_doc": "No tiene vocabulario canónico (son nombres propios) — solo se listan aquí los valores que no aparecen como clave en 'brand_corrections', por si quieres añadir una corrección.",
@@ -298,6 +304,7 @@
       "canva",
       "capcut",
       "chatgpt",
+      "chrome extensions",
       "chu capcha",
       "cling",
       "clouhub.i",
@@ -331,7 +338,9 @@
       "gmail",
       "google",
       "google adsense",
+      "google drive",
       "google maps (scrapeo)",
+      "google search console",
       "google studio",
       "google_api",
       "google_calendar",
@@ -373,6 +382,7 @@
       "nanobanana",
       "newsletter",
       "node_js",
+      "notion",
       "open_router",
       "openai",
       "ordenador con tarjeta grafica",
@@ -394,10 +404,12 @@
       "reddit",
       "republic",
       "scrapping_skill",
+      "seo tools",
       "shopify",
       "sidekick",
       "sketchfab",
       "skool",
+      "slack",
       "software_de_inversion",
       "sora 2",
       "sp500",
@@ -411,6 +423,7 @@
       "tiktok_shop",
       "trading view",
       "tripoide",
+      "twitter api",
       "udemy",
       "ufn",
       "viral",

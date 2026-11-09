@@ -1,0 +1,12 @@
+# Credenciales y configuración local
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+
+# Salidas generadas por los scripts (no son código)
+wordpress_tools/generar_articulos/00_EDA_procesado*/
+youtube_tools/yt_channel_to_corpus/channel_corpus/
