@@ -29,16 +29,20 @@ controla **su propia máquina**.
 
 | Desde | Panel de R7 | Panel de V15 |
 |---|---|---|
-| R7  | `http://127.0.0.1:8990` | `http://IP_V15:8990` |
-| V15 | — (no expuesto) | `http://127.0.0.1:8990` |
+| R7, en casa | `http://127.0.0.1:8990` | `http://v15.local:8990` (o `http://IP_V15:8990`) |
+| R7, con V15 fuera de casa | `http://127.0.0.1:8990` | `http://IP_TAILSCALE_V15:8990` |
+| V15 | `ssh -N r7-panel` → `http://localhost:8991` | `http://127.0.0.1:8990` |
 
 - El panel de **R7 no sale de R7**: escucha solo en `127.0.0.1`, como siempre.
+  Desde V15 se llega con un túnel SSH (alias `r7-panel`).
 - El panel de **V15** escucha en todas las interfaces, pero solo atiende a la
-  propia V15 y a las IPs de `PANEL_ALLOW` (R7). Cualquier otra, incluida la
-  IP de Tailscale de R7, recibe `403 cliente no permitido`.
-- Por eso las dos IPs deben estar **reservadas en el router** (DHCP estático):
-  si el router le da otra IP a V15, la dirección para entrar cambia; si se la
-  da a R7, V15 la rechazará.
+  propia V15 y a las IPs de `PANEL_ALLOW`: la IP de casa de R7 y su **IP de
+  Tailscale**. Cualquier otra recibe `403 cliente no permitido`.
+- `v15.local` es el nombre de V15 en la red de casa (mDNS, Avahi): funciona
+  aunque el router le cambie la IP.
+- La IP de Tailscale de R7 es fija, así que aunque el router le cambie la IP
+  de casa a R7 (las IPs **no** están reservadas en el router), R7 siempre
+  puede entrar por Tailscale. Si se reservan algún día, nada cambia.
 - La cabecera de la página dice en qué máquina estás: *Panel de control · R7*
   o *· V15*.
 
@@ -243,8 +247,8 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 
 | Síntoma | Causa probable | Solución |
 |---|---|---|
-| Desde R7 `http://IP_V15:8990` no carga | V15 apagado, cambió de IP o UFW bloquea | `ping IP_V15`; revisar la reserva en el router; `sudo ufw status` en V15 |
-| `{"error": "cliente no permitido"}` | R7 entra con una IP que no está en `PANEL_ALLOW` (otra IP por DHCP, o por Tailscale) | Reservar la IP de R7 en el router, o añadirla a `~/.config/panel-control/env` en V15 y `systemctl --user restart panel-control` |
+| Desde R7 `http://v15.local:8990` no carga | V15 apagado, fuera de casa o UFW bloquea | Probar `http://IP_TAILSCALE_V15:8990`; `sudo ufw status` en V15 |
+| `{"error": "cliente no permitido"}` | R7 entra con una IP de casa nueva (DHCP) que no está en `PANEL_ALLOW` | Entrar por Tailscale (`http://IP_TAILSCALE_V15:8990`), o actualizar la IP en `~/.config/panel-control/env` de V15 y `systemctl --user restart panel-control` |
 | `{"error": "cabecera Host no permitida"}` | Entras por un nombre DNS que no es el de la máquina | Usar la IP, o `PANEL_MACHINE`/nombre de la máquina |
 | Botón → "Error: origen no permitido" | Petición POST que no viene de la página del panel | Normal para `curl`; ver Seguridad (3) |
 | Botón de servicio de sistema → "sudo sin permiso" | Falta `/etc/sudoers.d/panel-control` en esa máquina | Paso 4 de la instalación de V15 |
