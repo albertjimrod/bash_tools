@@ -337,7 +337,13 @@ async function toggle(kind, key, action) {
   }
 }
 
+// El servidor da los enlaces como http://localhost:<puerto>. Si el panel se
+// abre desde otra máquina (p.ej. el de V15 desde R7), 'localhost' sería el
+// equipo del navegador: se cambia por la máquina que sirve el panel.
+const PANEL_IS_REMOTE = !['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+
 function urlLink(url) {
+  if (PANEL_IS_REMOTE) url = url.replace('://localhost', '://' + location.hostname);
   return `<a class="url-link" href="${url}" target="_blank" rel="noopener">${url.replace('http://', '')} ↗</a>`;
 }
 
@@ -556,8 +562,13 @@ function render() {
 
   const loc = data.panel;
   document.getElementById('panel-location').innerHTML = loc
-    ? `Este panel: <code>${esc(loc.dir)}</code> · servido por <code>${esc(loc.unit)}</code> (systemd usuario) en <code>${esc(loc.address)}</code>`
+    ? `Este panel (${esc(loc.machine)}): <code>${esc(loc.dir)}</code> · servido por <code>${esc(loc.unit)}</code> (systemd usuario) en <code>${esc(loc.address)}</code>`
     : '';
+  if (loc && loc.machine) {
+    const title = `Panel de control · ${loc.machine}`;
+    document.querySelector('header h1').textContent = title;
+    document.title = title;
+  }
 
   const sys = data.system;
   const sysEl = document.getElementById('system');

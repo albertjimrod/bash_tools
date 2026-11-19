@@ -5,8 +5,13 @@ un vistazo lo que tienes corriendo en la máquina: accesos remotos, servicios
 systemd, contenedores Docker, y el estado general del sistema (carga, RAM,
 disco, GPU, actualizaciones pendientes, firewall).
 
-Solo escucha en `127.0.0.1`: no es accesible desde la red, solo desde esta
-máquina.
+En R7 solo escucha en `127.0.0.1`: no es accesible desde la red, solo desde
+esa máquina.
+
+**Dos máquinas.** El mismo panel corre también en V15 (portátil), accesible
+desde la propia V15 y desde R7. Se edita solo en R7 y cada cambio se propaga
+solo a V15 al guardar. Cómo funciona, instalación, seguridad y problemas
+frecuentes: [DOS-MAQUINAS.md](DOS-MAQUINAS.md).
 
 ## Qué muestra
 
@@ -60,7 +65,12 @@ máquina.
   parado reclama un puerto que ya usa otro, la fila lo avisa.
 - **Estado del sistema**: carga/uptime, RAM, disco, GPU, actualizaciones
   pendientes de `apt`, estado del firewall.
-- **Pie de página**: dónde está el código del panel y qué unidad lo sirve.
+- **Pie de página**: dónde está el código del panel, qué unidad lo sirve y
+  en qué máquina (el nombre también sale en la cabecera).
+
+Lo que las listas nombran pero no existe en la máquina (una unidad no
+instalada, un `docker-compose.yml` que no está) no se muestra: así el mismo
+código sirve en R7 y en V15.
 
 > Qué puertos y servicios tienes expuestos en concreto solo lo ves tú, en tu
 > propio navegador — deliberadamente no se documenta aquí para no dar pistas
@@ -133,10 +143,15 @@ Y abre `http://127.0.0.1:8990` en el navegador.
 
 ## Añadir un servicio nuevo a la lista
 
+Siempre en R7: al guardar, el cambio llega solo a V15
+(ver [DOS-MAQUINAS.md](DOS-MAQUINAS.md)). Si el servicio solo existe en una
+de las dos máquinas, en la otra simplemente no aparecerá.
+
 1. Añádelo a `REMOTE_ACCESS`, `SERVICES` o `INFO_ONLY` en `panel_server.py`.
 2. Si es un servicio de **sistema** y quieres que tenga botón, añade sus 3
    líneas (start/stop/restart) a `sudoers-panel-control` y reinstálalo
-   (paso 1).
+   (paso 1) **en cada máquina donde exista** — el sudoers no se propaga solo,
+   porque instalarlo necesita tu contraseña.
 3. Si es un servicio de **usuario** (`"scope": "user"`, como Herdr), no toca
    sudoers — solo necesita su unidad en `~/.config/systemd/user/` (paso 1b).
    Antes de fijarle un puerto en `--address`/similar, comprueba que no choca

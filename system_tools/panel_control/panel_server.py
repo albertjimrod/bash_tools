@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """Panel de control local del sistema.
 
-Sirve una página web en 127.0.0.1 (nunca en la red) que muestra el estado
-de accesos remotos, servicios systemd y contenedores Docker instalados en
-la máquina, con botones para activar/desactivarlos, más un vistazo rápido
-al estado general (carga, RAM, disco, GPU, actualizaciones pendientes).
+Sirve una página web que muestra el estado de accesos remotos, servicios
+systemd y contenedores Docker instalados en la máquina, con botones para
+activar/desactivarlos, más un vistazo rápido al estado general (carga, RAM,
+disco, GPU, actualizaciones pendientes).
+
+El mismo fichero corre en varias máquinas (ver DOS-MAQUINAS.md). Por defecto
+escucha solo en 127.0.0.1; dirección, puerto y clientes permitidos se cambian
+con variables de entorno (PANEL_HOST, PANEL_PORT, PANEL_ALLOW), que cada
+máquina define en su propia unidad systemd o fichero de entorno, nunca en el
+repo. Lo que la lista blanca nombra pero no existe en la máquina (unidades,
+proyectos Compose) no se muestra.
 
 Solo usa la librería estándar de Python: no requiere ningún entorno virtual
 ni paquete instalado, para poder arrancarlo siempre con /usr/bin/python3.
@@ -21,13 +28,21 @@ import json
 import os
 import pwd
 import re
+import socket
 import subprocess
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-HOST = "127.0.0.1"
-PORT = 8990
+HOST = os.environ.get("PANEL_HOST", "127.0.0.1")
+PORT = int(os.environ.get("PANEL_PORT", "8990"))
+# IPs (o redes CIDR) que pueden abrir el panel ademas de la propia maquina,
+# separadas por comas. Vacio = solo la propia maquina.
+PANEL_ALLOW = [
+    ipaddress.ip_network(x.strip(), strict=False)
+    for x in os.environ.get("PANEL_ALLOW", "").split(",") if x.strip()
+]
+MACHINE = os.environ.get("PANEL_MACHINE") or socket.gethostname()
 STATIC_DIR = Path(__file__).parent / "static"
 
 SYSTEMCTL = "/usr/bin/systemctl"
@@ -60,7 +75,9 @@ SERVICES = [
     # habla directamente con la sesión de systemd de 'ion'.
     {"unit": "herdr.service", "label": "Herdr (agentes en terminal)", "url": None, "scope": "user"},
     {"unit": "syncthing.service", "label": "Syncthing", "url": "http://localhost:8384", "scope": "user"},
+    # Cada máquina tiene el túnel hacia la otra; solo se ve el que existe.
     {"unit": "syncthing-tunnel-v15.service", "label": "Túnel SSH a v15 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user"},
+    {"unit": "syncthing-tunnel-r7.service", "label": "Túnel SSH a R7 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user"},
     {"unit": "fabric.service", "label": "Fabric (API IA)", "url": "http://localhost:8099", "scope": "user"},
 ]
 
@@ -90,11 +107,40 @@ def unit_status(unit: str, scope: str = "system") -> str:
     return out or "inactive"
 
 
-def unit_enabled(unit: str, scope: str = "system") -> bool:
-    # 'static' (sin sección [Install]) también sale con código 0, pero no
-    # arranca solo — solo cuenta como habilitado el 'enabled' real.
-    _, out = _run(_systemctl(scope) + ["is-enabled", unit])
-    return out.strip() == "enabled"
+def units_state(items: list[dict]) -> list[dict]:
+    """Estado de una lista de unidades con UNA llamada a systemctl por scope
+    (en vez de dos por unidad). Las que no existen en esta máquina
+    (LoadState=not-found) se descartan: el panel es el mismo en R7 y en V15,
+    y cada una solo enseña lo que tiene instalado."""
+    by_scope: dict[str, list[dict]] = {}
+    for s in items:
+        by_scope.setdefault(s.get("scope", "system"), []).append(s)
+
+    state = {}
+    for scope, group in by_scope.items():
+        code, out = _run(_systemctl(scope) + [
+            "show", "--property=LoadState,ActiveState,UnitFileState",
+        ] + [s["unit"] for s in group])
+        # Un bloque por unidad, separados por línea en blanco y en el mismo
+        # orden que los argumentos.
+        blocks = out.split("\n\n") if code == 0 else []
+        for s, block in zip(group, blocks):
+            props = dict(l.split("=", 1) for l in block.splitlines() if "=" in l)
+            state[s["unit"]] = props
+
+    result = []
+    for s in items:
+        props = state.get(s["unit"])
+        if props is None or props.get("LoadState") == "not-found":
+            continue
+        result.append({
+            **s,
+            "active": props.get("ActiveState") == "active",
+            # 'static' (sin sección [Install]) no arranca solo: solo cuenta
+            # como habilitado el 'enabled' real.
+            "enabled": props.get("UnitFileState") == "enabled",
+        })
+    return result
 
 
 def toggle_unit(unit: str, action: str) -> tuple[bool, str]:
@@ -201,15 +247,15 @@ COMPOSE_PROJECTS = [
     {
         "id": "mi-wordpress",
         "label": "mi-wordpress (WordPress)",
-        "compose_file": "/home/ion/Documentos/albertjimrod/mi-wordpress/docker-compose.yml",
+        "compose_file": "/home/ion/dev/sandbox/mi-wordpress/docker-compose.yml",
         "url": "http://localhost:3001",
         "note": None,
     },
     {
         "id": "sim",
         "label": "Sim Studio (local)",
-        "compose_file": "/home/ion/sim/docker-compose.local.yml",
-        "override_file": "/home/ion/sim/docker-compose.panel.yml",
+        "compose_file": "/home/ion/dev/terceros/sim/docker-compose.local.yml",
+        "override_file": "/home/ion/dev/terceros/sim/docker-compose.panel.yml",
         "url": "http://localhost:3003",
         "note": "Primer arranque puede tardar (compila la imagen)",
     },
@@ -229,6 +275,11 @@ COMPOSE_BY_ID = {p["id"]: p for p in COMPOSE_PROJECTS}
 def compose_projects_status() -> list[dict]:
     result = []
     for p in COMPOSE_PROJECTS:
+        # Proyecto que no existe en esta máquina (p.ej. sim en V15): no se muestra.
+        if not Path(p["compose_file"]).exists():
+            continue
+        if p.get("override_file") and not Path(p["override_file"]).exists():
+            continue
         code, out = _run([DOCKER, "compose", "-p", p["id"], "ps", "-q"])
         running = code == 0 and bool(out.strip())
         result.append({**p, "running": running})
@@ -394,7 +445,7 @@ def toggle_agent_reach(action: str) -> tuple[bool, str]:
 # resuelve cruzando el puerto con los puertos publicados de cada contenedor.
 
 SS = "/usr/bin/ss"
-PANEL_UNIT = "panel-control.service"
+PANEL_UNIT = os.environ.get("PANEL_UNIT", "panel-control.service")
 
 
 def _ephemeral_low() -> int:
@@ -588,12 +639,77 @@ def panel_location() -> dict:
         "dir": str(Path(__file__).resolve().parent),
         "unit": PANEL_UNIT,
         "address": f"{HOST}:{PORT}",
+        "machine": MACHINE,
     }
+
+
+# --- Quién puede usar el panel. No tiene contraseña, así que se protege por
+# tres lados:
+#  1. IP del cliente: la propia máquina o las de PANEL_ALLOW.
+#  2. Cabecera Host: solo IPs literales, 'localhost' o el nombre de la
+#     máquina. Evita el "DNS rebinding" (una web maliciosa cuyo dominio
+#     resuelve a 127.0.0.1 para leer /api/status desde tu navegador).
+#  3. Cabecera Origin en los POST: debe ser esta misma página. Evita que otra
+#     web abierta en tu navegador pulse los botones por ti (CSRF).
+
+def _ip(text: str):
+    try:
+        ip = ipaddress.ip_address(text)
+    except ValueError:
+        return None
+    if ip.version == 6 and ip.ipv4_mapped:
+        ip = ip.ipv4_mapped
+    return ip
+
+
+def client_allowed(peer: str, local: str) -> bool:
+    ip = _ip(peer)
+    if ip is None:
+        return False
+    # Loopback, o conexión de la máquina a sí misma por su IP de red
+    # (origen y destino del socket coinciden).
+    if ip.is_loopback or ip == _ip(local):
+        return True
+    return any(ip in net for net in PANEL_ALLOW)
+
+
+def _host_part(value: str) -> str:
+    value = value.strip()
+    if value.startswith("["):
+        return value[1:value.find("]")] if "]" in value else ""
+    return value.rsplit(":", 1)[0] if value.count(":") == 1 else value
+
+
+def host_header_ok(host_header: str | None) -> bool:
+    host = _host_part(host_header or "").lower()
+    if not host:
+        return False
+    if _ip(host) is not None:
+        return True
+    name = MACHINE.lower()
+    return host in ("localhost", name, f"{name}.local")
 
 
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         pass
+
+    def _guard(self, check_origin: bool) -> bool:
+        """True si la petición puede seguir; si no, ya ha respondido 403."""
+        peer = self.client_address[0]
+        local = self.connection.getsockname()[0]
+        if not client_allowed(peer, local):
+            reason = "cliente no permitido"
+        elif not host_header_ok(self.headers.get("Host")):
+            reason = "cabecera Host no permitida"
+        elif check_origin and (
+            self.headers.get("Origin", "").split("://", 1)[-1] != self.headers.get("Host", "")
+        ):
+            reason = "origen no permitido"
+        else:
+            return True
+        self._json({"ok": False, "error": reason}, 403)
+        return False
 
     def _json(self, obj, status=200):
         body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
@@ -616,25 +732,17 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
+        if not self._guard(check_origin=False):
+            return
         if self.path in ("/", "/index.html"):
             self._serve_static("index.html")
         elif self.path == "/api/status":
-            def block(items):
-                return [
-                    {
-                        **s,
-                        "active": unit_status(s["unit"], s.get("scope", "system")) == "active",
-                        "enabled": unit_enabled(s["unit"], s.get("scope", "system")),
-                    }
-                    for s in items
-                ]
-
             containers = docker_containers()
             compose = compose_projects_status()
             self._json({
-                "remote_access": block(REMOTE_ACCESS),
-                "services": block(SERVICES),
-                "info_only": block(INFO_ONLY),
+                "remote_access": units_state(REMOTE_ACCESS),
+                "services": units_state(SERVICES),
+                "info_only": units_state(INFO_ONLY),
                 "containers": containers,
                 "compose_projects": compose,
                 "agent_reach": agent_reach_status(),
@@ -646,6 +754,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
 
     def do_POST(self):
+        if not self._guard(check_origin=True):
+            return
         length = int(self.headers.get("Content-Length", 0))
         raw = self.rfile.read(length) if length else b"{}"
         try:
@@ -671,7 +781,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     server = ThreadingHTTPServer((HOST, PORT), Handler)
-    print(f"Panel de control en http://{HOST}:{PORT}")
+    extra = ", ".join(str(n) for n in PANEL_ALLOW) or "ninguno"
+    print(f"Panel de control ({MACHINE}) en http://{HOST}:{PORT} · clientes extra: {extra}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

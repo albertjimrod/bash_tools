@@ -1,0 +1,13 @@
+# R7: red de seguridad del despliegue. Si V15 estaba apagado cuando editaste
+# el panel, este temporizador lo pone al día en cuanto vuelva (rsync no copia
+# nada si ya está al día, así que repetirlo no cuesta nada).
+[Unit]
+Description=Reintenta periódicamente el despliegue del panel en V15
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=15min
+Unit=panel-deploy-v15.service
+
+[Install]
+WantedBy=timers.target

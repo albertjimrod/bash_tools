@@ -1,0 +1,13 @@
+# R7: vigila los ficheros del panel y, en cuanto guardas uno, lanza
+# panel-deploy-v15.service, que lo propaga a V15. Ver DOS-MAQUINAS.md.
+[Unit]
+Description=Vigila el panel de control para propagar cambios a V15
+
+[Path]
+PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/panel_server.py
+PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/static/index.html
+PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/panel-control-v15.service
+Unit=panel-deploy-v15.service
+
+[Install]
+WantedBy=default.target

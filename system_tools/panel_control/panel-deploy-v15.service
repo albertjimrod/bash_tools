@@ -1,0 +1,10 @@
+# R7: despliega el panel en V15. No se habilita por sí sola: la lanzan
+# panel-deploy-v15.path (al guardar) y panel-deploy-v15.timer (cada 15 min).
+# Ver el resultado: journalctl --user -u panel-deploy-v15.service -n 20
+[Unit]
+Description=Despliega el panel de control de R7 en V15
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/dev/github/bash_tools/system_tools/panel_control/deploy-v15.sh
