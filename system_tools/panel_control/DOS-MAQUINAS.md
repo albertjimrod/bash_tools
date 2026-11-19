@@ -60,6 +60,44 @@ Tailscale activo en las dos.
 | IA de R7 en el navegador | Open WebUI de V15: `http://localhost:3000` | sí (mismo túnel) |
 | Panel de R7 | `ssh -N r7-panel` y abrir `http://localhost:8991` | no, a mano (Ctrl+C para cerrarlo) |
 
+### El alias `r7-panel` (panel de R7 desde V15)
+
+El panel de R7 solo escucha en `127.0.0.1` de R7 y no se expone a la red. Para
+verlo desde V15 se abre un túnel SSH que lleva el puerto 8991 de V15 al 8990
+de R7. El alias vive en `~/.ssh/config` de **V15** (fuera del repo):
+
+```
+# Panel de control de R7 en http://localhost:8991 (uso: ssh -N r7-panel)
+Host r7-panel
+    HostName IP_TAILSCALE_R7
+    User ion
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 60
+    LocalForward 8991 localhost:8990
+    ExitOnForwardFailure yes
+```
+
+- `HostName` es la IP de Tailscale de R7 (la misma que el alias `r7`): por eso
+  funciona en casa y fuera, también con el móvil.
+- Se usa el **8991** en V15 porque el 8990 ya lo ocupa el panel de V15.
+- `ExitOnForwardFailure`: si el 8991 está ocupado (p.ej. por otro túnel
+  igual ya abierto), falla en vez de quedarse conectado sin túnel.
+
+Uso, en V15:
+
+```bash
+ssh -N r7-panel          # se queda en primer plano; Ctrl+C para cerrarlo
+# o en segundo plano:
+ssh -fN r7-panel         # y para cerrarlo: pkill -f "ssh -fN r7-panel"
+```
+
+Con el túnel abierto, `http://localhost:8991` es el panel de **R7**, con los
+botones funcionando (actúan sobre R7). La cabecera dice *Panel de control · R7*
+para no confundirlo con el de V15.
+
+A diferencia del túnel de Ollama, este no es un servicio permanente: se abre
+solo cuando se necesita.
+
 ### El túnel de Ollama
 
 `ollama-tunnel-r7.service` (unidad de usuario de V15) mantiene abierta una
@@ -221,6 +259,11 @@ chmod 600 ~/.config/panel-control/env
 systemctl --user daemon-reload
 systemctl --user enable --now panel-control.service ollama-tunnel-r7.service
 
+# 3b. En V15: alias r7-panel para ver el panel de R7 (bloque completo en
+#     "El alias r7-panel"); hacer copia antes de tocar el fichero
+cp ~/.ssh/config ~/.ssh/config.bak-$(date +%Y%m%d)
+nano ~/.ssh/config        # pegar el bloque Host r7-panel al final
+
 # 4. En V15, con sudo: botones de servicios de sistema y firewall
 sudo cp sudoers-panel-control /etc/sudoers.d/panel-control   # desde el repo de V15
 sudo chmod 440 /etc/sudoers.d/panel-control
@@ -242,6 +285,7 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 | Pausar la propagación automática | `systemctl --user stop panel-deploy-v15.path panel-deploy-v15.timer` |
 | Ver el estado del panel de V15 | `ssh v15 systemctl --user status panel-control` |
 | Ver el túnel de Ollama | `ssh v15 systemctl --user status ollama-tunnel-r7` |
+| Ver el panel de R7 estando en V15 | En V15: `ssh -N r7-panel` y abrir `http://localhost:8991` |
 | Logs del panel de V15 | `ssh v15 journalctl --user -u panel-control -n 30` |
 
 ## Problemas frecuentes
@@ -258,6 +302,8 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 | "IA (Ollama) de R7: No responde" | R7 apagado o sin Tailscale, o el túnel reconectando | Mirar la tarjeta "R7 por Tailscale"; `systemctl --user status ollama-tunnel-r7` en V15 |
 | `ollama` en V15 dice que no hay servidor | Túnel parado | Activarlo en el panel o `systemctl --user start ollama-tunnel-r7` |
 | Open WebUI de V15 sin modelos | Túnel parado, o arrancó antes que Docker y aún está reintentando | Esperar ~10 s o reiniciar el túnel desde el panel |
+| `ssh -N r7-panel` → *"bind … Address already in use"* | Ya hay un túnel `r7-panel` abierto (quizá en segundo plano) | Usar ese (`http://localhost:8991`) o cerrarlo: `pkill -f "r7-panel"` |
+| `http://localhost:8991` no carga (en V15) | El túnel `r7-panel` no está abierto, o R7 apagado / sin Tailscale | Abrir `ssh -N r7-panel`; mirar "R7 por Tailscale" en el panel de V15 |
 | "R7 por Tailscale: por relay" | Tailscale no consigue conexión directa (pasa con algunas redes móviles) | Normal; funciona, solo más lento |
 
 ## Si cambia algo de la red
@@ -289,4 +335,5 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 | `ollama-tunnel-r7.service` | V15: `~/.config/systemd/user/` (lo copia `deploy-v15.sh`) | Túnel permanente al Ollama de R7 |
 
 Fuera del repo, solo en V15: el alias `r7-panel` de `~/.ssh/config`
-(`LocalForward 8991 localhost:8990` hacia R7 por Tailscale).
+(`LocalForward 8991 localhost:8990` hacia R7 por Tailscale; bloque completo
+en "El alias `r7-panel`").
