@@ -42,6 +42,57 @@ controla **su propia máquina**.
 - La cabecera de la página dice en qué máquina estás: *Panel de control · R7*
   o *· V15*.
 
+## Usar R7 desde V15 (también fuera de casa)
+
+Todo va por **Tailscale**, así que funciona igual en casa que con V15
+conectado a la conexión compartida del móvil. Requisitos: R7 encendido y
+Tailscale activo en las dos.
+
+| Qué | Cómo, en V15 | Siempre activo |
+|---|---|---|
+| SSH a R7 | `ssh r7` | — |
+| Web de Syncthing de R7 | `http://localhost:8385` | sí (`syncthing-tunnel-r7.service`) |
+| IA de R7 (Ollama, GPU de R7) en terminal y scripts | `ollama list`, `ollama run <modelo>`, API en `http://localhost:11434` | sí (`ollama-tunnel-r7.service`) |
+| IA de R7 en el navegador | Open WebUI de V15: `http://localhost:3000` | sí (mismo túnel) |
+| Panel de R7 | `ssh -N r7-panel` y abrir `http://localhost:8991` | no, a mano (Ctrl+C para cerrarlo) |
+
+### El túnel de Ollama
+
+`ollama-tunnel-r7.service` (unidad de usuario de V15) mantiene abierta una
+conexión SSH a R7 que publica su Ollama en dos sitios de V15:
+
+- `127.0.0.1:11434`: el puerto estándar de Ollama. El programa `ollama` de V15
+  (solo el cliente; V15 no tiene servicio Ollama propio) y cualquier script
+  que use Ollama hablan con R7 sin configurar nada.
+- `172.17.0.1:11435`: la IP de V15 en la red interna de Docker, que es donde
+  el contenedor Open WebUI busca Ollama (`OLLAMA_BASE_URL`). No es accesible
+  desde fuera de V15.
+
+Si se corta (el móvil pierde cobertura, R7 se reinicia), lo detecta en ~90 s
+y se reconecta solo; si R7 está apagado, reintenta cada vez más espaciado
+(hasta cada 15 min). Se enciende y apaga desde el panel de V15.
+
+Lo que consume datos móviles es solo el texto de preguntas y respuestas: el
+modelo corre en R7. La primera pregunta tras un rato sin usarlo tarda (1-2
+min): R7 tiene que cargar el modelo en la GPU.
+
+### Sección "Conexión con R7" del panel de V15
+
+Aparece solo en V15 (la activa `PANEL_PEER` en su configuración local) y se
+refresca cada 5 s:
+
+| Tarjeta | Qué dice | De dónde sale |
+|---|---|---|
+| Red actual | Nombre de la red y si es de **datos medidos** (en naranja) | NetworkManager. Lo de "medidos" lo detecta solo en puntos de acceso Android; en iPhone puede salir como no medida |
+| Datos en esta red | Bajada/subida de **todo V15** desde que se conectó a esa red | Contadores del sistema; empiezan de 0 al cambiar de red y sobreviven a reinicios (`~/.cache/panel-control/net-counters.json`) |
+| R7 por Tailscale | **Directa** (bien), **por relay** (naranja: funciona pero más lenta) o **desconectada** (rojo) | `tailscale status` |
+| Datos con R7 | Lo intercambiado con R7: túneles, Syncthing, despliegues del panel | Contadores de Tailscale para R7 |
+| IA (Ollama) de R7 | Si responde y en cuánto (latencia de ida y vuelta), nº de modelos | Petición a Ollama a través del túnel |
+| Modelo en la GPU | Qué modelo tiene R7 cargado, cuánta VRAM y a qué hora lo descargará | `ollama ps` de R7 |
+
+Debajo están los botones de los túneles (Syncthing y Ollama). En R7 esta
+sección no existe y su túnel sigue en "Servicios y herramientas".
+
 ## Cómo se propagan los cambios
 
 1. Editas `panel_server.py`, `static/index.html` o `panel-control-v15.service`
@@ -111,6 +162,8 @@ Variables que entiende `panel_server.py`:
 | `PANEL_ALLOW` | *(vacío)* | IPs o redes CIDR extra que pueden entrar, separadas por comas. La propia máquina siempre puede. |
 | `PANEL_MACHINE` | `hostname` | Nombre que se muestra. |
 | `PANEL_UNIT` | `panel-control.service` | Nombre de la unidad que sirve el panel (para identificarse en "Puertos en uso"). |
+| `PANEL_PEER` | *(vacío)* | Nombre en Tailscale de la otra máquina. Si está, aparece la sección "Conexión con …". |
+| `PANEL_PEER_OLLAMA` | *(vacío)* | URL del Ollama de la otra máquina a través del túnel (p.ej. `http://127.0.0.1:11434`). Vacío = sin tarjetas de IA. |
 
 Plantilla del fichero de V15: [`panel-control.env.example`](panel-control.env.example).
 
@@ -159,9 +212,10 @@ chmod 600 ~/.config/panel-control/env
 # 2. Desde R7: primer despliegue (copia código y unidad)
 ./deploy-v15.sh
 
-# 3. En V15: habilitar el panel
+# 3. En V15: habilitar el panel y el túnel de Ollama (deploy-v15.sh ya
+#    copió las dos unidades)
 systemctl --user daemon-reload
-systemctl --user enable --now panel-control.service
+systemctl --user enable --now panel-control.service ollama-tunnel-r7.service
 
 # 4. En V15, con sudo: botones de servicios de sistema y firewall
 sudo cp sudoers-panel-control /etc/sudoers.d/panel-control   # desde el repo de V15
@@ -182,6 +236,7 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 | Ver cuándo toca el próximo reintento | `systemctl --user list-timers panel-deploy-v15.timer` |
 | Pausar la propagación automática | `systemctl --user stop panel-deploy-v15.path panel-deploy-v15.timer` |
 | Ver el estado del panel de V15 | `ssh v15 systemctl --user status panel-control` |
+| Ver el túnel de Ollama | `ssh v15 systemctl --user status ollama-tunnel-r7` |
 | Logs del panel de V15 | `ssh v15 journalctl --user -u panel-control -n 30` |
 
 ## Problemas frecuentes
@@ -195,6 +250,10 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 | Botón de servicio de sistema → "sudo sin permiso" | Falta `/etc/sudoers.d/panel-control` en esa máquina | Paso 4 de la instalación de V15 |
 | Cambio en R7 que no llega a V15 | El despliegue falló (no compila, V15 inaccesible) | `journalctl --user -u panel-deploy-v15.service -n 20` |
 | Un servicio no aparece en V15 | No está instalado allí (se oculta a propósito) | Instalarlo en V15; aparece solo en el siguiente refresco |
+| "IA (Ollama) de R7: No responde" | R7 apagado o sin Tailscale, o el túnel reconectando | Mirar la tarjeta "R7 por Tailscale"; `systemctl --user status ollama-tunnel-r7` en V15 |
+| `ollama` en V15 dice que no hay servidor | Túnel parado | Activarlo en el panel o `systemctl --user start ollama-tunnel-r7` |
+| Open WebUI de V15 sin modelos | Túnel parado, o arrancó antes que Docker y aún está reintentando | Esperar ~10 s o reiniciar el túnel desde el panel |
+| "R7 por Tailscale: por relay" | Tailscale no consigue conexión directa (pasa con algunas redes móviles) | Normal; funciona, solo más lento |
 
 ## Si cambia algo de la red
 
@@ -222,3 +281,7 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 | `panel-deploy-v15.service` | R7: `~/.config/systemd/user/` | Ejecuta `deploy-v15.sh` |
 | `panel-deploy-v15.timer` | R7: `~/.config/systemd/user/` | Reintento cada 15 min |
 | `sudoers-panel-control` | Ambas: `/etc/sudoers.d/panel-control` | Permiso sin contraseña para las unidades de la lista |
+| `ollama-tunnel-r7.service` | V15: `~/.config/systemd/user/` (lo copia `deploy-v15.sh`) | Túnel permanente al Ollama de R7 |
+
+Fuera del repo, solo en V15: el alias `r7-panel` de `~/.ssh/config`
+(`LocalForward 8991 localhost:8990` hacia R7 por Tailscale).

@@ -30,7 +30,9 @@ import pwd
 import re
 import socket
 import subprocess
+import threading
 import time
+import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -76,8 +78,11 @@ SERVICES = [
     {"unit": "herdr.service", "label": "Herdr (agentes en terminal)", "url": None, "scope": "user"},
     {"unit": "syncthing.service", "label": "Syncthing", "url": "http://localhost:8384", "scope": "user"},
     # Cada máquina tiene el túnel hacia la otra; solo se ve el que existe.
-    {"unit": "syncthing-tunnel-v15.service", "label": "Túnel SSH a v15 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user"},
-    {"unit": "syncthing-tunnel-r7.service", "label": "Túnel SSH a R7 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user"},
+    # "section": "peer" -> se muestran en "Conexión con <otra máquina>" si
+    # PANEL_PEER está definido; si no, en esta sección como siempre.
+    {"unit": "syncthing-tunnel-v15.service", "label": "Túnel SSH a v15 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user", "section": "peer"},
+    {"unit": "syncthing-tunnel-r7.service", "label": "Túnel SSH a R7 (Syncthing remoto)", "url": "http://localhost:8385", "scope": "user", "section": "peer"},
+    {"unit": "ollama-tunnel-r7.service", "label": "Túnel SSH al Ollama de R7 (IA)", "url": None, "scope": "user", "section": "peer"},
     {"unit": "fabric.service", "label": "Fabric (API IA)", "url": "http://localhost:8099", "scope": "user"},
 ]
 
@@ -652,6 +657,180 @@ def listening_ports(containers: list[dict], compose: list[dict]) -> dict:
     return {"main": main, "system": system, "idle": idle}
 
 
+# --- Conexión con la otra máquina: solo si PANEL_PEER (nombre de la otra
+# máquina en Tailscale) está definido en la configuración local. Pensado para
+# V15 fuera de casa con datos del móvil: en qué red estás, si es de datos
+# medidos, cuánto has gastado en ella, cómo llega la conexión con R7 y si su
+# Ollama responde a través del túnel.
+
+PANEL_PEER = os.environ.get("PANEL_PEER", "").strip()
+PANEL_PEER_OLLAMA = os.environ.get("PANEL_PEER_OLLAMA", "").strip().rstrip("/")
+TAILSCALE = "/usr/bin/tailscale"
+NMCLI = "/usr/bin/nmcli"
+NET_STATE = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "panel-control" / "net-counters.json"
+_net_lock = threading.Lock()
+
+_NET_TYPES = {"802-11-wireless": "WiFi", "802-3-ethernet": "cable", "gsm": "módem móvil", "bluetooth": "Bluetooth"}
+
+
+def active_network() -> dict | None:
+    """La conexión de red principal activa (WiFi, cable...), sin contar
+    loopback, Docker ni Tailscale."""
+    code, out = _run([NMCLI, "-t", "-f", "NAME,TYPE,DEVICE", "con", "show", "--active"])
+    if code != 0:
+        return None
+    for line in out.splitlines():
+        # En modo -t, nmcli escapa los ':' de los nombres como '\:'.
+        parts = [x.replace("\\:", ":") for x in re.split(r"(?<!\\):", line)]
+        if len(parts) != 3 or parts[1] not in _NET_TYPES:
+            continue
+        name, ctype, dev = parts
+        _, metered = _run([NMCLI, "-g", "GENERAL.METERED", "dev", "show", dev])
+        return {
+            "name": name,
+            "type": _NET_TYPES[ctype],
+            "device": dev,
+            # 'yes' / 'yes (guessed)': NetworkManager cree que es de datos
+            # limitados (lo detecta solo en el punto de acceso de un Android).
+            "metered": metered.startswith("yes"),
+            "metered_raw": metered,
+        }
+    return None
+
+
+def _sys_counter(dev: str, name: str) -> int | None:
+    try:
+        return int(Path(f"/sys/class/net/{dev}/statistics/{name}").read_text())
+    except (OSError, ValueError):
+        return None
+
+
+def traffic_on_network(key: str, metrics: dict) -> dict:
+    """Bytes acumulados desde que el panel vio por primera vez esta red como
+    activa. Se guarda en disco para sobrevivir a reinicios del panel; si un
+    contador del sistema vuelve a empezar (reinicio, reconexión de Tailscale),
+    se suma lo que llevaba en vez de perderlo. Al cambiar de red, empieza de 0."""
+    with _net_lock:
+        try:
+            state = json.loads(NET_STATE.read_text())
+        except (OSError, ValueError):
+            state = {}
+        if state.get("key") != key:
+            state = {"key": key, "since": time.time(), "m": {}}
+        result = {"since": state["since"]}
+        for name, cur in metrics.items():
+            if cur is None:
+                result[name] = None
+                continue
+            m = state["m"].get(name) or {"base": cur, "last": cur, "acc": 0}
+            if cur < m["last"]:
+                m["acc"] += m["last"] - m["base"]
+                m["base"] = 0
+            m["last"] = cur
+            state["m"][name] = m
+            result[name] = m["acc"] + cur - m["base"]
+        try:
+            NET_STATE.parent.mkdir(parents=True, exist_ok=True)
+            NET_STATE.write_text(json.dumps(state))
+        except OSError:
+            pass
+        return result
+
+
+def peer_tailscale() -> dict:
+    code, out = _run([TAILSCALE, "status", "--json"], timeout=5)
+    if code != 0:
+        return {"running": False}
+    try:
+        data = json.loads(out)
+    except ValueError:
+        return {"running": False}
+    if data.get("BackendState") != "Running":
+        return {"running": False}
+    want = PANEL_PEER.lower()
+    for p in (data.get("Peer") or {}).values():
+        if p.get("HostName", "").lower() == want or p.get("DNSName", "").lower().startswith(want + "."):
+            return {
+                "running": True,
+                "found": True,
+                "online": bool(p.get("Online")),
+                # Con CurAddr la conexión es directa; si no, pasa por un
+                # servidor relay de Tailscale (DERP): funciona, pero más lenta.
+                "direct": bool(p.get("CurAddr")),
+                "relay": p.get("Relay", ""),
+                "rx": p.get("RxBytes"),
+                "tx": p.get("TxBytes"),
+            }
+    return {"running": True, "found": False}
+
+
+def _http_json(url: str, timeout: float = 3) -> dict:
+    with urllib.request.urlopen(url, timeout=timeout) as r:
+        return json.loads(r.read())
+
+
+_tags_cache = {"at": 0.0, "n": None}
+
+
+def peer_ollama() -> dict | None:
+    """Ollama de la otra máquina a través del túnel. La latencia es la de una
+    petición mínima de ida y vuelta (V15 -> túnel -> R7)."""
+    if not PANEL_PEER_OLLAMA:
+        return None
+    t0 = time.monotonic()
+    try:
+        version = _http_json(f"{PANEL_PEER_OLLAMA}/api/version").get("version", "")
+    except Exception:
+        return {"reachable": False}
+    latency_ms = round((time.monotonic() - t0) * 1000)
+
+    loaded = []
+    try:
+        for m in _http_json(f"{PANEL_PEER_OLLAMA}/api/ps").get("models", []):
+            loaded.append({
+                "name": m.get("name", ""),
+                "vram": m.get("size_vram", 0),
+                "expires_at": m.get("expires_at", ""),
+            })
+    except Exception:
+        pass
+
+    # El número de modelos instalados cambia poco: se consulta cada 10 min.
+    if _tags_cache["n"] is None or time.time() - _tags_cache["at"] > 600:
+        try:
+            _tags_cache["n"] = len(_http_json(f"{PANEL_PEER_OLLAMA}/api/tags").get("models", []))
+            _tags_cache["at"] = time.time()
+        except Exception:
+            pass
+
+    return {
+        "reachable": True,
+        "version": version,
+        "latency_ms": latency_ms,
+        "loaded": loaded,
+        "models": _tags_cache["n"],
+    }
+
+
+def peer_info() -> dict | None:
+    if not PANEL_PEER:
+        return None
+    net = active_network()
+    ts = peer_tailscale()
+    metrics = {"peer_rx": ts.get("rx"), "peer_tx": ts.get("tx")}
+    if net:
+        metrics["net_rx"] = _sys_counter(net["device"], "rx_bytes")
+        metrics["net_tx"] = _sys_counter(net["device"], "tx_bytes")
+    key = f"{net['device']}|{net['name']}" if net else "sin-red"
+    return {
+        "name": PANEL_PEER,
+        "network": net,
+        "traffic": traffic_on_network(key, metrics),
+        "tailscale": ts,
+        "ollama": peer_ollama(),
+    }
+
+
 def panel_location() -> dict:
     return {
         "dir": str(Path(__file__).resolve().parent),
@@ -764,6 +943,7 @@ class Handler(BaseHTTPRequestHandler):
                 "containers": containers,
                 "compose_projects": compose,
                 "agent_reach": agent_reach_status(),
+                "peer": peer_info(),
                 "system": system_info(),
                 "ports": listening_ports(containers, compose),
                 "panel": panel_location(),

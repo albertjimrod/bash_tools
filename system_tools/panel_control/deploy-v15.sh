@@ -52,17 +52,24 @@ code_changes=$(rsync -a --delete --mkpath --itemize-changes --exclude '__pycache
     "$SRC/panel_server.py" "$SRC/static" "$REMOTE:$REMOTE_DIR/")
 unit_changes=$(rsync -a --itemize-changes -e "$SSH" \
     "$SRC/panel-control-v15.service" "$REMOTE:.config/systemd/user/$UNIT")
+# Otras unidades de V15 que viven en este repo (mismo nombre allí).
+tunnel_changes=$(rsync -a --itemize-changes -e "$SSH" \
+    "$SRC/ollama-tunnel-r7.service" "$REMOTE:.config/systemd/user/ollama-tunnel-r7.service")
 
-if [[ -z "$code_changes$unit_changes" ]]; then
+if [[ -z "$code_changes$unit_changes$tunnel_changes" ]]; then
     log "V15 ya estaba al día"
     exit 0
 fi
 [[ -n "$code_changes" ]] && log "V15: copiado -> $(echo "$code_changes" | awk '/^[<>c]f/{print $2}' | xargs)"
 
 remote_cmd=""
-if [[ -n "$unit_changes" ]]; then
+if [[ -n "$unit_changes$tunnel_changes" ]]; then
     remote_cmd+="systemctl --user daemon-reload; "
-    log "V15: unidad systemd actualizada"
+    log "V15: unidades systemd actualizadas"
+fi
+if [[ -n "$tunnel_changes" ]]; then
+    remote_cmd+="systemctl --user try-restart ollama-tunnel-r7.service; "
+    log "V15: túnel de Ollama reiniciado (si estaba activo)"
 fi
 # Solo hace falta reiniciar si cambió el Python o la unidad (no por el HTML).
 if [[ -n "$unit_changes" ]] || grep -q 'panel_server.py' <<<"$code_changes"; then

@@ -1,0 +1,36 @@
+# V15: túnel SSH permanente al Ollama de R7, para usar la IA (GPU de R7) desde
+# V15 también fuera de casa (va por Tailscale, funciona con datos del móvil).
+#
+#   127.0.0.1:11434  -> terminal y scripts de V15 (ollama list/run, aip...)
+#   172.17.0.1:11435 -> Open WebUI de V15 (contenedor Docker, OLLAMA_BASE_URL)
+#
+# Instalación (en V15):
+#   cp ollama-tunnel-r7.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now ollama-tunnel-r7.service
+# Se enciende/apaga desde el panel de V15 (sección "Conexión con R7").
+# Ver DOS-MAQUINAS.md.
+[Unit]
+Description=Túnel SSH al Ollama de R7 (IA de R7 desde V15)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# 'r7' es el alias de ~/.ssh/config (por Tailscale). ServerAlive detecta en
+# ~90 s una conexión muerta (p.ej. el móvil pierde cobertura) y systemd la
+# vuelve a abrir. Si Docker aún no ha creado 172.17.0.1, el túnel falla y se
+# reintenta solo.
+ExecStart=/usr/bin/ssh -N -o BatchMode=yes -o ConnectTimeout=15 \
+    -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o ExitOnForwardFailure=yes \
+    -L 127.0.0.1:11434:localhost:11434 \
+    -L 172.17.0.1:11435:localhost:11434 \
+    r7
+Restart=always
+RestartSec=10
+# Si R7 está apagado, cada intento espera más (10 s -> 15 min).
+RestartSteps=8
+RestartMaxDelaySec=15min
+
+[Install]
+WantedBy=default.target

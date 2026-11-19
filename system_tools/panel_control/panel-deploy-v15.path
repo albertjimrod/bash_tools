@@ -7,6 +7,7 @@ Description=Vigila el panel de control para propagar cambios a V15
 PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/panel_server.py
 PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/static/index.html
 PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/panel-control-v15.service
+PathChanged=%h/dev/github/bash_tools/system_tools/panel_control/ollama-tunnel-r7.service
 Unit=panel-deploy-v15.service
 
 [Install]

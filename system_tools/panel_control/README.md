@@ -10,8 +10,10 @@ esa máquina.
 
 **Dos máquinas.** El mismo panel corre también en V15 (portátil), accesible
 desde la propia V15 y desde R7. Se edita solo en R7 y cada cambio se propaga
-solo a V15 al guardar. Cómo funciona, instalación, seguridad y problemas
-frecuentes: [DOS-MAQUINAS.md](DOS-MAQUINAS.md).
+solo a V15 al guardar. El panel de V15 tiene además una sección "Conexión con
+R7" (red, datos gastados, Tailscale, IA de R7). Cómo funciona, uso de R7
+desde V15 fuera de casa, instalación, seguridad y problemas frecuentes:
+[DOS-MAQUINAS.md](DOS-MAQUINAS.md).
 
 ## Qué muestra
 

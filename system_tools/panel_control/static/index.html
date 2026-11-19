@@ -254,6 +254,12 @@
     <div id="remote-access" class="card-grid"></div>
   </section>
 
+  <section id="peer-section" hidden>
+    <h2>Conexión con <span id="peer-name"></span> <span id="peer-badge" class="badge"></span></h2>
+    <div id="peer-stats" class="stat-grid"></div>
+    <div id="peer-units" class="card-grid" style="margin-top:10px"></div>
+  </section>
+
   <section>
     <h2>Servicios y herramientas</h2>
     <div id="services" class="card-grid"></div>
@@ -481,6 +487,101 @@ function renderPorts(ports) {
     : '';
 }
 
+function fmtBytes(n) {
+  if (n === null || n === undefined) return '?';
+  const u = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let i = 0;
+  while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
+  return `${n.toFixed(i >= 2 ? 1 : 0)} ${u[i]}`;
+}
+
+function fmtWhen(epoch) {
+  const d = new Date(epoch * 1000);
+  const today = new Date().toDateString() === d.toDateString();
+  return today
+    ? 'desde las ' + d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+    : 'desde el ' + d.toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
+function stat(label, value, sub, cls = '') {
+  return `<div class="stat ${cls}"><div class="label">${esc(label)}</div>` +
+         `<div class="value">${value}</div><div class="sub">${sub}</div></div>`;
+}
+
+// Sección "Conexión con <otra máquina>": solo existe si el servidor tiene
+// PANEL_PEER (V15). Devuelve las unidades que se pintan aquí (túneles), para
+// no repetirlas en "Servicios".
+function renderPeer(peer, services) {
+  const section = document.getElementById('peer-section');
+  if (!peer) { section.hidden = true; return new Set(); }
+  section.hidden = false;
+  document.getElementById('peer-name').textContent = peer.name.toUpperCase();
+
+  const ts = peer.tailscale || {};
+  const net = peer.network;
+  const tr = peer.traffic || {};
+  const ol = peer.ollama;
+  const ollamaUnit = services.find(s => s.unit.startsWith('ollama-tunnel'));
+
+  const badge = document.getElementById('peer-badge');
+  const online = ts.running && ts.found && ts.online;
+  badge.textContent = online ? (ts.direct ? 'en línea · directa' : 'en línea · por relay') : 'sin conexión';
+  badge.className = 'badge ' + (online ? (ts.direct ? 'good' : 'warn') : 'bad');
+
+  const cards = [];
+  cards.push(net
+    ? stat('Red actual', esc(net.name),
+        `${esc(net.type)}${net.metered ? ' · <b>datos medidos</b>' : ''}`, net.metered ? 'warn' : '')
+    : stat('Red actual', 'Sin red', '', 'bad'));
+
+  cards.push(net
+    ? stat('Datos en esta red', `↓ ${fmtBytes(tr.net_rx)} · ↑ ${fmtBytes(tr.net_tx)}`,
+        `todo el equipo, ${fmtWhen(tr.since)}`)
+    : '');
+
+  let tsValue, tsSub, tsCls = '';
+  if (!ts.running) { tsValue = 'Tailscale apagado'; tsSub = 'sin acceso a ' + esc(peer.name); tsCls = 'bad'; }
+  else if (!ts.found) { tsValue = 'No encontrada'; tsSub = 'no está en tu red Tailscale'; tsCls = 'bad'; }
+  else if (!ts.online) { tsValue = 'Desconectada'; tsSub = '¿apagada o sin red?'; tsCls = 'bad'; }
+  else if (ts.direct) { tsValue = 'Directa'; tsSub = 'conexión punto a punto'; }
+  else { tsValue = 'Por relay'; tsSub = `servidor de Tailscale (${esc(ts.relay)}): más lenta`; tsCls = 'warn'; }
+  cards.push(stat(`${peer.name.toUpperCase()} por Tailscale`, tsValue, tsSub, tsCls));
+
+  cards.push(stat(`Datos con ${peer.name.toUpperCase()}`,
+    `↓ ${fmtBytes(tr.peer_rx)} · ↑ ${fmtBytes(tr.peer_tx)}`,
+    'túneles, Syncthing, despliegues'));
+
+  if (ol) {
+    const tunnelOff = ollamaUnit && !ollamaUnit.active;
+    if (ol.reachable) {
+      cards.push(stat('IA (Ollama) de ' + peer.name.toUpperCase(), `${ol.latency_ms} ms`,
+        `responde · ${ol.models ?? '?'} modelos · v${esc(ol.version)}`));
+      const m = ol.loaded[0];
+      cards.push(m
+        ? stat('Modelo en la GPU', esc(m.name.split(':')[0]),
+            `${fmtBytes(m.vram)} VRAM · se descarga a las ` +
+            new Date(m.expires_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) +
+            (ol.loaded.length > 1 ? ` · +${ol.loaded.length - 1} más` : ''))
+        : stat('Modelo en la GPU', 'Ninguno', 'la próxima pregunta tardará en cargarlo'));
+    } else {
+      cards.push(stat('IA (Ollama) de ' + peer.name.toUpperCase(),
+        tunnelOff ? 'Túnel parado' : 'No responde',
+        tunnelOff ? 'actívalo abajo' : `túnel reconectando o ${esc(peer.name)} apagada`,
+        tunnelOff ? '' : 'bad'));
+    }
+  }
+  document.getElementById('peer-stats').innerHTML = cards.join('');
+
+  const unitsEl = document.getElementById('peer-units');
+  unitsEl.innerHTML = '';
+  const shown = new Set();
+  services.filter(s => s.section === 'peer').forEach(s => {
+    unitsEl.appendChild(unitCard(s, false));
+    shown.add(s.unit);
+  });
+  return shown;
+}
+
 function groupKey(name) {
   const m = name.match(/^([a-zA-Z0-9]+)[-_]/);
   return m ? m[1] : name;
@@ -500,9 +601,10 @@ function render() {
   badge.textContent = `${activeRemote} de ${data.remote_access.length} activos`;
   badge.className = 'badge ' + (activeRemote > 0 ? 'bad' : 'good');
 
+  const inPeer = renderPeer(data.peer, data.services);
   const servicesEl = document.getElementById('services');
   servicesEl.innerHTML = '';
-  data.services.forEach(s => servicesEl.appendChild(unitCard(s, false)));
+  data.services.filter(s => !inPeer.has(s.unit)).forEach(s => servicesEl.appendChild(unitCard(s, false)));
 
   const ar = data.agent_reach;
   const skillsSection = document.getElementById('skills-section');
