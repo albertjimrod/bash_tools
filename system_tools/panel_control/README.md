@@ -67,6 +67,10 @@ desde V15 fuera de casa, instalación, seguridad y problemas frecuentes:
   parado reclama un puerto que ya usa otro, la fila lo avisa.
 - **Estado del sistema**: carga/uptime, RAM, disco, GPU, actualizaciones
   pendientes de `apt`, estado del firewall.
+- **Documentación**: rutas de las guías de uso (este README,
+  `DOS-MAQUINAS.md` y la guía privada para reservar las IPs en el router), con
+  enlace para leerlas en el navegador. Solo se sirven esos ficheros (lista
+  `DOCS` en `panel_server.py`).
 - **Pie de página**: dónde está el código del panel, qué unidad lo sirve y
   en qué máquina (el nombre también sale en la cabecera).
 

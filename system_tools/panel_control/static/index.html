@@ -300,6 +300,11 @@
     <h2>Estado del sistema</h2>
     <div id="system" class="stat-grid"></div>
   </section>
+
+  <section id="docs-section" hidden>
+    <h2>Documentación</h2>
+    <div id="docs" class="card-grid"></div>
+  </section>
 </main>
 
 <footer id="panel-location"></footer>
@@ -661,6 +666,19 @@ function render() {
   (data.compose_projects || []).forEach(p => composeEl.appendChild(composeCard(p)));
 
   renderPorts(data.ports);
+
+  const docs = data.docs || [];
+  document.getElementById('docs-section').hidden = docs.length === 0;
+  document.getElementById('docs').innerHTML = docs.map(d => `
+    <div class="card">
+      <div class="card-info">
+        <div class="name">${esc(d.label)}</div>
+        <div class="status-row">${esc(d.desc)}</div>
+        <div class="unit" style="user-select:all">${esc(d.path)}</div>
+        <div class="status-row" style="opacity:.7">actualizado ${new Date(d.mtime * 1000).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+        <a class="url-link" href="/docs/${encodeURIComponent(d.id)}" target="_blank" rel="noopener">leer ↗</a>
+      </div>
+    </div>`).join('');
 
   const loc = data.panel;
   document.getElementById('panel-location').innerHTML = loc

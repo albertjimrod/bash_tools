@@ -235,6 +235,7 @@ así que el panel arranca con la máquina aunque no hayas iniciado sesión.
 
 | Quiero… | Comando (en R7) |
 |---|---|
+| Leer esta documentación o la del panel | Sección **Documentación** al final de cualquiera de los dos paneles (rutas y enlace «leer») |
 | Ver qué hizo el último despliegue | `journalctl --user -u panel-deploy-v15.service -n 20` |
 | Forzar un despliegue ya | `systemctl --user start panel-deploy-v15.service` (o `./deploy-v15.sh`) |
 | Ver cuándo toca el próximo reintento | `systemctl --user list-timers panel-deploy-v15.timer` |

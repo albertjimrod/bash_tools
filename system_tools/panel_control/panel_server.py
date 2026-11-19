@@ -831,6 +831,41 @@ def peer_info() -> dict | None:
     }
 
 
+# --- Documentación de uso: rutas que el panel enseña en su sección
+# "Documentación" y que deja leer en el navegador (/docs/<id>). Lista blanca:
+# solo se sirven estos ficheros. Las rutas son las mismas en R7 y en V15 (el
+# repo está en la misma carpeta en las dos y ~/Documentos se sincroniza con
+# Syncthing); lo que no exista en una máquina no se muestra.
+
+_REPO_DOCS = Path.home() / "dev/github/bash_tools/system_tools/panel_control"
+DOCS = [
+    {"id": "panel", "label": "Panel de control",
+     "desc": "Qué muestra cada sección, instalación, sudoers, añadir servicios o proyectos Compose",
+     "path": _REPO_DOCS / "README.md"},
+    {"id": "dos-maquinas", "label": "R7 y V15 juntas",
+     "desc": "Cómo se accede a cada panel, despliegue automático R7 → V15, usar la IA de R7 desde V15 "
+             "fuera de casa, sección «Conexión con R7», seguridad, uso diario y problemas frecuentes",
+     "path": _REPO_DOCS / "DOS-MAQUINAS.md"},
+    {"id": "router", "label": "Reservar las IPs en el router",
+     "desc": "Paso a paso para fijar las IPs de casa de R7 y V15 (privado: fuera del repo)",
+     "path": Path.home() / "Documentos/conocimiento/guias/Reservar IPs de R7 y V15 en el router.md"},
+]
+DOCS_BY_ID = {d["id"]: d for d in DOCS}
+
+
+def docs_list() -> list[dict]:
+    result = []
+    for d in DOCS:
+        try:
+            mtime = d["path"].stat().st_mtime
+        except OSError:
+            continue
+        result.append({"id": d["id"], "label": d["label"], "desc": d["desc"],
+                       "path": str(d["path"]).replace(str(Path.home()), "~", 1),
+                       "mtime": mtime})
+    return result
+
+
 def panel_location() -> dict:
     return {
         "dir": str(Path(__file__).resolve().parent),
@@ -933,6 +968,22 @@ class Handler(BaseHTTPRequestHandler):
             return
         if self.path in ("/", "/index.html"):
             self._serve_static("index.html")
+        elif self.path.startswith("/docs/"):
+            doc = DOCS_BY_ID.get(self.path[len("/docs/"):])
+            try:
+                body = doc["path"].read_bytes() if doc else None
+            except OSError:
+                body = None
+            if body is None:
+                self.send_error(404)
+                return
+            # Markdown tal cual: se lee bien como texto y no hace falta
+            # ninguna librería para convertirlo.
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
         elif self.path == "/api/status":
             containers = docker_containers()
             compose = compose_projects_status()
@@ -947,6 +998,7 @@ class Handler(BaseHTTPRequestHandler):
                 "system": system_info(),
                 "ports": listening_ports(containers, compose),
                 "panel": panel_location(),
+                "docs": docs_list(),
             })
         else:
             self.send_error(404)
