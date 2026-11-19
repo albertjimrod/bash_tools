@@ -321,6 +321,24 @@ def toggle_container(name: str, action: str) -> tuple[bool, str]:
     return True, "ok"
 
 
+def ufw_enabled() -> bool:
+    """Si el firewall está de verdad activo. 'ufw.service' sale 'active'
+    aunque el firewall esté desactivado (es un oneshot que solo carga la
+    configuración al arrancar), así que no basta. Lo que manda es
+    ENABLED=yes en /etc/ufw/ufw.conf, que se puede leer sin sudo (es lo que
+    cambian 'ufw enable' / 'ufw disable')."""
+    try:
+        conf = Path("/etc/ufw/ufw.conf").read_text()
+    except OSError:
+        return False
+    enabled = re.search(r"^\s*ENABLED\s*=\s*(\S+)", conf, re.MULTILINE)
+    return (
+        enabled is not None
+        and enabled.group(1).strip("'\"").lower() == "yes"
+        and unit_status("ufw.service") == "active"
+    )
+
+
 def system_info() -> dict:
     info = {}
 
@@ -365,7 +383,7 @@ def system_info() -> dict:
         ["bash", "-c", "apt list --upgradable 2>/dev/null | tail -n +2 | wc -l"]
     )
     info["pending_updates"] = upgrades.strip() if code == 0 else "?"
-    info["firewall_active"] = unit_status("ufw.service") == "active"
+    info["firewall_active"] = ufw_enabled()
 
     return info
 
